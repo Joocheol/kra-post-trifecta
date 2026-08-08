@@ -7,7 +7,7 @@
 
 ## Paper
 
-- 가제: **복권식 경마시장의 정보 집계: 삼쌍승식 상태가격을 이용한 교차시장 재구성**
+- 가제: **경마 베팅시장의 정보 집계: 삼쌍승식 상태가격을 이용한 교차시장 재구성**
 - 원고: `main.tex`, `preamble.tex`, `sections/`
 - 연구 설계: `RESEARCH_PLAN.md`
 - 집필 원칙: `WRITING_GUIDE.md`

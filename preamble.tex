@@ -10,6 +10,7 @@
 \usepackage{enumitem}
 \usepackage{microtype}
 \usepackage{titlesec}
+\usepackage{etoolbox}
 \usepackage[
   a4paper,
   top=25mm,
@@ -48,7 +49,7 @@
   linkcolor=LinkBlue,
   citecolor=LinkBlue,
   urlcolor=LinkBlue,
-  pdftitle={복권식 경마시장의 정보 집계},
+  pdftitle={경마 베팅시장의 정보 집계},
   pdfauthor={김주철}
 }
 
@@ -79,3 +80,10 @@
 \renewcommand{\refname}{참고문헌}
 \renewcommand{\tablename}{표}
 \renewcommand{\figurename}{그림}
+
+% Keep each bibliography entry on one page when space permits.
+\AtBeginEnvironment{thebibliography}{%
+  \interlinepenalty=10000
+  \clubpenalty=10000
+  \widowpenalty=10000
+}
