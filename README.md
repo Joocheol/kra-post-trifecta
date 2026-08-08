@@ -49,7 +49,8 @@ Markets per partition: `win`, `place`, `quinella`, `quinella_place`,
 `exacta`, `trifecta`, `trio`, plus `market_status` and `valid_horses`.
 Partitioned by year and month.
 
-Race counts for this subset: 19,301 races.
+Candidate race count for this date-restricted subset: 19,301 races. This is the
+pre-filter count; the paper's main-analysis inclusion conditions are applied later.
 
 ## Data Source and License
 

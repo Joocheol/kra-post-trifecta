@@ -12,13 +12,23 @@ $\widehat p^{m\leftarrow\T}_r$의 차이를 다음과 같이 측정한다.
     &=\left[\frac{1}{C_{r,m}}\sum_c
       \left\{\log(p^m_{r,c}+\epsilon)-
       \log(\widehat p^{m\leftarrow\T}_{r,c}+\epsilon)\right\}^2
-      \right]^{1/2}.
+      \right]^{1/2},\\
+  \operatorname{JS}_{r,m}
+    &=\frac12\sum_c p^m_{r,c}\log\frac{p^m_{r,c}}{s^m_{r,c}}
+      +\frac12\sum_c \widehat p^{m\leftarrow\T}_{r,c}
+       \log\frac{\widehat p^{m\leftarrow\T}_{r,c}}{s^m_{r,c}},\\
+  s^m_{r,c}
+    &=\frac12\left(p^m_{r,c}+\widehat p^{m\leftarrow\T}_{r,c}\right),\\
+  \operatorname{MAE}_{r,m}
+    &=\frac{1}{C_{r,m}}\sum_c
+      \left|p^m_{r,c}-\widehat p^{m\leftarrow\T}_{r,c}\right|.
 \end{align*}
 여기서 $c$는 해당 승식의 조합, $C_{r,m}$은 조합 수, $\epsilon$은 자료를 보기
-전에 정한 수치 안정화 상수다. Jensen--Shannon 발산과 확률수준 평균절대오차를
-함께 보고한다. $R^2$는 직관적인 보조 통계로 제시하되, 극단적으로 작은 확률이
-많고 한 경주가 조합 수만큼 반복된다는 점 때문에 유일한 적합도 지표로 쓰지
-않는다.
+전에 정한 수치 안정화 상수다. $\operatorname{JS}$에는 자연로그를 사용하고
+$0\log 0=0$으로 둔다. $\operatorname{MAE}$는 경주 안의 조합별 확률오차를
+동일 가중한 값이다. $R^2$는 직관적인 보조 통계로 제시하되, 극단적으로 작은
+확률이 많고 한 경주가 조합 수만큼 반복된다는 점 때문에 유일한 적합도 지표로
+쓰지 않는다.
 
 보정 여부는
 \begin{equation}
