@@ -22,6 +22,7 @@
   - `exacta`: clean point 3,321경주, capped interval 15,963경주
   - `quinella`: clean point 3,321경주, capped interval 15,963경주
   - `trio`: clean point 3,321경주, capped interval 15,963경주
+- 네 목표 승식의 clean race_id 집합: **동일**
 
 ## 분석상 위험과 처리
 

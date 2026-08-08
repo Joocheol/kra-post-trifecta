@@ -14,6 +14,16 @@
     }
   },
   "candidate_races": 19301,
+  "clean_sample_race_ids": {
+    "identical_across_targets": true,
+    "reference_market": "win",
+    "symmetric_difference_from_reference": {
+      "exacta": 0,
+      "quinella": 0,
+      "trio": 0,
+      "win": 0
+    }
+  },
   "in_date_scope_races": 19284,
   "orphan_records": {
     "exacta": {

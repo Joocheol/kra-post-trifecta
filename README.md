@@ -102,8 +102,9 @@ point observations: the clean-sample point estimates (Panel A) and full-sample
 partial-identification bounds (Panel B) are co-primary results.
 
 The two race-level CSVs are deterministic but intentionally not versioned. Their row
-counts and SHA-256 hashes are frozen in `outputs/data_audit_manifest.json`, and CI
-regenerates the CSVs and checks the manifest on every PR and main-branch update.
+counts and embedded SHA-256 hashes are frozen in `outputs/data_audit_manifest.json`.
+CI regenerates both CSVs and the manifest, then byte-compares the tracked manifest;
+this indirect hash comparison is the freshness check for the untracked CSVs.
 
 ## Data Browser
 

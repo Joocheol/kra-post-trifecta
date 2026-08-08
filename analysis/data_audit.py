@@ -447,6 +447,25 @@ def build_analysis_sample(quality: pd.DataFrame) -> pd.DataFrame:
     )
 
 
+def clean_sample_set_differences(sample: pd.DataFrame) -> dict[str, int]:
+    """Return symmetric differences from the win clean-sample race-ID set."""
+    clean_sets = {
+        target: set(
+            sample.loc[
+                sample["target_market"].eq(target)
+                & sample["eligible_clean_point_sample"],
+                "race_id",
+            ]
+        )
+        for target in TARGET_MARKETS
+    }
+    reference = clean_sets[TARGET_MARKETS[0]]
+    return {
+        target: len(reference.symmetric_difference(clean_sets[target]))
+        for target in TARGET_MARKETS
+    }
+
+
 def build_sample_flow(quality: pd.DataFrame) -> pd.DataFrame:
     rows: list[dict[str, object]] = []
     for target in TARGET_MARKETS:
@@ -560,8 +579,15 @@ def write_summary(
         lines.append(
             f"  - `{target}`: clean point {clean:,}경주, capped interval {censored:,}경주"
         )
+    set_differences = clean_sample_set_differences(sample)
+    sets_identical = not any(set_differences.values())
     lines.extend(
         [
+            (
+                "- 네 목표 승식의 clean race_id 집합: **동일**"
+                if sets_identical
+                else "- 네 목표 승식의 clean race_id 집합: **불일치 — strict 실패**"
+            ),
             "",
             "## 분석상 위험과 처리",
             "",
@@ -609,6 +635,19 @@ def write_latex_table(
             f"{labels[target]} & {complete:,} & {target_capped:,} & "
             f"{clean:,} & {interval:,} \\\\"
         )
+    trifecta_complete = int(
+        (
+            in_scope
+            & quality["trifecta_complete_support"]
+            & quality["trifecta_positive_finite_odds"]
+        ).sum()
+    )
+    trifecta_capped = int((in_scope & ~quality["trifecta_uncapped"]).sum())
+    trifecta_clean = trifecta_complete - trifecta_capped
+    rows.append(
+        f"삼쌍승 (원천) & {trifecta_complete:,} & {trifecta_capped:,} & "
+        f"{trifecta_clean:,} & {trifecta_capped:,} \\\\"
+    )
 
     content = "\n".join(
         [
@@ -620,17 +659,17 @@ def write_latex_table(
             r"  \small",
             r"  \begin{tabular}{lrrrr}",
             r"    \hline",
-            r"    목표 승식 & 완전·유효 & 목표 상한 & clean 점표본 & 상한 구간표본 \\",
+            r"    승식(역할) & 완전·유효 & 승식 상한 & clean 점표본 & 상한 구간표본 \\",
             r"    \hline",
             *[f"    {row}" for row in rows],
             r"    \hline",
             r"  \end{tabular}",
             r"  \begin{minipage}{0.96\linewidth}",
             r"    \footnotesize\emph{주:} 경주 수를 보고한다. 모든 행은 사전 제외일을 뺀",
-            r"    19,284경주 중 삼쌍승과 목표 승식의 완전한 지지집합 및 양수·유한",
-            r"    배당을 만족하는 표본이다. clean 점표본은 두 승식 모두 상한 배당이",
-            r"    없는 경주이며, 상한 구간표본은 적어도 하나의 삼쌍승 또는 목표 승식",
-            r"    조합이 게시 상한에 걸린 경주다.",
+            r"    목표 승식 행은 19,284경주 중 삼쌍승과 해당 승식의 완전한 지지집합",
+            r"    및 양수·유한 배당을 만족한다. clean 점표본은 두 승식 모두 상한이",
+            r"    없는 경주다. 네 목표 승식의 clean 표본은 동일한 3,321개 race\_id",
+            r"    집합이며, 삼쌍승 원천행에서 보듯 이는 19,284-15,963이다.",
             r"  \end{minipage}",
             r"\end{table}",
             "",
@@ -678,6 +717,15 @@ def write_manifest(
             }
             for market in ANALYSIS_MARKETS
         },
+        "clean_sample_race_ids": {
+            "reference_market": TARGET_MARKETS[0],
+            "identical_across_targets": not any(
+                clean_sample_set_differences(sample).values()
+            ),
+            "symmetric_difference_from_reference": clean_sample_set_differences(
+                sample
+            ),
+        },
         "artifacts": {
             name: {
                 "rows": rows,
@@ -715,7 +763,7 @@ def write_manifest(
     )
 
 
-def strict_failures(quality: pd.DataFrame) -> list[str]:
+def strict_failures(quality: pd.DataFrame, sample: pd.DataFrame) -> list[str]:
     in_scope = quality["in_date_scope"]
     failures: list[str] = []
     invalid_horses = int((in_scope & ~quality["valid_horses_ok"]).sum())
@@ -734,6 +782,15 @@ def strict_failures(quality: pd.DataFrame) -> list[str]:
             failures.append(f"{market} incomplete-support races: {incomplete}")
         if invalid_odds:
             failures.append(f"{market} invalid-odds races: {invalid_odds}")
+    set_differences = clean_sample_set_differences(sample)
+    if any(set_differences.values()):
+        failures.append(
+            "clean sample race-ID sets differ across targets: "
+            + ", ".join(
+                f"{target}={difference}"
+                for target, difference in set_differences.items()
+            )
+        )
     return failures
 
 
@@ -758,7 +815,7 @@ def main() -> int:
     )
     write_latex_table(args.table_dir / "data_quality_summary.tex", quality, sample)
 
-    failures = strict_failures(quality)
+    failures = strict_failures(quality, sample)
     print(f"candidate_races={len(quality)}")
     print(f"in_date_scope_races={int(quality['in_date_scope'].sum())}")
     for target in TARGET_MARKETS:

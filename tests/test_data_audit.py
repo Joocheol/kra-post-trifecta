@@ -13,6 +13,7 @@ from analysis.data_audit import (
     allowed_horse_matrix,
     audit_market,
     build_analysis_sample,
+    clean_sample_set_differences,
     expected_row_count,
     invalid_key_mask,
     parse_horse_list,
@@ -205,6 +206,30 @@ class SampleConstructionTest(unittest.TestCase):
             exacta.loc["incomplete", "structural_exclusion_reason"],
             "incomplete_exacta_support",
         )
+        self.assertFalse(any(clean_sample_set_differences(sample).values()))
+
+    def test_clean_race_id_mismatch_is_detected_even_when_counts_match(self) -> None:
+        sample = pd.DataFrame(
+            {
+                "target_market": [
+                    "win",
+                    "win",
+                    "exacta",
+                    "exacta",
+                    "quinella",
+                    "quinella",
+                    "trio",
+                    "trio",
+                ],
+                "race_id": ["r1", "r2", "r1", "r3", "r1", "r2", "r1", "r2"],
+                "eligible_clean_point_sample": [True] * 8,
+            }
+        )
+        differences = clean_sample_set_differences(sample)
+        self.assertEqual(differences["win"], 0)
+        self.assertEqual(differences["exacta"], 2)
+        self.assertEqual(differences["quinella"], 0)
+        self.assertEqual(differences["trio"], 0)
 
 
 if __name__ == "__main__":
