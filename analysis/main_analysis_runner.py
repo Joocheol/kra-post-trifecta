@@ -9,6 +9,10 @@ import pandas as pd
 
 from analysis.data_audit import TARGET_MARKETS, parse_horse_list, prepare_races
 from analysis.main_analysis_core import SOURCE_MARKET
+from analysis.main_analysis_p3 import (
+    order_information_bounds,
+    write_order_information_bounds_table,
+)
 from analysis.main_analysis_panels import (
     grouped_ids_by_field,
     load_market,
@@ -123,13 +127,29 @@ def heterogeneity_summary(metrics: pd.DataFrame, races: pd.DataFrame) -> pd.Data
     for dimension in ("year", "meet", "n_valid_horses"):
         grouped = (
             merged.groupby(["target_market", "model", dimension], dropna=False)["tv"]
-            .agg(n_races="size", median_tv="median", q25=lambda x: x.quantile(0.25), q75=lambda x: x.quantile(0.75))
+            .agg(
+                n_races="size",
+                median_tv="median",
+                q25=lambda x: x.quantile(0.25),
+                q75=lambda x: x.quantile(0.75),
+            )
             .reset_index()
         )
         grouped["dimension"] = dimension
         grouped["level"] = grouped[dimension].astype(str)
         frames.append(
-            grouped[["target_market", "model", "dimension", "level", "n_races", "median_tv", "q25", "q75"]]
+            grouped[
+                [
+                    "target_market",
+                    "model",
+                    "dimension",
+                    "level",
+                    "n_races",
+                    "median_tv",
+                    "q25",
+                    "q75",
+                ]
+            ]
         )
     return pd.concat(frames, ignore_index=True)
 
@@ -145,7 +165,7 @@ def main() -> None:
     if not clean_ids or not full_ids:
         raise ValueError("analysis sample is empty")
 
-    # Donor benchmarks are defined using the frozen panel, not the arbitrary
+    # Donor benchmarks are defined using the frozen panel, not an arbitrary
     # development subset. Loading all source races keeps --max-races from
     # changing donor eligibility or assignment.
     source_ids = set(all_full_ids)
@@ -154,6 +174,11 @@ def main() -> None:
         raise ValueError("race metadata does not cover the frozen analysis sample")
     trifecta = load_market(args.data_root, SOURCE_MARKET, source_ids)
     win = load_market(args.data_root, "win", source_ids)
+    if bool(win.frame["is_capped_odds"].fillna(False).any()):
+        raise ValueError(
+            "Harville benchmark requires uncapped win odds; current frozen design "
+            "does not silently point-value capped win observations"
+        )
     clean_peers = grouped_ids_by_field(races, all_clean_ids)
     full_peers = grouped_ids_by_field(races, all_full_ids)
 
@@ -192,11 +217,10 @@ def main() -> None:
     improve_a = benchmark_improvements_a(metrics_a)
     improve_b = None if bounds_b is None else benchmark_improvements_b(bounds_b)
     p3 = order_information_test(metrics_a)
+    p3_bounds = None if bounds_b is None else order_information_bounds(bounds_b)
     thresholds = absolute_threshold_decision(summary_a, summary_b)
 
-    cap_by_race = (
-        trifecta.frame.groupby("race_id")["is_capped_odds"].sum().astype(int)
-    )
+    cap_by_race = trifecta.frame.groupby("race_id")["is_capped_odds"].sum().astype(int)
     selection = sample_selection_summary(
         races, set(all_clean_ids), set(all_full_ids), cap_by_race
     )
@@ -226,6 +250,8 @@ def main() -> None:
                 (args.output_dir / "main_panel_b_improvements.csv", improve_b),
             ]
         )
+    if p3_bounds is not None:
+        outputs.append((args.output_dir / "main_order_information_bounds.csv", p3_bounds))
     for path, frame in outputs:
         frame.to_csv(path, index=False, float_format="%.12g")
         generated.append(path)
@@ -235,6 +261,8 @@ def main() -> None:
             args.table_dir, summary_a, summary_b, improve_a, improve_b, p3
         )
     )
+    if p3_bounds is not None:
+        generated.append(write_order_information_bounds_table(args.table_dir, p3_bounds))
     write_manifest(
         args.output_dir,
         generated,
@@ -243,8 +271,13 @@ def main() -> None:
     )
 
     print(f"Panel A evaluated races: {len(clean_ids):,} / frozen {len(all_clean_ids):,}")
-    print(f"Panel B evaluated races: {0 if args.skip_bounds else len(full_ids):,} / frozen {len(all_full_ids):,}")
+    print(
+        f"Panel B evaluated races: {0 if args.skip_bounds else len(full_ids):,} / "
+        f"frozen {len(all_full_ids):,}"
+    )
     print(summary_a[summary_a["model"].eq("main")].to_string(index=False))
     if summary_b is not None:
         print(summary_b[summary_b["model"].eq("main")].to_string(index=False))
+    if p3_bounds is not None:
+        print(p3_bounds.to_string(index=False))
     print("PASS: main cross-pool analysis completed")
