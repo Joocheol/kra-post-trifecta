@@ -48,12 +48,33 @@ $2/C_{r,m}$를 곱한다.
 각 기준모형에도 같은 방식으로 TV의 하한과 인증 상한을 계산한다. 삼쌍승 타경주
 기준의 donor가 상한 경주이면 donor의 $\mathcal P^T_{r'}$ 전체를 포함하며 점값으로
 대체하지 않는다. 삼쌍승 주변가격이 기준보다 강건하게 우월하다는 판정은 보수적으로
-$\overline{\operatorname{TV}}^{\rm out}_{\rm main}
- <\underline{\operatorname{TV}}_{\rm benchmark}$일 때만 내린다. 구간이 겹치면 순위를
+$\overline{\operatorname{TV}}^{\mathrm{out}}_{\mathrm{main}}
+ <\underline{\operatorname{TV}}_{\mathrm{benchmark}}$일 때만 내린다. 구간이 겹치면 순위를
 식별하지 못한 것으로 보고한다. Jensen--Shannon 발산, log-ratio 거리와
 calibration은 Panel A의 주지표로 유지하되, Panel B에서는 사전 고정한 허용
 가격 시나리오의 설명적 민감도 분석으로만 제시하고 확정 판정에는 사용하지 않는다.
 표본불확실성은 경주 단위 부트스트랩으로 각 경계에 반영한다.
+
+패널 집계는 조합 수와 무관하게 경주에 같은 가중치를 주고 중앙값을 사용한다.
+Panel A에서 기준모형 $b$ 대비 경주별 개선폭을
+\[
+  \Delta^A_{r,m,b}
+  =\operatorname{TV}_{r,m,b}-\operatorname{TV}_{r,m,\mathrm{main}}
+\]
+으로 정의한다. Panel B에서는 참 개선폭의 보수적 하한
+\[
+  \underline\Delta^B_{r,m,b}
+  =\underline{\operatorname{TV}}_{r,m,b}
+   -\overline{\operatorname{TV}}^{\mathrm{out}}_{r,m,\mathrm{main}}
+\]
+을 사용한다. Panel A와 Panel B의 기준모형 우위는 각각
+$\operatorname{median}_r(\Delta^A_{r,m,b})$와
+$\operatorname{median}_r(\underline\Delta^B_{r,m,b})$의 경주 단위
+부트스트랩 95\% 신뢰구간 하한이 0보다 클 때만 인정한다. 절대오차가 경제적으로
+작다는 판정은 TV의 운영적 의미에 따라 $\tau_{\rm TV}=0.05$를 사전 기준으로
+두고, Panel A 중앙값과 Panel B의 경주별 인증 상한 중앙값의 95\% 신뢰구간
+상한이 모두 $\tau_{\rm TV}$보다 작을 때만 내린다. $0.025$와 $0.10$은 사전
+고정 민감도 기준으로 함께 보고한다.
 
 \subsection{주요 평가량}
 
@@ -155,8 +176,9 @@ Jensen--Shannon 발산을 사용하고, 동일 경주를 한 쌍으로 한 평�
 묻는다. 내부 가격 일관성과 외부 예측 정확도는 서로 다른 가설이므로 같은 표의
 한 계수로 합치지 않는다.
 
-강한 주결론은 Panel A의 점추정과 Panel B의 보수적 TV/MAE 경계가 같은 방향을
-지지할 때만 내린다. Panel A에서는 기준모형보다 우월하지만 Panel B에서 주모형
-TV 상한이 기준모형 TV 하한보다 작지 않으면 `clean 표본에서만 확인`으로 제한한다.
+강한 주결론은 Panel A와 Panel B의 사전 고정 중앙값 판정이 같은 방향을
+지지할 때만 내린다. Panel A의 개선폭 중앙값은 유의하게 양수이지만 Panel B의
+보수적 개선폭 하한 중앙값이 유의하게 양수가 아니면 `clean 표본에서만 확인`으로
+제한한다.
 두 패널의 방향이 충돌하면 상한 또는 표본선택 때문에 전체표본 결론이 식별되지
 않는다고 판정한다.
