@@ -4,7 +4,7 @@
 
 승식 $m$과 경주 $r$에서 실제 정규화 가격 $p^m_r$와 삼쌍승 재구성 가격
 $\widehat p^{m\leftarrow\T}_r$의 차이를 다음과 같이 측정한다.
-\begin{align}
+\begin{align*}
   \operatorname{TV}_{r,m}
     &=\frac12\sum_c\left|p^m_{r,c}-
       \widehat p^{m\leftarrow\T}_{r,c}\right|,\\
@@ -13,7 +13,7 @@ $\widehat p^{m\leftarrow\T}_r$의 차이를 다음과 같이 측정한다.
       \left\{\log(p^m_{r,c}+\epsilon)-
       \log(\widehat p^{m\leftarrow\T}_{r,c}+\epsilon)\right\}^2
       \right]^{1/2}.
-\end{align}
+\end{align*}
 여기서 $c$는 해당 승식의 조합, $C_{r,m}$은 조합 수, $\epsilon$은 자료를 보기
 전에 정한 수치 안정화 상수다. Jensen--Shannon 발산과 확률수준 평균절대오차를
 함께 보고한다. $R^2$는 직관적인 보조 통계로 제시하되, 극단적으로 작은 확률이
@@ -46,6 +46,26 @@ $\widehat p^{m\leftarrow\T}_r$의 차이를 다음과 같이 측정한다.
 모든 비교는 같은 표본, 같은 정규화, 같은 손실함수에서 수행한다. 주 분석의
 우위 판정은 하나의 전체표본 $R^2$가 아니라 경주별 손실 차이의 분포와 연도·
 경마장 밖 검증에서의 재현 여부에 근거한다.
+
+\subsection{순서정보 가설의 검정}
+
+H3은 같은 경주에서 쌍승식과 복승식의 Harville 대비 개선폭을 짝지어 검정한다.
+손실함수 $L$에 대해 삼쌍승식 주변가격의 개선폭을
+\[
+  \Delta^L_{r,m}
+  =L\!\left(p^m_r,A^m_rq^H_r\right)
+   -L\!\left(p^m_r,\widehat p^{m\leftarrow\T}_r\right)
+\]
+로 정의한다. 양의 값은 삼쌍승식 주변가격이 Harville 기준보다 실제 가격에 더
+가깝다는 뜻이다. 순서를 구분하는 쌍승식과 순서를 제거하는 복승식의 차이는
+\[
+  D^L_r=\Delta^L_{r,\Eact}-\Delta^L_{r,\Q}
+\]
+로 측정한다. 1차 검정은 범위가 승식 차원에 의존하지 않는 TV 거리와
+Jensen--Shannon 발산을 사용하고, 동일 경주를 한 쌍으로 한 평균·중앙값과
+경주 단위 부트스트랩 신뢰구간을 보고한다. $D^L_r$의 부호와 크기는 순서정보
+가설을 검정하지만, 별도 풀의 유동성과 참가자 구성이 함께 다를 수 있으므로
+순서 구분의 인과효과로 해석하지 않는다.
 
 \subsection{이질성과 강건성}
 

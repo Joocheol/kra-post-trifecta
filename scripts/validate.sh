@@ -53,6 +53,9 @@ cite_keys = {key.strip() for group in cite_groups for key in group.split(",")}
 missing = sorted(cite_keys - bib_keys)
 if missing:
     raise SystemExit(f"FAIL: missing bibliography keys: {', '.join(missing)}")
+unused = sorted(bib_keys - cite_keys)
+if unused:
+    raise SystemExit(f"FAIL: uncited bibliography keys: {', '.join(unused)}")
 
 print(f"PASS: {len(tex_paths)} TeX files, {len(labels)} unique labels, {len(cite_keys)} cited sources")
 PY
