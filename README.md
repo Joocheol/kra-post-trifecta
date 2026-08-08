@@ -7,7 +7,7 @@ used to build it and a static data browser.
 
 - Race-date range: `2016-06-10` through `2025-12-31`
 - Excluded years: `2020`, `2021` (COVID-19 period)
-- Excluded date: `2018-07-01` — TODO: 제외 사유를 여기에 적으세요
+- Excluded date: `2018-07-01` — 9999 초과 데이터 존재
 - Cutover rationale: `trifecta` betting begins `2016-06-10`, so this dataset
   starts at the post-trifecta market era.
 - Parsed parquet dataset: `KRA/parsed/`
