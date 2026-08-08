@@ -66,14 +66,28 @@ def render_table(
     output.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def heterogeneity_summary(heterogeneity: pd.DataFrame) -> pd.DataFrame:
+    main = heterogeneity[heterogeneity["model"].eq("main")]
+    summary = (
+        main.groupby(["target_market", "dimension"], sort=True)["median_tv"]
+        .agg(n_levels="size", min_group_median_tv="min", max_group_median_tv="max")
+        .reset_index()
+    )
+    return summary
+
+
 def main() -> None:
     output_dir = Path("outputs")
     table_dir = Path("tables")
     selection = pd.read_csv(output_dir / "main_sample_selection.csv")
     composition = pd.read_csv(output_dir / "main_sample_composition.csv")
     tails = pd.read_csv(output_dir / "main_sample_tail.csv")
+    heterogeneity = pd.read_csv(output_dir / "main_heterogeneity.csv")
     render_table(selection, composition, tails, table_dir / "main_sample_selection.tex")
-    print("PASS: sample-selection manuscript table generated")
+    heterogeneity_summary(heterogeneity).to_csv(
+        output_dir / "main_heterogeneity_summary.csv", index=False, float_format="%.12g"
+    )
+    print("PASS: sample-selection and compact heterogeneity diagnostics generated")
 
 
 if __name__ == "__main__":
