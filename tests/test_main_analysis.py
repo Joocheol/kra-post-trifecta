@@ -5,6 +5,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
+from analysis.data_audit import TARGET_MARKETS
 from analysis.main_analysis import (
     PriceSet,
     aggregate_price_set,
@@ -18,6 +19,8 @@ from analysis.main_analysis import (
     tv_lower_exact,
     tv_upper_outer,
 )
+from analysis.main_analysis_p3 import order_information_bounds
+from analysis.main_analysis_runner import common_race_ids
 
 
 class PriceSetTest(unittest.TestCase):
@@ -123,6 +126,64 @@ class MetricTest(unittest.TestCase):
         self.assertAlmostEqual(metrics["tv"], 0.0)
         self.assertAlmostEqual(metrics["js"], 0.0)
         self.assertAlmostEqual(metrics["r2"], 1.0)
+
+
+class FrozenSampleTest(unittest.TestCase):
+    @staticmethod
+    def _sample(ids_by_target: dict[str, list[str]]) -> pd.DataFrame:
+        rows = []
+        for target in TARGET_MARKETS:
+            for race_id in ids_by_target[target]:
+                rows.append(
+                    {
+                        "race_id": race_id,
+                        "target_market": target,
+                        "eligible_clean_point_sample": True,
+                    }
+                )
+        return pd.DataFrame(rows)
+
+    def test_common_race_ids_accepts_identical_target_sets(self) -> None:
+        ids = {target: ["r1", "r2"] for target in TARGET_MARKETS}
+        sample = self._sample(ids)
+        self.assertEqual(
+            common_race_ids(sample, "eligible_clean_point_sample"), ["r1", "r2"]
+        )
+
+    def test_common_race_ids_rejects_target_mismatch(self) -> None:
+        ids = {target: ["r1", "r2"] for target in TARGET_MARKETS}
+        ids["trio"] = ["r1"]
+        sample = self._sample(ids)
+        with self.assertRaisesRegex(ValueError, "target samples differ"):
+            common_race_ids(sample, "eligible_clean_point_sample")
+
+
+class OrderInformationBoundsTest(unittest.TestCase):
+    def test_conservative_difference_uses_opposite_endpoints(self) -> None:
+        rows = []
+        values = {
+            ("exacta", "harville"): (0.20, 0.22),
+            ("exacta", "main"): (0.10, 0.12),
+            ("quinella", "harville"): (0.16, 0.18),
+            ("quinella", "main"): (0.11, 0.13),
+        }
+        for race_id in ("r1", "r2"):
+            for (target, model), (lower, upper) in values.items():
+                rows.append(
+                    {
+                        "race_id": race_id,
+                        "target_market": target,
+                        "model": model,
+                        "tv_lower": lower,
+                        "tv_upper_outer": upper,
+                    }
+                )
+        result = order_information_bounds(pd.DataFrame(rows)).iloc[0]
+        expected_lower = 0.20 - 0.12 - 0.18 + 0.11
+        expected_upper = 0.22 - 0.10 - 0.16 + 0.13
+        self.assertAlmostEqual(result["median_difference_lower"], expected_lower)
+        self.assertAlmostEqual(result["median_difference_upper"], expected_upper)
+        self.assertTrue(result["robust_positive_difference"])
 
 
 if __name__ == "__main__":
