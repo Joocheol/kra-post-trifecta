@@ -48,7 +48,11 @@ if duplicates:
 
 bib = Path("references.bib").read_text(encoding="utf-8")
 bib_keys = set(re.findall(r"@\w+\s*\{\s*([^,\s]+)", bib))
-cite_groups = re.findall(r"\\cite[pt]?\*?(?:\[[^]]*\])?(?:\[[^]]*\])?\{([^}]+)\}", text)
+cite_groups = re.findall(
+    r"\\cite(?:alp|alt|author|num|p|t|year|yearpar)?\*?"
+    r"(?:\[[^]]*\])?(?:\[[^]]*\])?\{([^}]+)\}",
+    text,
+)
 cite_keys = {key.strip() for group in cite_groups for key in group.split(",")}
 missing = sorted(cite_keys - bib_keys)
 if missing:
