@@ -26,7 +26,9 @@ main.pdf
 outputs/data_quality.csv
 outputs/analysis_sample.csv
 
-# Large deterministic race-level main-analysis outputs. Compact summaries and
-# the manifest are tracked; the manifest records SHA-256 for these CSVs.
+# Large deterministic race-level or long-form main-analysis outputs. Compact
+# manuscript-facing summaries are tracked and byte-compared in Paper CI.
 outputs/main_metrics.csv
 outputs/main_metrics_bounds.csv
+outputs/main_heterogeneity.csv
+outputs/main_heterogeneity_b.csv
