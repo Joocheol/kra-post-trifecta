@@ -63,9 +63,9 @@ jobs:
           test -s "$AUDIT_TMP/outputs/analysis_sample.csv"
           echo "PASS: analysis sample and audit artifacts are reproducible"
 
-  main-analysis-smoke:
+  main-analysis-full:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 180
 
     steps:
       - name: Check out repository
@@ -79,19 +79,19 @@ jobs:
       - name: Recreate frozen race membership
         run: python -m analysis.data_audit --strict
 
-      - name: Run donor-safe Panel A smoke test
-        run: python -m analysis.main_analysis --skip-bounds
+      - name: Run full Panel A and Panel B analysis
+        run: python -m analysis.main_analysis
 
-      - name: Upload smoke outputs
+      - name: Upload full analysis outputs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: main-analysis-smoke
+          name: main-analysis-full
           path: |
             outputs/main_*.csv
             outputs/main_analysis_manifest.json
             tables/main_*.tex
           if-no-files-found: error
-          retention-days: 3
+          retention-days: 7
 
   validate-and-build:
     runs-on: ubuntu-latest
