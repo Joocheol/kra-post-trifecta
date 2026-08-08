@@ -20,9 +20,9 @@ from analysis.main_analysis_core import (
     point_metrics,
     point_price_set,
     source_group_index,
-    tv_lower_exact,
     tv_upper_outer,
 )
+from analysis.main_analysis_fast import tv_lower_exact_fast
 
 
 @dataclass(frozen=True)
@@ -177,7 +177,7 @@ def panel_b(
             models["other_race"] = (donor_set, donor_id)
 
         for model, (prediction_set, used_donor) in models.items():
-            lower = tv_lower_exact(actual_set, prediction_set)
+            lower = tv_lower_exact_fast(actual_set, prediction_set)
             upper = tv_upper_outer(actual_set, prediction_set)
             if lower - upper > 1e-7:
                 raise RuntimeError(
