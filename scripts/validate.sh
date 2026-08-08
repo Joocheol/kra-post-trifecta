@@ -22,7 +22,7 @@ done
 
 git diff --check
 
-if rg -n 'TODO|FIXME|TBD|작성 예정|추후 작성' \
+if grep -RInE 'TODO|FIXME|TBD|작성 예정|추후 작성' \
   main.tex preamble.tex sections references.bib; then
   echo "FAIL: unresolved manuscript marker found." >&2
   exit 1
@@ -58,7 +58,7 @@ print(f"PASS: {len(tex_paths)} TeX files, {len(labels)} unique labels, {len(cite
 PY
 
 if [[ -f main.log ]]; then
-  if rg -n 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined|Overfull \\hbox' main.log; then
+  if grep -nE 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined|Overfull \\hbox' main.log; then
     echo "FAIL: LaTeX diagnostic warning found in main.log." >&2
     exit 1
   fi
