@@ -55,6 +55,13 @@ jobs:
       - name: Reject LaTeX warnings after build
         run: bash scripts/validate.sh
 
+      - name: Install PDF text extraction tools
+        run: |
+          apt-get update
+          apt-get install --no-install-recommends -y \
+            poppler-data \
+            poppler-utils
+
       - name: Verify Korean text extraction
         run: |
           test -s main.pdf
