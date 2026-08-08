@@ -99,6 +99,7 @@ jobs:
             outputs/main_sample_selection.csv \
             outputs/main_sample_composition.csv \
             outputs/main_sample_tail.csv \
+            outputs/main_heterogeneity_summary.csv \
             tables/main_panel_a.tex \
             tables/main_panel_b.tex \
             tables/main_benchmark_comparison.tex \
