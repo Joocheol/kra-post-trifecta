@@ -222,6 +222,9 @@ def audit_market(
     if market != "win":
         columns.append("is_cancel")
     frame = read_parquets(data_root, market, columns=columns)
+    orphan_mask = ~frame["race_id"].isin(race_codes)
+    orphan_race_ids = int(frame.loc[orphan_mask, "race_id"].nunique())
+    orphan_rows = int(orphan_mask.sum())
     odds = pd.to_numeric(frame["odds"], errors="coerce").to_numpy(dtype=float)
     missing_odds = np.isnan(odds)
     nonfinite_odds = ~np.isfinite(odds) & ~missing_odds
@@ -331,6 +334,8 @@ def audit_market(
         & result["cancelled_combination_rows"].eq(0)
     )
     result["uncapped"] = result["capped_odds_rows"].eq(0)
+    result["orphan_race_ids_detected"] = orphan_race_ids
+    result["orphan_rows_detected"] = orphan_rows
 
     result = result.drop(columns=["n_valid_horses"])
     return result.add_prefix(f"{market}_")
@@ -518,18 +523,25 @@ def write_summary(
             ).sum()
         )
         capped = int((in_scope & ~quality[f"{market}_uncapped"]).sum())
-        all_complete &= complete == int(in_scope.sum()) and usable == int(in_scope.sum())
+        orphan_ids = int(quality[f"{market}_orphan_race_ids_detected"].iloc[0])
+        all_complete &= (
+            complete == int(in_scope.sum())
+            and usable == int(in_scope.sum())
+            and orphan_ids == 0
+        )
         lines.append(
             f"- `{market}`: 완전 조합 {complete:,}경주, 양수·유한 배당 {usable:,}경주, "
-            f"상한 포함 {capped:,}경주"
+            f"상한 포함 {capped:,}경주, 고아 race_id {orphan_ids:,}개"
         )
 
-    clean_counts = sample.groupby("target_market")["eligible_clean_point_sample"].sum()
-    censored_counts = sample.groupby("target_market")[
-        "eligible_capped_interval_sample"
-    ].sum()
-    common_clean = int(clean_counts.min())
-    common_censored = int(censored_counts.max())
+    scope_counts = quality.loc[
+        ~quality["in_date_scope"], "scope_exclusion_reason"
+    ].value_counts()
+    if not scope_counts.empty:
+        scope_text = ", ".join(
+            f"{reason} {int(count):,}경주" for reason, count in scope_counts.items()
+        )
+        lines.append(f"- 날짜 범위 제외 사유: {scope_text}")
     lines.extend(
         [
             "",
@@ -538,8 +550,18 @@ def write_summary(
                 if all_complete
                 else "- 지원집합·키·배당 유효성: **일부 실패 — data_quality.csv 확인 필요**"
             ),
-            f"- 삼쌍승 상한의 영향을 받지 않는 clean point sample: **{common_clean:,}경주**",
-            f"- 상한 때문에 구간·부분식별이 필요한 표본: **{common_censored:,}경주**",
+            "- 목표 승식별 최종 분석표본:",
+        ]
+    )
+    for target in TARGET_MARKETS:
+        target_sample = sample[sample["target_market"].eq(target)]
+        clean = int(target_sample["eligible_clean_point_sample"].sum())
+        censored = int(target_sample["eligible_capped_interval_sample"].sum())
+        lines.append(
+            f"  - `{target}`: clean point {clean:,}경주, capped interval {censored:,}경주"
+        )
+    lines.extend(
+        [
             "",
             "## 분석상 위험과 처리",
             "",
@@ -641,6 +663,21 @@ def write_manifest(
         "schema_version": 1,
         "candidate_races": len(quality),
         "in_date_scope_races": int(quality["in_date_scope"].sum()),
+        "scope_exclusions": {
+            reason: int(count)
+            for reason, count in quality.loc[
+                ~quality["in_date_scope"], "scope_exclusion_reason"
+            ].value_counts().sort_index().items()
+        },
+        "orphan_records": {
+            market: {
+                "race_ids": int(
+                    quality[f"{market}_orphan_race_ids_detected"].iloc[0]
+                ),
+                "rows": int(quality[f"{market}_orphan_rows_detected"].iloc[0]),
+            }
+            for market in ANALYSIS_MARKETS
+        },
         "artifacts": {
             name: {
                 "rows": rows,
@@ -685,6 +722,12 @@ def strict_failures(quality: pd.DataFrame) -> list[str]:
     if invalid_horses:
         failures.append(f"invalid valid-horse records: {invalid_horses}")
     for market in ANALYSIS_MARKETS:
+        orphan_race_ids = int(quality[f"{market}_orphan_race_ids_detected"].iloc[0])
+        orphan_rows = int(quality[f"{market}_orphan_rows_detected"].iloc[0])
+        if orphan_race_ids or orphan_rows:
+            failures.append(
+                f"{market} orphan records: {orphan_race_ids} race IDs, {orphan_rows} rows"
+            )
         incomplete = int((in_scope & ~quality[f"{market}_complete_support"]).sum())
         invalid_odds = int((in_scope & ~quality[f"{market}_positive_finite_odds"]).sum())
         if incomplete:
