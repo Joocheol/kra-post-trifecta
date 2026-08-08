@@ -79,8 +79,8 @@ jobs:
       - name: Recreate frozen race membership
         run: python -m analysis.data_audit --strict
 
-      - name: Run bounded main-analysis smoke test
-        run: python -m analysis.main_analysis --max-races 200
+      - name: Run donor-safe Panel A smoke test
+        run: python -m analysis.main_analysis --skip-bounds
 
       - name: Upload smoke outputs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
