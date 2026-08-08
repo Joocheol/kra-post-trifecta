@@ -19,6 +19,7 @@ from analysis.main_analysis import (
     tv_lower_exact,
     tv_upper_outer,
 )
+from analysis.main_analysis_core import aggregate_point, choose_other_race
 from analysis.main_analysis_p3 import order_information_bounds
 from analysis.main_analysis_runner import common_race_ids
 
@@ -78,6 +79,18 @@ class PriceSetTest(unittest.TestCase):
 
 
 class MappingTest(unittest.TestCase):
+    @staticmethod
+    def _trifecta_frame(horses: list[int]) -> pd.DataFrame:
+        rows = []
+        for i in horses:
+            for j in horses:
+                for k in horses:
+                    if len({i, j, k}) == 3:
+                        rows.append((i, j, k))
+        return pd.DataFrame(
+            sorted(rows), columns=["first_no", "second_no", "third_no"]
+        )
+
     def test_trifecta_to_targets(self) -> None:
         source = pd.DataFrame(
             {
@@ -102,21 +115,43 @@ class MappingTest(unittest.TestCase):
 
     def test_harville_sums_to_one(self) -> None:
         horses = [1, 2, 3, 4]
-        rows = []
-        for i in horses:
-            for j in horses:
-                for k in horses:
-                    if len({i, j, k}) == 3:
-                        rows.append((i, j, k))
-        source = pd.DataFrame(
-            rows, columns=["first_no", "second_no", "third_no"]
-        )
+        source = self._trifecta_frame(horses)
         win = pd.DataFrame(
             {"horse_no": horses, "odds": [2.0, 3.0, 4.0, 5.0]}
         )
         q = harville_trifecta(source, win)
         self.assertAlmostEqual(float(q.sum()), 1.0, places=12)
         self.assertTrue(np.all(q > 0))
+
+    def test_other_race_transfer_is_rank_aligned_with_gapped_horse_numbers(self) -> None:
+        anchor_horses = [1, 3, 7, 10]
+        donor_horses = [2, 5, 9, 14]
+        anchor_source = self._trifecta_frame(anchor_horses)
+        donor_source = self._trifecta_frame(donor_horses)
+        anchor_exacta = pd.DataFrame(
+            sorted((i, j) for i in anchor_horses for j in anchor_horses if i != j),
+            columns=["first_no", "second_no"],
+        )
+        donor_exacta = pd.DataFrame(
+            sorted((i, j) for i in donor_horses for j in donor_horses if i != j),
+            columns=["first_no", "second_no"],
+        )
+        anchor_groups = source_group_index(anchor_source, anchor_exacta, "exacta")
+        donor_groups = source_group_index(donor_source, donor_exacta, "exacta")
+        np.testing.assert_array_equal(anchor_groups, donor_groups)
+
+        chosen = choose_other_race("anchor", ["anchor", "donor"], "B")
+        self.assertEqual(chosen, "donor")
+        donor_weights = np.zeros(len(donor_source))
+        donor_weights[0] = 1.0
+        transferred = aggregate_point(
+            donor_weights, anchor_groups, len(anchor_exacta)
+        )
+        donor_native = aggregate_point(
+            donor_weights, donor_groups, len(donor_exacta)
+        )
+        np.testing.assert_allclose(transferred, donor_native)
+        self.assertEqual(int(np.argmax(transferred)), 0)
 
 
 class MetricTest(unittest.TestCase):
