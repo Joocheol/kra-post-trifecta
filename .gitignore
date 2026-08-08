@@ -5,3 +5,18 @@ __pycache__/
 *.pyc
 *.zip
 .DS_Store
+
+# LaTeX build products
+main.pdf
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+.ai-review-input/

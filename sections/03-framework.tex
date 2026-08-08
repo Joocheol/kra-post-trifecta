@@ -1,0 +1,89 @@
+\section{주분석: 가격측도와 교차풀 제약}
+
+\subsection{게시가격과 삼쌍승식 상태분포}
+
+경주 $r$의 유효 출전마 집합을 $N_r$, 유효 출전마 수를 $n_r=|N_r|$라 하고,
+순서 있는 상위 3마리의 상태공간을
+\[
+  \Omega_r=\{(i,j,k)\in N_r^3:i,j,k\text{는 서로 다르다}\}
+\]
+로 둔다. 삼쌍승식 상태 $(i,j,k)$의 게시 총지급배율을 $D^{\T}_{r,ijk}$라 하자.
+KRA 배당률은 원금을 포함하므로 단위지급 청구권의 게시가격은
+$x^{\T}_{r,ijk}=1/D^{\T}_{r,ijk}$다. 순수익 배당을 $O/1$로 표시하는 문헌의
+가격 $1/(O+1)$과 같은 개념이지만, 표기법은 구분한다.
+
+주분석에서는 역배당률을 경주와 풀 안에서 정규화한
+\begin{equation}
+  q^{\T}_{r,ijk}
+  =\frac{x^{\T}_{r,ijk}}
+  {\sum_{(a,b,c)\in\Omega_r}x^{\T}_{r,abc}}
+  \label{eq:trifecta-state-price}
+\end{equation}
+을 삼쌍승식 정규화 가격측도라 부른다. 이상적인 패리뮤추얼 풀에서 이는 풀의
+조합별 베팅금액 비중과 대응한다. 객관적 순위확률이나 Arrow--Debreu 상태가격을
+복원한다고 전제하지 않는다. 정규화는 풀 전체에 공통으로 곱해지는 공제 요인을
+제거하지만 조합별 반올림, 유동성 차이와 마감 직전 베팅의 영향은 제거하지 않는다.
+
+\subsection{주변화 연산}
+
+삼쌍승식 분포가 주어지면 단승식, 쌍승식, 복승식의 재구성 가격은 각각
+\begin{align}
+  \widehat p^{\W\leftarrow\T}_{r,i}
+    &=\sum_{j\ne i}\sum_{k\notin\{i,j\}}q^{\T}_{r,ijk},
+    \label{eq:win-marginal}\\
+  \widehat p^{\Eact\leftarrow\T}_{r,ij}
+    &=\sum_{k\notin\{i,j\}}q^{\T}_{r,ijk},
+    \label{eq:exacta-marginal}\\
+  \widehat p^{\Q\leftarrow\T}_{r,\{i,j\}}
+    &=\sum_{k\notin\{i,j\}}
+      \left(q^{\T}_{r,ijk}+q^{\T}_{r,jik}\right)
+    \label{eq:quinella-marginal}
+\end{align}
+이다. 삼복승식은 세 말의 여섯 순열을 합한다.
+\begin{equation}
+  \widehat p^{\Trio\leftarrow\T}_{r,\{i,j,k\}}
+  =\sum_{\pi\in S_3}q^{\T}_{r,\pi(i,j,k)}.
+  \label{eq:trio-marginal}
+\end{equation}
+
+각 하위 승식 $m$의 게시가격도 같은 방식으로 정규화하여 $p^m_r$를 만든다.
+$A^m_r$를 식 \eqref{eq:win-marginal}--\eqref{eq:trio-marginal}의 합산을 나타내는
+0--1 incidence matrix라 하면 완전한 교차풀 제약은
+\begin{equation}
+  p^m_r=A^m_r q^{\T}_r
+  \label{eq:cross-market-restriction}
+\end{equation}
+이다. 실제 분석은 등식의 성립을 전제하지 않고 좌우의 거리를 측정한다.
+
+\subsection{공통 가격측도 해석의 유지가정}
+
+식 \eqref{eq:cross-market-restriction}을 하나의 공통 가격측도에서 나온 주변분포로
+해석하려면 네 가지 유지가정이 필요하다. 첫째, 각 풀의 최종 가격이 같은
+정보시점을 반영하고 취소마와 지급사건의 정의가 일치해야 한다. 둘째, 공제율은
+풀 안에서 공통 배율로 작용하고 반올림·절사·적중자 없음 규칙이 조합별
+상대가격을 크게 바꾸지 않아야 한다. 셋째, 별도 풀의 참가자 구성과 대표적
+신념·평가기능이 같거나 안정적으로 연결되어야 한다. 넷째, 유동성과 최소
+베팅단위가 풀별 비선형 왜곡을 만들지 않아야 한다.
+
+이 가정이 모두 성립하지 않아도 주변화 연산 자체는 정확하다. 다만 이때 거리는
+서로 다른 풀 가격측도의 \emph{정적 정렬 정도}이며, 무차익 상태가격의 존재나
+개별 참가자의 합리성을 검정하지 않는다. 이 구분 때문에 본 논문은
+``공통 상태가격을 입증한다''보다 ``공통 가격측도와의 양립 정도를 측정한다''고
+표현한다.
+
+\subsection{Harville 기준모형}
+
+단승식 정규화 가격 $p^{\W}_{r,i}$만을 이용하는 Harville형 순차
+모형\citep{harville1973}은
+\begin{equation}
+  q^{H}_{r,ijk}
+  =p^{\W}_{r,i}
+   \frac{p^{\W}_{r,j}}{1-p^{\W}_{r,i}}
+   \frac{p^{\W}_{r,k}}{1-p^{\W}_{r,i}-p^{\W}_{r,j}}
+  \label{eq:harville}
+\end{equation}
+로 정의한다. 이는 한 말이 먼저 들어온 뒤 남은 말의 상대확률이 비례적으로
+재조정된다는 강한 가정을 둔다. 삼쌍승식 가격측도의 주변분포가
+$A^m_rq^H_r$보다 실제 쌍승·복승·삼복승 가격에 더 가깝다면, 그 차이를
+삼쌍승식 가격이 담은 순위 의존 구조의 증분으로 해석한다. 두 모형 모두
+시장가격에서 출발하므로 이는 인과적 정보효과가 아니라 가격 설명력의 차이다.
