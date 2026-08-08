@@ -21,6 +21,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  analysis-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install analysis dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Reproduce and verify the frozen sample
+        shell: bash
+        run: |
+          AUDIT_TMP="$(mktemp -d)"
+          python -m analysis.data_audit \
+            --strict \
+            --output-dir "$AUDIT_TMP/outputs" \
+            --table-dir "$AUDIT_TMP/tables"
+
+          for path in \
+            outputs/sample_flow.csv \
+            outputs/data_audit_summary.md \
+            outputs/data_audit_manifest.json \
+            tables/data_quality_summary.tex
+          do
+            test -s "$path"
+            if ! cmp -s "$path" "$AUDIT_TMP/$path"; then
+              echo "FAIL: generated analysis artifact is stale: $path" >&2
+              sha256sum "$path" "$AUDIT_TMP/$path" >&2
+              exit 1
+            fi
+          done
+          test -s "$AUDIT_TMP/outputs/data_quality.csv"
+          test -s "$AUDIT_TMP/outputs/analysis_sample.csv"
+          echo "PASS: analysis sample and audit artifacts are reproducible"
+
   validate-and-build:
     runs-on: ubuntu-latest
     timeout-minutes: 30

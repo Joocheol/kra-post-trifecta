@@ -1,5 +1,81 @@
 \section{주분석의 실증전략}
 
+\subsection{공동 주결과의 두 패널}
+
+Panel A는 삼쌍승과 비교 승식의 배당이 모두 상한에 걸리지 않은 3,321개 경주에서
+점가격을 비교한다. Panel B는 완전 지지집합을 가진 전체 19,284개 경주에서
+게시 배당의 검열·반올림 규칙과 양립하는 가격집합을 사용한다. 경주 $r$과 승식
+$m$에서 조합 $c$의 실제 총지급배율이 속하는 구간을
+$[\underline D^m_{r,c},\overline D^m_{r,c}]$라 하자. 상한 조합에는
+$\overline D^m_{r,c}=\infty$를, 비상한 조합에는 게시 반올림 규칙이 허용하는
+유한한 양 끝점을 사용한다. 원시 역배당률의 구간은
+\[
+  [\ell^m_{r,c},u^m_{r,c}]
+  =\left[\frac{1}{\overline D^m_{r,c}},
+          \frac{1}{\underline D^m_{r,c}}\right],
+  \qquad \frac{1}{\infty}=0
+\]
+이다. 이를 풀 안에서 정규화한 허용 가격집합을
+\begin{equation}
+  \mathcal P^m_r
+  =\left\{p\in\Delta^{C_{r,m}-1}:\quad
+    \exists s\ge 0\ \text{s.t.}\quad
+    s\ell^m_{r,c}\le p_c\le su^m_{r,c}\ \forall c\right\}
+  \label{eq:interval-price-set}
+\end{equation}
+로 정의한다. 여기서 $s$는 원시 역배당률 합의 역수다. 이 표현은 심플렉스
+제약과 성분별 구간을 동시에 보존하며 선형 부등식으로 계산할 수 있다.
+
+Panel B의 확정적 공동 주지표는 TV와 이에 비례하는 MAE로 제한한다. TV의
+식별집합 하한은
+\[
+  \underline{\operatorname{TV}}_{r,m}
+  =\min_{p\in\mathcal P^m_r,\,q\in\mathcal P^T_r}
+    \frac12\sum_c\left|p_c-(A^m_rq)_c\right|
+\]
+이며 절댓값 보조변수를 사용한 선형계획으로 정확히 계산한다. 각 성분차
+$p_c-(A^m_rq)_c$의 최솟값과 최댓값을 별도의 선형계획으로 구해
+$[a_{r,m,c},b_{r,m,c}]$라 하고,
+\[
+  \overline{\operatorname{TV}}^{\rm out}_{r,m}
+  =\min\left\{1,\frac12\sum_c
+    \max\bigl(|a_{r,m,c}|,|b_{r,m,c}|\bigr)\right\}
+\]
+를 인증된 보수적 상한으로 사용한다. 이는 sharp upper bound라고 부르지 않으며,
+참 식별집합이 이 구간 안에 놓인다는 보장만 사용한다. MAE 경계는 TV 경계에
+$2/C_{r,m}$를 곱한다.
+
+각 기준모형에도 같은 방식으로 TV의 하한과 인증 상한을 계산한다. 삼쌍승 타경주
+기준의 donor가 상한 경주이면 donor의 $\mathcal P^T_{r'}$ 전체를 포함하며 점값으로
+대체하지 않는다. 삼쌍승 주변가격이 기준보다 강건하게 우월하다는 판정은 보수적으로
+$\overline{\operatorname{TV}}^{\mathrm{out}}_{\mathrm{main}}
+ <\underline{\operatorname{TV}}_{\mathrm{benchmark}}$일 때만 내린다. 구간이 겹치면 순위를
+식별하지 못한 것으로 보고한다. Jensen--Shannon 발산, log-ratio 거리와
+calibration은 Panel A의 주지표로 유지하되, Panel B에서는 사전 고정한 허용
+가격 시나리오의 설명적 민감도 분석으로만 제시하고 확정 판정에는 사용하지 않는다.
+표본불확실성은 경주 단위 부트스트랩으로 각 경계에 반영한다.
+
+패널 집계는 조합 수와 무관하게 경주에 같은 가중치를 주고 중앙값을 사용한다.
+Panel A에서 기준모형 $b$ 대비 경주별 개선폭을
+\[
+  \Delta^A_{r,m,b}
+  =\operatorname{TV}_{r,m,b}-\operatorname{TV}_{r,m,\mathrm{main}}
+\]
+으로 정의한다. Panel B에서는 참 개선폭의 보수적 하한
+\[
+  \underline\Delta^B_{r,m,b}
+  =\underline{\operatorname{TV}}_{r,m,b}
+   -\overline{\operatorname{TV}}^{\mathrm{out}}_{r,m,\mathrm{main}}
+\]
+을 사용한다. Panel A와 Panel B의 기준모형 우위는 각각
+$\operatorname{median}_r(\Delta^A_{r,m,b})$와
+$\operatorname{median}_r(\underline\Delta^B_{r,m,b})$의 경주 단위
+부트스트랩 95\% 신뢰구간 하한이 0보다 클 때만 인정한다. 절대오차가 경제적으로
+작다는 판정은 TV의 운영적 의미에 따라 $\tau_{\rm TV}=0.05$를 사전 기준으로
+두고, Panel A 중앙값과 Panel B의 경주별 인증 상한 중앙값의 95\% 신뢰구간
+상한이 모두 $\tau_{\rm TV}$보다 작을 때만 내린다. $0.025$와 $0.10$은 사전
+고정 민감도 기준으로 함께 보고한다.
+
 \subsection{주요 평가량}
 
 승식 $m$과 경주 $r$에서 실제 정규화 가격 $p^m_r$와 삼쌍승 재구성 가격
@@ -51,6 +127,7 @@ $0\log 0=0$으로 둔다. $\operatorname{MAE}$는 경주 안의 조합별 확률
   \item 단승 정규화 가격으로 식 \eqref{eq:harville}을 만든다.
   \item 같은 경주 안에서 삼쌍승 상태가격을 무작위 순열하여 말의 정체성을 끊는다.
   \item 출전두수가 같은 다른 경주의 삼쌍승 분포를 배정하여 경주 공통정보를 끊는다.
+    Panel B에서 donor가 상한 경주이면 donor의 허용 가격집합 전체를 전파한다.
   \item 모든 가능한 삼쌍승 상태에 균등 질량을 주어 인기 구조 자체의 설명력을 제거한다.
 \end{enumerate}
 
@@ -81,12 +158,13 @@ Jensen--Shannon 발산을 사용하고, 동일 경주를 한 쌍으로 한 평�
 명시한 복합복권 비축약의 구조적 검정이 아니다. 후자는 다음 절의 행동모형에서
 별도로 수행한다.
 
-\subsection{이질성과 강건성}
+\subsection{표본구성, 이질성과 강건성}
 
+가격 정합성 결과에 앞서 Panel A의 clean 경주와 나머지 상한 경주의 출전두수,
+연도, 경마장, 상한 조합 수와 상한 직전 비검열 배당의 꼬리분포를 비교한다.
 교차풀 오차는 출전두수, 연도, 경마장, 주말 여부, 조합의 인기구간별로 나눈다.
-배당률 상한에 걸린 조합, 일부 승식의 판매가 중단된 경주, 적중자가 없어 배당률
-표시 규칙이 달라진 조합은 별도 표본으로 분리한다. 반올림의 영향을 보기 위해
-관측 배당률이 허용하는 역배당률 구간을 이용한 부분식별 범위도 계산한다.
+일부 승식의 판매가 중단된 경주와 적중자가 없어 배당률 표시 규칙이 달라진
+조합은 별도 표본으로 분리한다.
 
 경주별 통계는 중앙값과 사분위범위를 기본으로 보고하고, 보조적 $R^2$가 0.8을
 넘는 경주의 비율과 식 \eqref{eq:calibration}의 기울기가 $[0.9,1.1]$에 드는
@@ -97,3 +175,10 @@ Jensen--Shannon 발산을 사용하고, 동일 경주를 한 쌍으로 한 평�
 삼쌍승 가격과 단승--Harville 가격 중 어느 쪽이 실제 순위를 더 잘 예측하는지
 묻는다. 내부 가격 일관성과 외부 예측 정확도는 서로 다른 가설이므로 같은 표의
 한 계수로 합치지 않는다.
+
+강한 주결론은 Panel A와 Panel B의 사전 고정 중앙값 판정이 같은 방향을
+지지할 때만 내린다. Panel A의 개선폭 중앙값은 유의하게 양수이지만 Panel B의
+보수적 개선폭 하한 중앙값이 유의하게 양수가 아니면 `clean 표본에서만 확인`으로
+제한한다.
+두 패널의 방향이 충돌하면 상한 또는 표본선택 때문에 전체표본 결론이 식별되지
+않는다고 판정한다.

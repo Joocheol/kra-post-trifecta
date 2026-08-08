@@ -20,3 +20,8 @@ main.pdf
 *.toc
 *.xdv
 .ai-review-input/
+
+# Large deterministic data-audit outputs; hashes and row counts are tracked in
+# outputs/data_audit_manifest.json.
+outputs/data_quality.csv
+outputs/analysis_sample.csv
