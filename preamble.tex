@@ -19,16 +19,14 @@
 ]{geometry}
 
 \defaultfontfeatures{Ligatures=TeX}
-\IfFontExistsTF{STIX Two Text}{
-  \setmainfont{STIX Two Text}
-}{
-  \setmainfont{TeX Gyre Termes}
-}
-\IfFontExistsTF{STIX Two Math}{
-  \setmathfont{STIX Two Math}
-}{
-  \setmathfont{Latin Modern Math}
-}
+% The pinned CI image exposes these TeX Live fonts by filename even when
+% fontconfig does not register their family names.
+\setmainfont{STIXTwoText-Regular.otf}[
+  BoldFont=STIXTwoText-Bold.otf,
+  ItalicFont=STIXTwoText-Italic.otf,
+  BoldItalicFont=STIXTwoText-BoldItalic.otf
+]
+\setmathfont{STIXTwoMath-Regular.otf}
 \IfFontExistsTF{KoPubWorld Batang Pro}{
   \setmainhangulfont{KoPubWorld Batang Pro}
   \setsanshangulfont{KoPubWorld Dotum Pro}
