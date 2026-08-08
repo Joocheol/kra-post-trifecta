@@ -98,8 +98,8 @@ sample membership to `outputs/analysis_sample.csv`, the sequential sample counts
 `outputs/sample_flow.csv`, and a compact interpretation to
 `outputs/data_audit_summary.md`. The manuscript-ready audit table is generated at
 `tables/data_quality_summary.tex`. Capped trifecta odds are not silently treated as
-point observations: uncapped races enter the point sample and capped races are
-reserved for interval/partial-identification analysis.
+point observations: the clean-sample point estimates (Panel A) and full-sample
+partial-identification bounds (Panel B) are co-primary results.
 
 The two race-level CSVs are deterministic but intentionally not versioned. Their row
 counts and SHA-256 hashes are frozen in `outputs/data_audit_manifest.json`, and CI
