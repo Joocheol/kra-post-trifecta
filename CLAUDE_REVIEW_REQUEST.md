@@ -1,142 +1,60 @@
-# Independent scope review: extending Snowberg and Wolfers (2010)
+# Claude 재검토 요청: 확정된 두 층 연구설계
 
-## Status and reviewer stance
+## 상태
 
-This file is a review request, not an accepted research-plan change and not evidence for
-the paper's conclusions. Review the proposal as a skeptical referee trying to identify the
-strongest reason to reject it. Do not agree with the proposed framing merely because it is
-presented here. Separate what follows from the currently locked design in
-`RESEARCH_PLAN.md`.
+2026-08-08의 독립 검토는 Snowberg and Wolfers (2010)의 단순한 한국 자료
+재현을 거부하고, Koivuranta and Korhonen (2019)을 명시적으로 포함하는
+``방어 가능한 확장''으로 판정했다. 저자는 그 검토 뒤 다음 두 층 구조를
+채택했다.
 
-## Decision under review
+1. 완전한 삼쌍승 가격벡터를 주변화하는 교차풀 가격 정합성 주분석
+2. 위험선호·확률가중과 복합복권의 3단계 축약 여부를 비교하는 행동모형 확장
 
-Should the project be framed as the following extension?
+현재의 권위 있는 설계 문서는 `RESEARCH_PLAN.md`다. 이 파일은 과거 결정을
+다시 묻는 문서가 아니라, Claude가 변경된 원고와 설계의 구현을 공격적으로
+재검토하기 위한 범위 지정 문서다.
 
-> Extend Snowberg and Wolfers' multi-pool identification strategy to a market in which the
-> complete vector of ordered top-three trifecta odds is observed, using that vector to test
-> cross-pool compatibility with win, exacta, quinella, and trio prices and to study reduction
-> versus sequential evaluation of a three-stage compound lottery.
+## 반드시 확인할 문헌상 기준
 
-The intended contribution is not a Korean replication of the favorite-longshot bias. It is
-the use of the full ordered top-three outcome space to connect several separately cleared
-parimutuel pools through fixed marginalization operators, followed by a behavioral layer
-that asks whether one risk-preference model, one probability-weighting model, or a
-sequential non-reduction model can rationalize prices across all pools.
+- Snowberg and Wolfers (2010)는 단승 자료에서 위험선호와 확률오인 모형을
+  추정하고 exotic 가격으로 이동성을 검정했다. 자료에는 당첨된 exotic 조합의
+  지급배당만 있고 비당첨 조합의 가격은 없었다. 이들의 비축약 모형은 1위
+  확률과 그 조건 아래 2위 확률에 확률가중을 각각 적용한다.
+- Koivuranta and Korhonen (2019)는 핀란드·스웨덴의 완전한 exotic 가격을
+  이용해 당첨조합 선택 문제를 줄였고, 1위와 2위의 순차평가를 지지하는 결과를
+  보고했다. 따라서 ``완전한 exotic 가격의 최초 사용''은 이 논문의 주장이 아니다.
+- KRA의 배당률 $D$는 원금을 포함한 총지급배율이므로 청구권 가격은 $1/D$다.
+  Snowberg and Wolfers의 순수익 배당 $O/1$에서는 같은 가격이 $1/(O+1)$이다.
 
-## Evidence that must anchor the comparison
+## 이번 재검토의 핵심 질문
 
-### Snowberg and Wolfers (2010)
+1. 주분석의 정규화 역배당률을 `pool-implied pricing measure`로 제한한 표현과,
+   이를 공통 가격측도의 주변분포로 해석하는 네 유지가정이 충분히 구분되는가?
+2. 주분석 P1--P4가 행동모형 B1--B3과 중복되지 않으며, 행동모형이 기각되어도
+   주분석의 기여가 독립적으로 남는가?
+3. 조건부 순위확률의 연도 단위 교차적합이 동일 표본을 이용한 순환적 적합을
+   막는가? Harville/Plackett--Luce와 유연한 순위모형의 역할이 공정한가?
+4. M-U, M-R, M-S2, M-S3의 수식이 KRA 총지급배율 표기와 일치하는가?
+5. M-U와 M-R의 관측적 동등성 때문에 실제로 식별되지 않는 주장을 원고가
+   과장하지 않는가?
+6. 삼쌍승의 M-S2와 M-S3가 완전 축약과 구분되는 3단계 검정을 제공하는가?
+   조건부분포의 추정오차가 모형순위로 잘못 전가될 가능성은 통제되는가?
+7. 복승·삼복승에 임의의 사건트리를 부여하지 않고 ordered-market 모형의
+   외부 검증으로 사용하는 방식이 경제적으로 일관적인가?
+8. 배당상한, 반올림, 공제율, 풀별 유동성과 참가자 차이에 대한 부분식별·이동성
+   검정이 가장 강한 예상 거절사유를 막기에 충분한가?
+9. Snowberg--Wolfers와 Koivuranta--Korhonen에 비해 ``상위 3위 전체 상태,
+   다섯 풀, 세 번째 평가단계, 풀 밖 이동성''이라는 기여가 원고에서 정확히
+   제한되어 있는가?
 
-The paper fits risk-love and probability-misperception explanations to win-bet data and
-asks which model better predicts exotic-bet prices. Its data record the winning payoffs in
-exacta, quinella, and trifecta races; the prices of nonwinning exotic combinations are not
-recorded (paper Appendix, Data). It predicts the observed winning exotic payoff using win
-odds and conditional finishing probabilities, first under Harville's conditional-independence
-assumption and then using conditional probabilities estimated from outcomes. It also studies
-the simultaneous relative pricing of the winning exacta and corresponding quinella. Its
-misperception interpretation is tied to a particular sequential failure to reduce compound
-lotteries.
+## 검토 태도와 출력
 
-### Koivuranta and Korhonen (2019)
+저자가 범위를 채택했다는 사실 때문에 구현에 동의하지 말라. 상위권 경제학
+저널의 회의적인 심사자 관점에서 수학, 식별, 표본분할, 모형 비교와 해석의
+가장 강한 실패 지점을 찾는다. 다만 연구범위 자체를 다시 바꾸어야 하는 문제와,
+채택된 범위 안에서 고칠 수 있는 구현 문제를 구분한다.
 
-This is the closest follow-up and must not be omitted from the novelty assessment:
-"Misperception explains favorite-longshot bias: evidence from the Finnish and Swedish
-harness horse race markets," *Empirical Economics* 57, 2149-2160,
-doi:10.1007/s00181-018-1538-0. The publisher abstract says that the data contain a complete
-set of odds for exotic markets; the authors use exotic and win odds to favor misperception
-over risk-love and find evidence that bettors evaluate first and second place sequentially
-rather than reducing the exotic event to a simple lottery. The reviewer must determine
-precisely what remains new after this paper.
-
-### KRA data and the current design
-
-- Separately cleared pools are observed for win, place, quinella, quinella-place, exacta,
-  trifecta, and trio bets.
-- The candidate date-restricted sample contains 19,301 races from 2016-06-10 through
-  2025-12-31, excluding 2020-2021 and 2018-07-01. The final analysis sample is not yet
-  established by reproducible sample-flow output.
-- For a race with valid horse set \(N_r\), the complete trifecta vector covers every ordered
-  state \((i,j,k)\) with distinct horses. The current design normalizes reciprocal total-payout
-  odds within each pool and applies deterministic marginalization matrices to reconstruct
-  win, exacta, quinella, and trio price vectors.
-- KRA odds are total payout multiples \(D\), so the reciprocal-price convention is \(1/D\).
-  Snowberg and Wolfers report net odds \(O/1\), whose contingent-claim price is
-  \(1/(O+1)\). Treating those conventions as identical would be an error.
-- The current primary estimand is internal cross-pool price compatibility, not objective
-  probability, causal information aggregation, profitability, or individual bettor choice.
-- Off-repository preliminary calculations, not yet auditable from this PR, report median
-  race-level auxiliary OLS \(R^2\) values of 0.982 (win), 0.976 (exacta), 0.972 (quinella),
-  and 0.988 (trio) when reconstructing from trifecta prices. Same-field-size race
-  permutations reduce the corresponding fit to roughly 0.003-0.009. These numbers are
-  motivation only; do not validate them or infer a common price measure from them.
-
-## User-provided literature packet
-
-The review package supplied outside the public repository contains the following papers.
-Use this list to locate the relevant line of argument in the manuscript and bibliography;
-do not assume that citing all of them is necessary.
-
-1. Griffith (1949), "Odds Adjustments by American Horse-Race Bettors."
-2. Weitzman (1965), "Utility Analysis and Group Behavior: An Empirical Study."
-3. Ali (1977), "Probability and Utility Estimates for Racetrack Bettors."
-4. Busche and Hall (1988), "An Exception to the Risk Preference Anomaly."
-5. Shin (1991), "Optimal Betting Odds Against Insider Traders."
-6. Vaughan Williams and Paton (1997), "Why is There a Favourite-Longshot Bias in
-   British Racetrack Betting Markets?"
-7. Vaughan Williams and Paton (1998), "Why are some favourite-longshot biases positive
-   and others negative?"
-8. Jullien and Salanie (2000), "Estimating Preferences under Risk: The Case of Racetrack
-   Bettors."
-9. Bruce and Johnson (2000), "Investigating the Roots of the Favourite-Longshot Bias:
-   An Analysis of Decision Making by Supply- and Demand-Side Agents in Parallel Betting
-   Markets."
-10. Walls and Busche (2003), "Broken odds and the favourite-longshot bias in parimutuel
-    betting: a direct test."
-11. Coleman (2004), "New light on the longshot bias."
-12. Winter and Kukuk (2006), "Risk Love and the Favorite-Longshot Bias: Evidence from
-    German Harness Horse Racing."
-13. Sung, Johnson, and Peirson (2012), "Discovering a Profitable Trading Strategy in an
-    Apparently Efficient Market: Exploiting the Actions of Less Informed Traders in
-    Speculative Markets."
-14. Suhonen, Saastamoinen, and Linden (2018), "A dual theory approach to estimating risk
-    preferences in the parimutuel betting market."
-15. Jeong, Kim, and Ro (2019), "On the efficiency of racetrack betting market: a new test
-    for the favourite-longshot bias."
-16. Snowberg and Wolfers (2010), "Explaining the Favorite-Long Shot Bias: Is it Risk-Love
-    or Misperceptions?"
-
-## Questions the review must answer
-
-1. Relative to both Snowberg-Wolfers and Koivuranta-Korhonen, what is genuinely new?
-   Is “ordered top-three states plus five pools” a substantive economic contribution or only
-   a larger accounting exercise?
-2. Is marginalizing normalized reciprocal trifecta odds across separately cleared pools an
-   economically justified cross-market restriction, or merely an arithmetic comparison of
-   different pool-specific pricing measures? State the assumptions needed for a common
-   measure and the interpretation available without them.
-3. Can this design identify risk preferences, probability misperceptions, and compound-
-   lottery non-reduction? If not, specify which objects are not identified and what additional
-   structural restrictions, outcome data, or variation would be required.
-4. What is the correct three-stage analogue of Snowberg and Wolfers' sequential
-   non-reduction model? Which comparisons would distinguish (a) reduction to the joint
-   top-three event, (b) first-place then conditional second/third evaluation, and (c) a generic
-   rank-dependent or probability-weighting model?
-5. Could high \(R^2\) arise mechanically from shared popularity rankings, dimensionality,
-   normalization, or common public information? Evaluate whether TV, Jensen-Shannon,
-   calibration, log-ratio/compositional metrics, Harville/Plackett-Luce, within-race
-   permutation, other-race, and uniform benchmarks are sufficient.
-6. Assess the threats from odds caps (including 9999.9), rounding/truncation, zero-winner
-   payout rules, incomplete support, different takeout, pool liquidity, late betting, and
-   different bettor populations. Which are fatal, partially identifiable, or manageable by
-   robustness analysis?
-7. Give the strongest plausible rejection report and the minimum design that would survive
-   it. End with four explicit lists: claims to retain, claims to weaken or drop, analyses to add,
-   and recommended framing.
-
-## Required review output
-
-Use the repository's validated JSON review format. In the summary, give an overall verdict
-(`reject as framed`, `promising but major redesign`, or `defensible extension`) and directly
-answer the seven questions above. Put concrete design deficiencies in findings. Put only
-genuine author choices in `author_questions`. Do not edit files or assume that the proposed
-scope has already been adopted.
+저장소의 검증된 JSON 형식을 사용한다. 요약에는 (i) 두 층 분리가 성공했는지,
+(ii) 현재 행동모형으로 실제 식별되는 대비, (iii) 가장 강한 남은 거절사유를
+명시한다. 구체적인 결함은 findings에, 저자 선택이 필요한 사안만
+author_questions에 둔다. 파일을 수정하거나 커밋·푸시·라벨·병합하지 않는다.
