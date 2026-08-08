@@ -82,6 +82,9 @@ jobs:
       - name: Run full Panel A and Panel B analysis
         run: python -m analysis.main_analysis
 
+      - name: Render sample-selection diagnostics table
+        run: python -m analysis.main_analysis_selection
+
       - name: Verify frozen compact main-analysis results
         shell: bash
         run: |
@@ -94,11 +97,14 @@ jobs:
             outputs/main_order_information_bounds.csv \
             outputs/main_threshold_decisions.csv \
             outputs/main_sample_selection.csv \
+            outputs/main_sample_composition.csv \
+            outputs/main_sample_tail.csv \
             tables/main_panel_a.tex \
             tables/main_panel_b.tex \
             tables/main_benchmark_comparison.tex \
             tables/main_order_information.tex \
-            tables/main_order_information_bounds.tex
+            tables/main_order_information_bounds.tex \
+            tables/main_sample_selection.tex
           echo "PASS: frozen compact main-analysis results are reproducible"
 
       - name: Upload full analysis outputs
