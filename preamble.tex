@@ -35,7 +35,18 @@
   \IfFontExistsTF{Noto Serif CJK KR}{
     \setmainhangulfont{Noto Serif CJK KR}
     \setsanshangulfont{Noto Sans CJK KR}
-  }{}
+  }{
+    \setmainhangulfont{UnBatang.ttf}[
+      BoldFont=UnBatangBold.ttf,
+      ItalicFont=UnBatang.ttf,
+      BoldItalicFont=UnBatangBold.ttf
+    ]
+    \setsanshangulfont{UnDotum.ttf}[
+      BoldFont=UnDotumBold.ttf,
+      ItalicFont=UnDotum.ttf,
+      BoldItalicFont=UnDotumBold.ttf
+    ]
+  }
 }
 
 \definecolor{LinkBlue}{HTML}{2457A6}

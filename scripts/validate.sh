@@ -58,7 +58,7 @@ print(f"PASS: {len(tex_paths)} TeX files, {len(labels)} unique labels, {len(cite
 PY
 
 if [[ -f main.log ]]; then
-  if grep -nE 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined|Overfull \\hbox' main.log; then
+  if grep -nE 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined|Overfull \\hbox|LaTeX Font Warning' main.log; then
     echo "FAIL: LaTeX diagnostic warning found in main.log." >&2
     exit 1
   fi
