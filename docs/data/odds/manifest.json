@@ -1,0 +1,6795 @@
+{
+  "dates": [
+    {
+      "date": "2016-06-10",
+      "file": "data/odds/2016-06-10.json.gz",
+      "rows": 18027,
+      "size_bytes": 92792
+    },
+    {
+      "date": "2016-06-11",
+      "file": "data/odds/2016-06-11.json.gz",
+      "rows": 21461,
+      "size_bytes": 113768
+    },
+    {
+      "date": "2016-06-12",
+      "file": "data/odds/2016-06-12.json.gz",
+      "rows": 19387,
+      "size_bytes": 101588
+    },
+    {
+      "date": "2016-06-17",
+      "file": "data/odds/2016-06-17.json.gz",
+      "rows": 20180,
+      "size_bytes": 107127
+    },
+    {
+      "date": "2016-06-18",
+      "file": "data/odds/2016-06-18.json.gz",
+      "rows": 20715,
+      "size_bytes": 109531
+    },
+    {
+      "date": "2016-06-19",
+      "file": "data/odds/2016-06-19.json.gz",
+      "rows": 21261,
+      "size_bytes": 113871
+    },
+    {
+      "date": "2016-06-24",
+      "file": "data/odds/2016-06-24.json.gz",
+      "rows": 17015,
+      "size_bytes": 90332
+    },
+    {
+      "date": "2016-06-25",
+      "file": "data/odds/2016-06-25.json.gz",
+      "rows": 21806,
+      "size_bytes": 115807
+    },
+    {
+      "date": "2016-06-26",
+      "file": "data/odds/2016-06-26.json.gz",
+      "rows": 23132,
+      "size_bytes": 119421
+    },
+    {
+      "date": "2016-07-01",
+      "file": "data/odds/2016-07-01.json.gz",
+      "rows": 17440,
+      "size_bytes": 93501
+    },
+    {
+      "date": "2016-07-02",
+      "file": "data/odds/2016-07-02.json.gz",
+      "rows": 12910,
+      "size_bytes": 73965
+    },
+    {
+      "date": "2016-07-03",
+      "file": "data/odds/2016-07-03.json.gz",
+      "rows": 20285,
+      "size_bytes": 105769
+    },
+    {
+      "date": "2016-07-08",
+      "file": "data/odds/2016-07-08.json.gz",
+      "rows": 16781,
+      "size_bytes": 90532
+    },
+    {
+      "date": "2016-07-09",
+      "file": "data/odds/2016-07-09.json.gz",
+      "rows": 18699,
+      "size_bytes": 102694
+    },
+    {
+      "date": "2016-07-10",
+      "file": "data/odds/2016-07-10.json.gz",
+      "rows": 12542,
+      "size_bytes": 69285
+    },
+    {
+      "date": "2016-07-15",
+      "file": "data/odds/2016-07-15.json.gz",
+      "rows": 16870,
+      "size_bytes": 91678
+    },
+    {
+      "date": "2016-07-16",
+      "file": "data/odds/2016-07-16.json.gz",
+      "rows": 24812,
+      "size_bytes": 132556
+    },
+    {
+      "date": "2016-07-17",
+      "file": "data/odds/2016-07-17.json.gz",
+      "rows": 18563,
+      "size_bytes": 99350
+    },
+    {
+      "date": "2016-07-22",
+      "file": "data/odds/2016-07-22.json.gz",
+      "rows": 23963,
+      "size_bytes": 127076
+    },
+    {
+      "date": "2016-07-23",
+      "file": "data/odds/2016-07-23.json.gz",
+      "rows": 18417,
+      "size_bytes": 101395
+    },
+    {
+      "date": "2016-07-24",
+      "file": "data/odds/2016-07-24.json.gz",
+      "rows": 20798,
+      "size_bytes": 109869
+    },
+    {
+      "date": "2016-07-29",
+      "file": "data/odds/2016-07-29.json.gz",
+      "rows": 11500,
+      "size_bytes": 63818
+    },
+    {
+      "date": "2016-07-30",
+      "file": "data/odds/2016-07-30.json.gz",
+      "rows": 21380,
+      "size_bytes": 113045
+    },
+    {
+      "date": "2016-07-31",
+      "file": "data/odds/2016-07-31.json.gz",
+      "rows": 25331,
+      "size_bytes": 129276
+    },
+    {
+      "date": "2016-08-05",
+      "file": "data/odds/2016-08-05.json.gz",
+      "rows": 11814,
+      "size_bytes": 65525
+    },
+    {
+      "date": "2016-08-06",
+      "file": "data/odds/2016-08-06.json.gz",
+      "rows": 8336,
+      "size_bytes": 46586
+    },
+    {
+      "date": "2016-08-07",
+      "file": "data/odds/2016-08-07.json.gz",
+      "rows": 18560,
+      "size_bytes": 97776
+    },
+    {
+      "date": "2016-08-12",
+      "file": "data/odds/2016-08-12.json.gz",
+      "rows": 13050,
+      "size_bytes": 71064
+    },
+    {
+      "date": "2016-08-13",
+      "file": "data/odds/2016-08-13.json.gz",
+      "rows": 23466,
+      "size_bytes": 117873
+    },
+    {
+      "date": "2016-08-14",
+      "file": "data/odds/2016-08-14.json.gz",
+      "rows": 19407,
+      "size_bytes": 102956
+    },
+    {
+      "date": "2016-08-19",
+      "file": "data/odds/2016-08-19.json.gz",
+      "rows": 18849,
+      "size_bytes": 102219
+    },
+    {
+      "date": "2016-08-20",
+      "file": "data/odds/2016-08-20.json.gz",
+      "rows": 30561,
+      "size_bytes": 159551
+    },
+    {
+      "date": "2016-08-21",
+      "file": "data/odds/2016-08-21.json.gz",
+      "rows": 25030,
+      "size_bytes": 128765
+    },
+    {
+      "date": "2016-08-26",
+      "file": "data/odds/2016-08-26.json.gz",
+      "rows": 16837,
+      "size_bytes": 92981
+    },
+    {
+      "date": "2016-08-27",
+      "file": "data/odds/2016-08-27.json.gz",
+      "rows": 28080,
+      "size_bytes": 149169
+    },
+    {
+      "date": "2016-08-28",
+      "file": "data/odds/2016-08-28.json.gz",
+      "rows": 20029,
+      "size_bytes": 108394
+    },
+    {
+      "date": "2016-09-02",
+      "file": "data/odds/2016-09-02.json.gz",
+      "rows": 24729,
+      "size_bytes": 130373
+    },
+    {
+      "date": "2016-09-03",
+      "file": "data/odds/2016-09-03.json.gz",
+      "rows": 22622,
+      "size_bytes": 123778
+    },
+    {
+      "date": "2016-09-04",
+      "file": "data/odds/2016-09-04.json.gz",
+      "rows": 21466,
+      "size_bytes": 113834
+    },
+    {
+      "date": "2016-09-09",
+      "file": "data/odds/2016-09-09.json.gz",
+      "rows": 28109,
+      "size_bytes": 143832
+    },
+    {
+      "date": "2016-09-10",
+      "file": "data/odds/2016-09-10.json.gz",
+      "rows": 34335,
+      "size_bytes": 176038
+    },
+    {
+      "date": "2016-09-11",
+      "file": "data/odds/2016-09-11.json.gz",
+      "rows": 32059,
+      "size_bytes": 157116
+    },
+    {
+      "date": "2016-09-23",
+      "file": "data/odds/2016-09-23.json.gz",
+      "rows": 32651,
+      "size_bytes": 158441
+    },
+    {
+      "date": "2016-09-24",
+      "file": "data/odds/2016-09-24.json.gz",
+      "rows": 36042,
+      "size_bytes": 184761
+    },
+    {
+      "date": "2016-09-25",
+      "file": "data/odds/2016-09-25.json.gz",
+      "rows": 36746,
+      "size_bytes": 182613
+    },
+    {
+      "date": "2016-09-30",
+      "file": "data/odds/2016-09-30.json.gz",
+      "rows": 21194,
+      "size_bytes": 111590
+    },
+    {
+      "date": "2016-10-01",
+      "file": "data/odds/2016-10-01.json.gz",
+      "rows": 22595,
+      "size_bytes": 122820
+    },
+    {
+      "date": "2016-10-02",
+      "file": "data/odds/2016-10-02.json.gz",
+      "rows": 24714,
+      "size_bytes": 131038
+    },
+    {
+      "date": "2016-10-07",
+      "file": "data/odds/2016-10-07.json.gz",
+      "rows": 17301,
+      "size_bytes": 91930
+    },
+    {
+      "date": "2016-10-08",
+      "file": "data/odds/2016-10-08.json.gz",
+      "rows": 20116,
+      "size_bytes": 111027
+    },
+    {
+      "date": "2016-10-09",
+      "file": "data/odds/2016-10-09.json.gz",
+      "rows": 22338,
+      "size_bytes": 119002
+    },
+    {
+      "date": "2016-10-14",
+      "file": "data/odds/2016-10-14.json.gz",
+      "rows": 17062,
+      "size_bytes": 93578
+    },
+    {
+      "date": "2016-10-15",
+      "file": "data/odds/2016-10-15.json.gz",
+      "rows": 19066,
+      "size_bytes": 104336
+    },
+    {
+      "date": "2016-10-16",
+      "file": "data/odds/2016-10-16.json.gz",
+      "rows": 22379,
+      "size_bytes": 117680
+    },
+    {
+      "date": "2016-10-21",
+      "file": "data/odds/2016-10-21.json.gz",
+      "rows": 21364,
+      "size_bytes": 109026
+    },
+    {
+      "date": "2016-10-22",
+      "file": "data/odds/2016-10-22.json.gz",
+      "rows": 19964,
+      "size_bytes": 105450
+    },
+    {
+      "date": "2016-10-23",
+      "file": "data/odds/2016-10-23.json.gz",
+      "rows": 21342,
+      "size_bytes": 117137
+    },
+    {
+      "date": "2016-10-28",
+      "file": "data/odds/2016-10-28.json.gz",
+      "rows": 23191,
+      "size_bytes": 120062
+    },
+    {
+      "date": "2016-10-29",
+      "file": "data/odds/2016-10-29.json.gz",
+      "rows": 24878,
+      "size_bytes": 128879
+    },
+    {
+      "date": "2016-10-30",
+      "file": "data/odds/2016-10-30.json.gz",
+      "rows": 23905,
+      "size_bytes": 123472
+    },
+    {
+      "date": "2016-11-04",
+      "file": "data/odds/2016-11-04.json.gz",
+      "rows": 20945,
+      "size_bytes": 111924
+    },
+    {
+      "date": "2016-11-05",
+      "file": "data/odds/2016-11-05.json.gz",
+      "rows": 22342,
+      "size_bytes": 121208
+    },
+    {
+      "date": "2016-11-06",
+      "file": "data/odds/2016-11-06.json.gz",
+      "rows": 24317,
+      "size_bytes": 128775
+    },
+    {
+      "date": "2016-11-11",
+      "file": "data/odds/2016-11-11.json.gz",
+      "rows": 18240,
+      "size_bytes": 97562
+    },
+    {
+      "date": "2016-11-12",
+      "file": "data/odds/2016-11-12.json.gz",
+      "rows": 22897,
+      "size_bytes": 123115
+    },
+    {
+      "date": "2016-11-13",
+      "file": "data/odds/2016-11-13.json.gz",
+      "rows": 20035,
+      "size_bytes": 104699
+    },
+    {
+      "date": "2016-11-18",
+      "file": "data/odds/2016-11-18.json.gz",
+      "rows": 24674,
+      "size_bytes": 127508
+    },
+    {
+      "date": "2016-11-19",
+      "file": "data/odds/2016-11-19.json.gz",
+      "rows": 24890,
+      "size_bytes": 128025
+    },
+    {
+      "date": "2016-11-20",
+      "file": "data/odds/2016-11-20.json.gz",
+      "rows": 26206,
+      "size_bytes": 134966
+    },
+    {
+      "date": "2016-11-25",
+      "file": "data/odds/2016-11-25.json.gz",
+      "rows": 27254,
+      "size_bytes": 136470
+    },
+    {
+      "date": "2016-11-26",
+      "file": "data/odds/2016-11-26.json.gz",
+      "rows": 29981,
+      "size_bytes": 151167
+    },
+    {
+      "date": "2016-11-27",
+      "file": "data/odds/2016-11-27.json.gz",
+      "rows": 28348,
+      "size_bytes": 149971
+    },
+    {
+      "date": "2016-12-02",
+      "file": "data/odds/2016-12-02.json.gz",
+      "rows": 21503,
+      "size_bytes": 111538
+    },
+    {
+      "date": "2016-12-03",
+      "file": "data/odds/2016-12-03.json.gz",
+      "rows": 23277,
+      "size_bytes": 125738
+    },
+    {
+      "date": "2016-12-04",
+      "file": "data/odds/2016-12-04.json.gz",
+      "rows": 25053,
+      "size_bytes": 129417
+    },
+    {
+      "date": "2016-12-09",
+      "file": "data/odds/2016-12-09.json.gz",
+      "rows": 24689,
+      "size_bytes": 126820
+    },
+    {
+      "date": "2016-12-10",
+      "file": "data/odds/2016-12-10.json.gz",
+      "rows": 19712,
+      "size_bytes": 107210
+    },
+    {
+      "date": "2016-12-11",
+      "file": "data/odds/2016-12-11.json.gz",
+      "rows": 20829,
+      "size_bytes": 114560
+    },
+    {
+      "date": "2016-12-16",
+      "file": "data/odds/2016-12-16.json.gz",
+      "rows": 24801,
+      "size_bytes": 128970
+    },
+    {
+      "date": "2016-12-17",
+      "file": "data/odds/2016-12-17.json.gz",
+      "rows": 26407,
+      "size_bytes": 141972
+    },
+    {
+      "date": "2016-12-18",
+      "file": "data/odds/2016-12-18.json.gz",
+      "rows": 30380,
+      "size_bytes": 155023
+    },
+    {
+      "date": "2016-12-23",
+      "file": "data/odds/2016-12-23.json.gz",
+      "rows": 13693,
+      "size_bytes": 75646
+    },
+    {
+      "date": "2016-12-24",
+      "file": "data/odds/2016-12-24.json.gz",
+      "rows": 33086,
+      "size_bytes": 172759
+    },
+    {
+      "date": "2016-12-25",
+      "file": "data/odds/2016-12-25.json.gz",
+      "rows": 25413,
+      "size_bytes": 133093
+    },
+    {
+      "date": "2016-12-30",
+      "file": "data/odds/2016-12-30.json.gz",
+      "rows": 22096,
+      "size_bytes": 117442
+    },
+    {
+      "date": "2017-01-06",
+      "file": "data/odds/2017-01-06.json.gz",
+      "rows": 22114,
+      "size_bytes": 110359
+    },
+    {
+      "date": "2017-01-07",
+      "file": "data/odds/2017-01-07.json.gz",
+      "rows": 22295,
+      "size_bytes": 115982
+    },
+    {
+      "date": "2017-01-08",
+      "file": "data/odds/2017-01-08.json.gz",
+      "rows": 26432,
+      "size_bytes": 141751
+    },
+    {
+      "date": "2017-01-13",
+      "file": "data/odds/2017-01-13.json.gz",
+      "rows": 26957,
+      "size_bytes": 139841
+    },
+    {
+      "date": "2017-01-14",
+      "file": "data/odds/2017-01-14.json.gz",
+      "rows": 30575,
+      "size_bytes": 163783
+    },
+    {
+      "date": "2017-01-15",
+      "file": "data/odds/2017-01-15.json.gz",
+      "rows": 27153,
+      "size_bytes": 146079
+    },
+    {
+      "date": "2017-01-20",
+      "file": "data/odds/2017-01-20.json.gz",
+      "rows": 27238,
+      "size_bytes": 146439
+    },
+    {
+      "date": "2017-01-21",
+      "file": "data/odds/2017-01-21.json.gz",
+      "rows": 29854,
+      "size_bytes": 160843
+    },
+    {
+      "date": "2017-01-22",
+      "file": "data/odds/2017-01-22.json.gz",
+      "rows": 29500,
+      "size_bytes": 158060
+    },
+    {
+      "date": "2017-02-03",
+      "file": "data/odds/2017-02-03.json.gz",
+      "rows": 28368,
+      "size_bytes": 151797
+    },
+    {
+      "date": "2017-02-04",
+      "file": "data/odds/2017-02-04.json.gz",
+      "rows": 30613,
+      "size_bytes": 164056
+    },
+    {
+      "date": "2017-02-05",
+      "file": "data/odds/2017-02-05.json.gz",
+      "rows": 29783,
+      "size_bytes": 155178
+    },
+    {
+      "date": "2017-02-10",
+      "file": "data/odds/2017-02-10.json.gz",
+      "rows": 26313,
+      "size_bytes": 137051
+    },
+    {
+      "date": "2017-02-11",
+      "file": "data/odds/2017-02-11.json.gz",
+      "rows": 27327,
+      "size_bytes": 146446
+    },
+    {
+      "date": "2017-02-12",
+      "file": "data/odds/2017-02-12.json.gz",
+      "rows": 26192,
+      "size_bytes": 138859
+    },
+    {
+      "date": "2017-02-17",
+      "file": "data/odds/2017-02-17.json.gz",
+      "rows": 27053,
+      "size_bytes": 141669
+    },
+    {
+      "date": "2017-02-18",
+      "file": "data/odds/2017-02-18.json.gz",
+      "rows": 27693,
+      "size_bytes": 147469
+    },
+    {
+      "date": "2017-02-19",
+      "file": "data/odds/2017-02-19.json.gz",
+      "rows": 26051,
+      "size_bytes": 132312
+    },
+    {
+      "date": "2017-02-24",
+      "file": "data/odds/2017-02-24.json.gz",
+      "rows": 26897,
+      "size_bytes": 141038
+    },
+    {
+      "date": "2017-02-25",
+      "file": "data/odds/2017-02-25.json.gz",
+      "rows": 29981,
+      "size_bytes": 155160
+    },
+    {
+      "date": "2017-02-26",
+      "file": "data/odds/2017-02-26.json.gz",
+      "rows": 26914,
+      "size_bytes": 139615
+    },
+    {
+      "date": "2017-03-03",
+      "file": "data/odds/2017-03-03.json.gz",
+      "rows": 23913,
+      "size_bytes": 124066
+    },
+    {
+      "date": "2017-03-04",
+      "file": "data/odds/2017-03-04.json.gz",
+      "rows": 25164,
+      "size_bytes": 132629
+    },
+    {
+      "date": "2017-03-05",
+      "file": "data/odds/2017-03-05.json.gz",
+      "rows": 24197,
+      "size_bytes": 125017
+    },
+    {
+      "date": "2017-03-10",
+      "file": "data/odds/2017-03-10.json.gz",
+      "rows": 24497,
+      "size_bytes": 126338
+    },
+    {
+      "date": "2017-03-11",
+      "file": "data/odds/2017-03-11.json.gz",
+      "rows": 23430,
+      "size_bytes": 125261
+    },
+    {
+      "date": "2017-03-12",
+      "file": "data/odds/2017-03-12.json.gz",
+      "rows": 26961,
+      "size_bytes": 138941
+    },
+    {
+      "date": "2017-03-17",
+      "file": "data/odds/2017-03-17.json.gz",
+      "rows": 27868,
+      "size_bytes": 142233
+    },
+    {
+      "date": "2017-03-18",
+      "file": "data/odds/2017-03-18.json.gz",
+      "rows": 25233,
+      "size_bytes": 134547
+    },
+    {
+      "date": "2017-03-19",
+      "file": "data/odds/2017-03-19.json.gz",
+      "rows": 30464,
+      "size_bytes": 150518
+    },
+    {
+      "date": "2017-03-24",
+      "file": "data/odds/2017-03-24.json.gz",
+      "rows": 26220,
+      "size_bytes": 136229
+    },
+    {
+      "date": "2017-03-25",
+      "file": "data/odds/2017-03-25.json.gz",
+      "rows": 28759,
+      "size_bytes": 147518
+    },
+    {
+      "date": "2017-03-26",
+      "file": "data/odds/2017-03-26.json.gz",
+      "rows": 29837,
+      "size_bytes": 150300
+    },
+    {
+      "date": "2017-03-31",
+      "file": "data/odds/2017-03-31.json.gz",
+      "rows": 22881,
+      "size_bytes": 120448
+    },
+    {
+      "date": "2017-04-01",
+      "file": "data/odds/2017-04-01.json.gz",
+      "rows": 24867,
+      "size_bytes": 133427
+    },
+    {
+      "date": "2017-04-02",
+      "file": "data/odds/2017-04-02.json.gz",
+      "rows": 24294,
+      "size_bytes": 129543
+    },
+    {
+      "date": "2017-04-07",
+      "file": "data/odds/2017-04-07.json.gz",
+      "rows": 20655,
+      "size_bytes": 112566
+    },
+    {
+      "date": "2017-04-08",
+      "file": "data/odds/2017-04-08.json.gz",
+      "rows": 23968,
+      "size_bytes": 130834
+    },
+    {
+      "date": "2017-04-09",
+      "file": "data/odds/2017-04-09.json.gz",
+      "rows": 21110,
+      "size_bytes": 115287
+    },
+    {
+      "date": "2017-04-14",
+      "file": "data/odds/2017-04-14.json.gz",
+      "rows": 19019,
+      "size_bytes": 104960
+    },
+    {
+      "date": "2017-04-15",
+      "file": "data/odds/2017-04-15.json.gz",
+      "rows": 23219,
+      "size_bytes": 126213
+    },
+    {
+      "date": "2017-04-16",
+      "file": "data/odds/2017-04-16.json.gz",
+      "rows": 19757,
+      "size_bytes": 105390
+    },
+    {
+      "date": "2017-04-21",
+      "file": "data/odds/2017-04-21.json.gz",
+      "rows": 20617,
+      "size_bytes": 111617
+    },
+    {
+      "date": "2017-04-22",
+      "file": "data/odds/2017-04-22.json.gz",
+      "rows": 22989,
+      "size_bytes": 123105
+    },
+    {
+      "date": "2017-04-23",
+      "file": "data/odds/2017-04-23.json.gz",
+      "rows": 20492,
+      "size_bytes": 109608
+    },
+    {
+      "date": "2017-04-28",
+      "file": "data/odds/2017-04-28.json.gz",
+      "rows": 21170,
+      "size_bytes": 114271
+    },
+    {
+      "date": "2017-04-29",
+      "file": "data/odds/2017-04-29.json.gz",
+      "rows": 22380,
+      "size_bytes": 120471
+    },
+    {
+      "date": "2017-04-30",
+      "file": "data/odds/2017-04-30.json.gz",
+      "rows": 24380,
+      "size_bytes": 127383
+    },
+    {
+      "date": "2017-05-05",
+      "file": "data/odds/2017-05-05.json.gz",
+      "rows": 21273,
+      "size_bytes": 115278
+    },
+    {
+      "date": "2017-05-06",
+      "file": "data/odds/2017-05-06.json.gz",
+      "rows": 20708,
+      "size_bytes": 113268
+    },
+    {
+      "date": "2017-05-07",
+      "file": "data/odds/2017-05-07.json.gz",
+      "rows": 22517,
+      "size_bytes": 117859
+    },
+    {
+      "date": "2017-05-12",
+      "file": "data/odds/2017-05-12.json.gz",
+      "rows": 17366,
+      "size_bytes": 95674
+    },
+    {
+      "date": "2017-05-13",
+      "file": "data/odds/2017-05-13.json.gz",
+      "rows": 19379,
+      "size_bytes": 106146
+    },
+    {
+      "date": "2017-05-14",
+      "file": "data/odds/2017-05-14.json.gz",
+      "rows": 21693,
+      "size_bytes": 118731
+    },
+    {
+      "date": "2017-05-19",
+      "file": "data/odds/2017-05-19.json.gz",
+      "rows": 19347,
+      "size_bytes": 106079
+    },
+    {
+      "date": "2017-05-20",
+      "file": "data/odds/2017-05-20.json.gz",
+      "rows": 25358,
+      "size_bytes": 136169
+    },
+    {
+      "date": "2017-05-21",
+      "file": "data/odds/2017-05-21.json.gz",
+      "rows": 23034,
+      "size_bytes": 120004
+    },
+    {
+      "date": "2017-05-26",
+      "file": "data/odds/2017-05-26.json.gz",
+      "rows": 23726,
+      "size_bytes": 128421
+    },
+    {
+      "date": "2017-05-27",
+      "file": "data/odds/2017-05-27.json.gz",
+      "rows": 23612,
+      "size_bytes": 125503
+    },
+    {
+      "date": "2017-05-28",
+      "file": "data/odds/2017-05-28.json.gz",
+      "rows": 26052,
+      "size_bytes": 133598
+    },
+    {
+      "date": "2017-06-02",
+      "file": "data/odds/2017-06-02.json.gz",
+      "rows": 21405,
+      "size_bytes": 113749
+    },
+    {
+      "date": "2017-06-03",
+      "file": "data/odds/2017-06-03.json.gz",
+      "rows": 21662,
+      "size_bytes": 114510
+    },
+    {
+      "date": "2017-06-04",
+      "file": "data/odds/2017-06-04.json.gz",
+      "rows": 19617,
+      "size_bytes": 106950
+    },
+    {
+      "date": "2017-06-09",
+      "file": "data/odds/2017-06-09.json.gz",
+      "rows": 20743,
+      "size_bytes": 111780
+    },
+    {
+      "date": "2017-06-10",
+      "file": "data/odds/2017-06-10.json.gz",
+      "rows": 20425,
+      "size_bytes": 113362
+    },
+    {
+      "date": "2017-06-11",
+      "file": "data/odds/2017-06-11.json.gz",
+      "rows": 24645,
+      "size_bytes": 127198
+    },
+    {
+      "date": "2017-06-16",
+      "file": "data/odds/2017-06-16.json.gz",
+      "rows": 19248,
+      "size_bytes": 104604
+    },
+    {
+      "date": "2017-06-17",
+      "file": "data/odds/2017-06-17.json.gz",
+      "rows": 21288,
+      "size_bytes": 116546
+    },
+    {
+      "date": "2017-06-18",
+      "file": "data/odds/2017-06-18.json.gz",
+      "rows": 21608,
+      "size_bytes": 115763
+    },
+    {
+      "date": "2017-06-23",
+      "file": "data/odds/2017-06-23.json.gz",
+      "rows": 22231,
+      "size_bytes": 120218
+    },
+    {
+      "date": "2017-06-24",
+      "file": "data/odds/2017-06-24.json.gz",
+      "rows": 24132,
+      "size_bytes": 133532
+    },
+    {
+      "date": "2017-06-25",
+      "file": "data/odds/2017-06-25.json.gz",
+      "rows": 24900,
+      "size_bytes": 133188
+    },
+    {
+      "date": "2017-06-30",
+      "file": "data/odds/2017-06-30.json.gz",
+      "rows": 19954,
+      "size_bytes": 108081
+    },
+    {
+      "date": "2017-07-01",
+      "file": "data/odds/2017-07-01.json.gz",
+      "rows": 18899,
+      "size_bytes": 105091
+    },
+    {
+      "date": "2017-07-02",
+      "file": "data/odds/2017-07-02.json.gz",
+      "rows": 19646,
+      "size_bytes": 106716
+    },
+    {
+      "date": "2017-07-07",
+      "file": "data/odds/2017-07-07.json.gz",
+      "rows": 20147,
+      "size_bytes": 107551
+    },
+    {
+      "date": "2017-07-08",
+      "file": "data/odds/2017-07-08.json.gz",
+      "rows": 17528,
+      "size_bytes": 94757
+    },
+    {
+      "date": "2017-07-09",
+      "file": "data/odds/2017-07-09.json.gz",
+      "rows": 18583,
+      "size_bytes": 101967
+    },
+    {
+      "date": "2017-07-14",
+      "file": "data/odds/2017-07-14.json.gz",
+      "rows": 22305,
+      "size_bytes": 120146
+    },
+    {
+      "date": "2017-07-15",
+      "file": "data/odds/2017-07-15.json.gz",
+      "rows": 20579,
+      "size_bytes": 111836
+    },
+    {
+      "date": "2017-07-16",
+      "file": "data/odds/2017-07-16.json.gz",
+      "rows": 18353,
+      "size_bytes": 102548
+    },
+    {
+      "date": "2017-07-21",
+      "file": "data/odds/2017-07-21.json.gz",
+      "rows": 21009,
+      "size_bytes": 116858
+    },
+    {
+      "date": "2017-07-22",
+      "file": "data/odds/2017-07-22.json.gz",
+      "rows": 16973,
+      "size_bytes": 92945
+    },
+    {
+      "date": "2017-07-23",
+      "file": "data/odds/2017-07-23.json.gz",
+      "rows": 23530,
+      "size_bytes": 124545
+    },
+    {
+      "date": "2017-07-28",
+      "file": "data/odds/2017-07-28.json.gz",
+      "rows": 11184,
+      "size_bytes": 64450
+    },
+    {
+      "date": "2017-07-29",
+      "file": "data/odds/2017-07-29.json.gz",
+      "rows": 16457,
+      "size_bytes": 91836
+    },
+    {
+      "date": "2017-07-30",
+      "file": "data/odds/2017-07-30.json.gz",
+      "rows": 17103,
+      "size_bytes": 93059
+    },
+    {
+      "date": "2017-08-04",
+      "file": "data/odds/2017-08-04.json.gz",
+      "rows": 14996,
+      "size_bytes": 80633
+    },
+    {
+      "date": "2017-08-05",
+      "file": "data/odds/2017-08-05.json.gz",
+      "rows": 7462,
+      "size_bytes": 40261
+    },
+    {
+      "date": "2017-08-06",
+      "file": "data/odds/2017-08-06.json.gz",
+      "rows": 20234,
+      "size_bytes": 106171
+    },
+    {
+      "date": "2017-08-11",
+      "file": "data/odds/2017-08-11.json.gz",
+      "rows": 15081,
+      "size_bytes": 81664
+    },
+    {
+      "date": "2017-08-12",
+      "file": "data/odds/2017-08-12.json.gz",
+      "rows": 18963,
+      "size_bytes": 101881
+    },
+    {
+      "date": "2017-08-13",
+      "file": "data/odds/2017-08-13.json.gz",
+      "rows": 20462,
+      "size_bytes": 111152
+    },
+    {
+      "date": "2017-08-18",
+      "file": "data/odds/2017-08-18.json.gz",
+      "rows": 18367,
+      "size_bytes": 102500
+    },
+    {
+      "date": "2017-08-19",
+      "file": "data/odds/2017-08-19.json.gz",
+      "rows": 23225,
+      "size_bytes": 125280
+    },
+    {
+      "date": "2017-08-20",
+      "file": "data/odds/2017-08-20.json.gz",
+      "rows": 22621,
+      "size_bytes": 123778
+    },
+    {
+      "date": "2017-08-25",
+      "file": "data/odds/2017-08-25.json.gz",
+      "rows": 20144,
+      "size_bytes": 110596
+    },
+    {
+      "date": "2017-08-26",
+      "file": "data/odds/2017-08-26.json.gz",
+      "rows": 25070,
+      "size_bytes": 137291
+    },
+    {
+      "date": "2017-08-27",
+      "file": "data/odds/2017-08-27.json.gz",
+      "rows": 19818,
+      "size_bytes": 107984
+    },
+    {
+      "date": "2017-09-01",
+      "file": "data/odds/2017-09-01.json.gz",
+      "rows": 19428,
+      "size_bytes": 105184
+    },
+    {
+      "date": "2017-09-02",
+      "file": "data/odds/2017-09-02.json.gz",
+      "rows": 15983,
+      "size_bytes": 89114
+    },
+    {
+      "date": "2017-09-03",
+      "file": "data/odds/2017-09-03.json.gz",
+      "rows": 16481,
+      "size_bytes": 90414
+    },
+    {
+      "date": "2017-09-08",
+      "file": "data/odds/2017-09-08.json.gz",
+      "rows": 21116,
+      "size_bytes": 113252
+    },
+    {
+      "date": "2017-09-09",
+      "file": "data/odds/2017-09-09.json.gz",
+      "rows": 22403,
+      "size_bytes": 122666
+    },
+    {
+      "date": "2017-09-10",
+      "file": "data/odds/2017-09-10.json.gz",
+      "rows": 19819,
+      "size_bytes": 105333
+    },
+    {
+      "date": "2017-09-15",
+      "file": "data/odds/2017-09-15.json.gz",
+      "rows": 16757,
+      "size_bytes": 89862
+    },
+    {
+      "date": "2017-09-16",
+      "file": "data/odds/2017-09-16.json.gz",
+      "rows": 21235,
+      "size_bytes": 116809
+    },
+    {
+      "date": "2017-09-17",
+      "file": "data/odds/2017-09-17.json.gz",
+      "rows": 18217,
+      "size_bytes": 100167
+    },
+    {
+      "date": "2017-09-22",
+      "file": "data/odds/2017-09-22.json.gz",
+      "rows": 23026,
+      "size_bytes": 121427
+    },
+    {
+      "date": "2017-09-23",
+      "file": "data/odds/2017-09-23.json.gz",
+      "rows": 28454,
+      "size_bytes": 150247
+    },
+    {
+      "date": "2017-09-24",
+      "file": "data/odds/2017-09-24.json.gz",
+      "rows": 27486,
+      "size_bytes": 142774
+    },
+    {
+      "date": "2017-09-29",
+      "file": "data/odds/2017-09-29.json.gz",
+      "rows": 27076,
+      "size_bytes": 140600
+    },
+    {
+      "date": "2017-09-30",
+      "file": "data/odds/2017-09-30.json.gz",
+      "rows": 28726,
+      "size_bytes": 155099
+    },
+    {
+      "date": "2017-10-01",
+      "file": "data/odds/2017-10-01.json.gz",
+      "rows": 27828,
+      "size_bytes": 145552
+    },
+    {
+      "date": "2017-10-13",
+      "file": "data/odds/2017-10-13.json.gz",
+      "rows": 25434,
+      "size_bytes": 130656
+    },
+    {
+      "date": "2017-10-14",
+      "file": "data/odds/2017-10-14.json.gz",
+      "rows": 29269,
+      "size_bytes": 150336
+    },
+    {
+      "date": "2017-10-15",
+      "file": "data/odds/2017-10-15.json.gz",
+      "rows": 28995,
+      "size_bytes": 149240
+    },
+    {
+      "date": "2017-10-20",
+      "file": "data/odds/2017-10-20.json.gz",
+      "rows": 27901,
+      "size_bytes": 140583
+    },
+    {
+      "date": "2017-10-21",
+      "file": "data/odds/2017-10-21.json.gz",
+      "rows": 28273,
+      "size_bytes": 147674
+    },
+    {
+      "date": "2017-10-22",
+      "file": "data/odds/2017-10-22.json.gz",
+      "rows": 27182,
+      "size_bytes": 138989
+    },
+    {
+      "date": "2017-10-27",
+      "file": "data/odds/2017-10-27.json.gz",
+      "rows": 26238,
+      "size_bytes": 137319
+    },
+    {
+      "date": "2017-10-28",
+      "file": "data/odds/2017-10-28.json.gz",
+      "rows": 28129,
+      "size_bytes": 146137
+    },
+    {
+      "date": "2017-10-29",
+      "file": "data/odds/2017-10-29.json.gz",
+      "rows": 28906,
+      "size_bytes": 152677
+    },
+    {
+      "date": "2017-11-03",
+      "file": "data/odds/2017-11-03.json.gz",
+      "rows": 18291,
+      "size_bytes": 94676
+    },
+    {
+      "date": "2017-11-04",
+      "file": "data/odds/2017-11-04.json.gz",
+      "rows": 21630,
+      "size_bytes": 115200
+    },
+    {
+      "date": "2017-11-05",
+      "file": "data/odds/2017-11-05.json.gz",
+      "rows": 23117,
+      "size_bytes": 120040
+    },
+    {
+      "date": "2017-11-10",
+      "file": "data/odds/2017-11-10.json.gz",
+      "rows": 20909,
+      "size_bytes": 110676
+    },
+    {
+      "date": "2017-11-11",
+      "file": "data/odds/2017-11-11.json.gz",
+      "rows": 27190,
+      "size_bytes": 143259
+    },
+    {
+      "date": "2017-11-12",
+      "file": "data/odds/2017-11-12.json.gz",
+      "rows": 23317,
+      "size_bytes": 125869
+    },
+    {
+      "date": "2017-11-17",
+      "file": "data/odds/2017-11-17.json.gz",
+      "rows": 23597,
+      "size_bytes": 126866
+    },
+    {
+      "date": "2017-11-18",
+      "file": "data/odds/2017-11-18.json.gz",
+      "rows": 26764,
+      "size_bytes": 143403
+    },
+    {
+      "date": "2017-11-19",
+      "file": "data/odds/2017-11-19.json.gz",
+      "rows": 24682,
+      "size_bytes": 130959
+    },
+    {
+      "date": "2017-11-24",
+      "file": "data/odds/2017-11-24.json.gz",
+      "rows": 23302,
+      "size_bytes": 122270
+    },
+    {
+      "date": "2017-11-25",
+      "file": "data/odds/2017-11-25.json.gz",
+      "rows": 30499,
+      "size_bytes": 163750
+    },
+    {
+      "date": "2017-11-26",
+      "file": "data/odds/2017-11-26.json.gz",
+      "rows": 28995,
+      "size_bytes": 151963
+    },
+    {
+      "date": "2017-12-01",
+      "file": "data/odds/2017-12-01.json.gz",
+      "rows": 21708,
+      "size_bytes": 118392
+    },
+    {
+      "date": "2017-12-02",
+      "file": "data/odds/2017-12-02.json.gz",
+      "rows": 27974,
+      "size_bytes": 150422
+    },
+    {
+      "date": "2017-12-03",
+      "file": "data/odds/2017-12-03.json.gz",
+      "rows": 23728,
+      "size_bytes": 128065
+    },
+    {
+      "date": "2017-12-08",
+      "file": "data/odds/2017-12-08.json.gz",
+      "rows": 22507,
+      "size_bytes": 120626
+    },
+    {
+      "date": "2017-12-09",
+      "file": "data/odds/2017-12-09.json.gz",
+      "rows": 24359,
+      "size_bytes": 133101
+    },
+    {
+      "date": "2017-12-10",
+      "file": "data/odds/2017-12-10.json.gz",
+      "rows": 26415,
+      "size_bytes": 141602
+    },
+    {
+      "date": "2017-12-15",
+      "file": "data/odds/2017-12-15.json.gz",
+      "rows": 11865,
+      "size_bytes": 67122
+    },
+    {
+      "date": "2017-12-16",
+      "file": "data/odds/2017-12-16.json.gz",
+      "rows": 24283,
+      "size_bytes": 131527
+    },
+    {
+      "date": "2017-12-17",
+      "file": "data/odds/2017-12-17.json.gz",
+      "rows": 19269,
+      "size_bytes": 105925
+    },
+    {
+      "date": "2017-12-22",
+      "file": "data/odds/2017-12-22.json.gz",
+      "rows": 26037,
+      "size_bytes": 137737
+    },
+    {
+      "date": "2017-12-23",
+      "file": "data/odds/2017-12-23.json.gz",
+      "rows": 28040,
+      "size_bytes": 152534
+    },
+    {
+      "date": "2017-12-24",
+      "file": "data/odds/2017-12-24.json.gz",
+      "rows": 28118,
+      "size_bytes": 151493
+    },
+    {
+      "date": "2017-12-29",
+      "file": "data/odds/2017-12-29.json.gz",
+      "rows": 13936,
+      "size_bytes": 77409
+    },
+    {
+      "date": "2017-12-30",
+      "file": "data/odds/2017-12-30.json.gz",
+      "rows": 7816,
+      "size_bytes": 43933
+    },
+    {
+      "date": "2017-12-31",
+      "file": "data/odds/2017-12-31.json.gz",
+      "rows": 22328,
+      "size_bytes": 118824
+    },
+    {
+      "date": "2018-01-05",
+      "file": "data/odds/2018-01-05.json.gz",
+      "rows": 11567,
+      "size_bytes": 63493
+    },
+    {
+      "date": "2018-01-06",
+      "file": "data/odds/2018-01-06.json.gz",
+      "rows": 21988,
+      "size_bytes": 118403
+    },
+    {
+      "date": "2018-01-07",
+      "file": "data/odds/2018-01-07.json.gz",
+      "rows": 22508,
+      "size_bytes": 123422
+    },
+    {
+      "date": "2018-01-12",
+      "file": "data/odds/2018-01-12.json.gz",
+      "rows": 19445,
+      "size_bytes": 108275
+    },
+    {
+      "date": "2018-01-13",
+      "file": "data/odds/2018-01-13.json.gz",
+      "rows": 26883,
+      "size_bytes": 146945
+    },
+    {
+      "date": "2018-01-14",
+      "file": "data/odds/2018-01-14.json.gz",
+      "rows": 21495,
+      "size_bytes": 116212
+    },
+    {
+      "date": "2018-01-19",
+      "file": "data/odds/2018-01-19.json.gz",
+      "rows": 23649,
+      "size_bytes": 127752
+    },
+    {
+      "date": "2018-01-20",
+      "file": "data/odds/2018-01-20.json.gz",
+      "rows": 29513,
+      "size_bytes": 156638
+    },
+    {
+      "date": "2018-01-21",
+      "file": "data/odds/2018-01-21.json.gz",
+      "rows": 23639,
+      "size_bytes": 127159
+    },
+    {
+      "date": "2018-01-26",
+      "file": "data/odds/2018-01-26.json.gz",
+      "rows": 25072,
+      "size_bytes": 131138
+    },
+    {
+      "date": "2018-01-27",
+      "file": "data/odds/2018-01-27.json.gz",
+      "rows": 30783,
+      "size_bytes": 164937
+    },
+    {
+      "date": "2018-01-28",
+      "file": "data/odds/2018-01-28.json.gz",
+      "rows": 23755,
+      "size_bytes": 127084
+    },
+    {
+      "date": "2018-02-02",
+      "file": "data/odds/2018-02-02.json.gz",
+      "rows": 22712,
+      "size_bytes": 123476
+    },
+    {
+      "date": "2018-02-03",
+      "file": "data/odds/2018-02-03.json.gz",
+      "rows": 25501,
+      "size_bytes": 138366
+    },
+    {
+      "date": "2018-02-04",
+      "file": "data/odds/2018-02-04.json.gz",
+      "rows": 25100,
+      "size_bytes": 135018
+    },
+    {
+      "date": "2018-02-09",
+      "file": "data/odds/2018-02-09.json.gz",
+      "rows": 28866,
+      "size_bytes": 155311
+    },
+    {
+      "date": "2018-02-10",
+      "file": "data/odds/2018-02-10.json.gz",
+      "rows": 32620,
+      "size_bytes": 175572
+    },
+    {
+      "date": "2018-02-11",
+      "file": "data/odds/2018-02-11.json.gz",
+      "rows": 24906,
+      "size_bytes": 136195
+    },
+    {
+      "date": "2018-02-23",
+      "file": "data/odds/2018-02-23.json.gz",
+      "rows": 30390,
+      "size_bytes": 158189
+    },
+    {
+      "date": "2018-02-24",
+      "file": "data/odds/2018-02-24.json.gz",
+      "rows": 33229,
+      "size_bytes": 176133
+    },
+    {
+      "date": "2018-02-25",
+      "file": "data/odds/2018-02-25.json.gz",
+      "rows": 29160,
+      "size_bytes": 149178
+    },
+    {
+      "date": "2018-03-02",
+      "file": "data/odds/2018-03-02.json.gz",
+      "rows": 22107,
+      "size_bytes": 120641
+    },
+    {
+      "date": "2018-03-03",
+      "file": "data/odds/2018-03-03.json.gz",
+      "rows": 28258,
+      "size_bytes": 149962
+    },
+    {
+      "date": "2018-03-04",
+      "file": "data/odds/2018-03-04.json.gz",
+      "rows": 24283,
+      "size_bytes": 130273
+    },
+    {
+      "date": "2018-03-09",
+      "file": "data/odds/2018-03-09.json.gz",
+      "rows": 25649,
+      "size_bytes": 138682
+    },
+    {
+      "date": "2018-03-10",
+      "file": "data/odds/2018-03-10.json.gz",
+      "rows": 27506,
+      "size_bytes": 151460
+    },
+    {
+      "date": "2018-03-11",
+      "file": "data/odds/2018-03-11.json.gz",
+      "rows": 26624,
+      "size_bytes": 143746
+    },
+    {
+      "date": "2018-03-16",
+      "file": "data/odds/2018-03-16.json.gz",
+      "rows": 21388,
+      "size_bytes": 117909
+    },
+    {
+      "date": "2018-03-17",
+      "file": "data/odds/2018-03-17.json.gz",
+      "rows": 26785,
+      "size_bytes": 150522
+    },
+    {
+      "date": "2018-03-18",
+      "file": "data/odds/2018-03-18.json.gz",
+      "rows": 21900,
+      "size_bytes": 118195
+    },
+    {
+      "date": "2018-03-23",
+      "file": "data/odds/2018-03-23.json.gz",
+      "rows": 23153,
+      "size_bytes": 127523
+    },
+    {
+      "date": "2018-03-24",
+      "file": "data/odds/2018-03-24.json.gz",
+      "rows": 25209,
+      "size_bytes": 139723
+    },
+    {
+      "date": "2018-03-25",
+      "file": "data/odds/2018-03-25.json.gz",
+      "rows": 20628,
+      "size_bytes": 112667
+    },
+    {
+      "date": "2018-03-30",
+      "file": "data/odds/2018-03-30.json.gz",
+      "rows": 22381,
+      "size_bytes": 124724
+    },
+    {
+      "date": "2018-03-31",
+      "file": "data/odds/2018-03-31.json.gz",
+      "rows": 24224,
+      "size_bytes": 135179
+    },
+    {
+      "date": "2018-04-01",
+      "file": "data/odds/2018-04-01.json.gz",
+      "rows": 25115,
+      "size_bytes": 133725
+    },
+    {
+      "date": "2018-04-06",
+      "file": "data/odds/2018-04-06.json.gz",
+      "rows": 24743,
+      "size_bytes": 131768
+    },
+    {
+      "date": "2018-04-07",
+      "file": "data/odds/2018-04-07.json.gz",
+      "rows": 18975,
+      "size_bytes": 106933
+    },
+    {
+      "date": "2018-04-08",
+      "file": "data/odds/2018-04-08.json.gz",
+      "rows": 18632,
+      "size_bytes": 104267
+    },
+    {
+      "date": "2018-04-13",
+      "file": "data/odds/2018-04-13.json.gz",
+      "rows": 20128,
+      "size_bytes": 109539
+    },
+    {
+      "date": "2018-04-14",
+      "file": "data/odds/2018-04-14.json.gz",
+      "rows": 18312,
+      "size_bytes": 101977
+    },
+    {
+      "date": "2018-04-15",
+      "file": "data/odds/2018-04-15.json.gz",
+      "rows": 25606,
+      "size_bytes": 134915
+    },
+    {
+      "date": "2018-04-20",
+      "file": "data/odds/2018-04-20.json.gz",
+      "rows": 16433,
+      "size_bytes": 92182
+    },
+    {
+      "date": "2018-04-21",
+      "file": "data/odds/2018-04-21.json.gz",
+      "rows": 29499,
+      "size_bytes": 156474
+    },
+    {
+      "date": "2018-04-22",
+      "file": "data/odds/2018-04-22.json.gz",
+      "rows": 26252,
+      "size_bytes": 138185
+    },
+    {
+      "date": "2018-04-27",
+      "file": "data/odds/2018-04-27.json.gz",
+      "rows": 22396,
+      "size_bytes": 120644
+    },
+    {
+      "date": "2018-04-28",
+      "file": "data/odds/2018-04-28.json.gz",
+      "rows": 24447,
+      "size_bytes": 131520
+    },
+    {
+      "date": "2018-04-29",
+      "file": "data/odds/2018-04-29.json.gz",
+      "rows": 23764,
+      "size_bytes": 126895
+    },
+    {
+      "date": "2018-05-04",
+      "file": "data/odds/2018-05-04.json.gz",
+      "rows": 18441,
+      "size_bytes": 99090
+    },
+    {
+      "date": "2018-05-05",
+      "file": "data/odds/2018-05-05.json.gz",
+      "rows": 24854,
+      "size_bytes": 136111
+    },
+    {
+      "date": "2018-05-06",
+      "file": "data/odds/2018-05-06.json.gz",
+      "rows": 20412,
+      "size_bytes": 111169
+    },
+    {
+      "date": "2018-05-11",
+      "file": "data/odds/2018-05-11.json.gz",
+      "rows": 20818,
+      "size_bytes": 114849
+    },
+    {
+      "date": "2018-05-12",
+      "file": "data/odds/2018-05-12.json.gz",
+      "rows": 23142,
+      "size_bytes": 128271
+    },
+    {
+      "date": "2018-05-13",
+      "file": "data/odds/2018-05-13.json.gz",
+      "rows": 21888,
+      "size_bytes": 120421
+    },
+    {
+      "date": "2018-05-18",
+      "file": "data/odds/2018-05-18.json.gz",
+      "rows": 24706,
+      "size_bytes": 132972
+    },
+    {
+      "date": "2018-05-19",
+      "file": "data/odds/2018-05-19.json.gz",
+      "rows": 27492,
+      "size_bytes": 148015
+    },
+    {
+      "date": "2018-05-20",
+      "file": "data/odds/2018-05-20.json.gz",
+      "rows": 24907,
+      "size_bytes": 133991
+    },
+    {
+      "date": "2018-05-25",
+      "file": "data/odds/2018-05-25.json.gz",
+      "rows": 18585,
+      "size_bytes": 103742
+    },
+    {
+      "date": "2018-05-26",
+      "file": "data/odds/2018-05-26.json.gz",
+      "rows": 22555,
+      "size_bytes": 120463
+    },
+    {
+      "date": "2018-05-27",
+      "file": "data/odds/2018-05-27.json.gz",
+      "rows": 23167,
+      "size_bytes": 123237
+    },
+    {
+      "date": "2018-06-01",
+      "file": "data/odds/2018-06-01.json.gz",
+      "rows": 12985,
+      "size_bytes": 73059
+    },
+    {
+      "date": "2018-06-02",
+      "file": "data/odds/2018-06-02.json.gz",
+      "rows": 15214,
+      "size_bytes": 85363
+    },
+    {
+      "date": "2018-06-03",
+      "file": "data/odds/2018-06-03.json.gz",
+      "rows": 21558,
+      "size_bytes": 110683
+    },
+    {
+      "date": "2018-06-08",
+      "file": "data/odds/2018-06-08.json.gz",
+      "rows": 16886,
+      "size_bytes": 94808
+    },
+    {
+      "date": "2018-06-09",
+      "file": "data/odds/2018-06-09.json.gz",
+      "rows": 17504,
+      "size_bytes": 98248
+    },
+    {
+      "date": "2018-06-10",
+      "file": "data/odds/2018-06-10.json.gz",
+      "rows": 15109,
+      "size_bytes": 84262
+    },
+    {
+      "date": "2018-06-15",
+      "file": "data/odds/2018-06-15.json.gz",
+      "rows": 18013,
+      "size_bytes": 98364
+    },
+    {
+      "date": "2018-06-16",
+      "file": "data/odds/2018-06-16.json.gz",
+      "rows": 13339,
+      "size_bytes": 75444
+    },
+    {
+      "date": "2018-06-17",
+      "file": "data/odds/2018-06-17.json.gz",
+      "rows": 16149,
+      "size_bytes": 90493
+    },
+    {
+      "date": "2018-06-22",
+      "file": "data/odds/2018-06-22.json.gz",
+      "rows": 19294,
+      "size_bytes": 106413
+    },
+    {
+      "date": "2018-06-23",
+      "file": "data/odds/2018-06-23.json.gz",
+      "rows": 22304,
+      "size_bytes": 122138
+    },
+    {
+      "date": "2018-06-24",
+      "file": "data/odds/2018-06-24.json.gz",
+      "rows": 21510,
+      "size_bytes": 116144
+    },
+    {
+      "date": "2018-06-29",
+      "file": "data/odds/2018-06-29.json.gz",
+      "rows": 19474,
+      "size_bytes": 106320
+    },
+    {
+      "date": "2018-06-30",
+      "file": "data/odds/2018-06-30.json.gz",
+      "rows": 18782,
+      "size_bytes": 103011
+    },
+    {
+      "date": "2018-07-01",
+      "file": "data/odds/2018-07-01.json.gz",
+      "rows": 19808,
+      "size_bytes": 120140
+    },
+    {
+      "date": "2018-07-06",
+      "file": "data/odds/2018-07-06.json.gz",
+      "rows": 17914,
+      "size_bytes": 98862
+    },
+    {
+      "date": "2018-07-07",
+      "file": "data/odds/2018-07-07.json.gz",
+      "rows": 15402,
+      "size_bytes": 85733
+    },
+    {
+      "date": "2018-07-08",
+      "file": "data/odds/2018-07-08.json.gz",
+      "rows": 14869,
+      "size_bytes": 81779
+    },
+    {
+      "date": "2018-07-13",
+      "file": "data/odds/2018-07-13.json.gz",
+      "rows": 18356,
+      "size_bytes": 100057
+    },
+    {
+      "date": "2018-07-14",
+      "file": "data/odds/2018-07-14.json.gz",
+      "rows": 17670,
+      "size_bytes": 99782
+    },
+    {
+      "date": "2018-07-15",
+      "file": "data/odds/2018-07-15.json.gz",
+      "rows": 17098,
+      "size_bytes": 93727
+    },
+    {
+      "date": "2018-07-20",
+      "file": "data/odds/2018-07-20.json.gz",
+      "rows": 19333,
+      "size_bytes": 107362
+    },
+    {
+      "date": "2018-07-21",
+      "file": "data/odds/2018-07-21.json.gz",
+      "rows": 24246,
+      "size_bytes": 130899
+    },
+    {
+      "date": "2018-07-22",
+      "file": "data/odds/2018-07-22.json.gz",
+      "rows": 23383,
+      "size_bytes": 125950
+    },
+    {
+      "date": "2018-07-27",
+      "file": "data/odds/2018-07-27.json.gz",
+      "rows": 11937,
+      "size_bytes": 67717
+    },
+    {
+      "date": "2018-07-28",
+      "file": "data/odds/2018-07-28.json.gz",
+      "rows": 13496,
+      "size_bytes": 74995
+    },
+    {
+      "date": "2018-07-29",
+      "file": "data/odds/2018-07-29.json.gz",
+      "rows": 20098,
+      "size_bytes": 111726
+    },
+    {
+      "date": "2018-08-03",
+      "file": "data/odds/2018-08-03.json.gz",
+      "rows": 13110,
+      "size_bytes": 73655
+    },
+    {
+      "date": "2018-08-04",
+      "file": "data/odds/2018-08-04.json.gz",
+      "rows": 9034,
+      "size_bytes": 50372
+    },
+    {
+      "date": "2018-08-05",
+      "file": "data/odds/2018-08-05.json.gz",
+      "rows": 9663,
+      "size_bytes": 55323
+    },
+    {
+      "date": "2018-08-10",
+      "file": "data/odds/2018-08-10.json.gz",
+      "rows": 12243,
+      "size_bytes": 69371
+    },
+    {
+      "date": "2018-08-11",
+      "file": "data/odds/2018-08-11.json.gz",
+      "rows": 17992,
+      "size_bytes": 99928
+    },
+    {
+      "date": "2018-08-12",
+      "file": "data/odds/2018-08-12.json.gz",
+      "rows": 15587,
+      "size_bytes": 84670
+    },
+    {
+      "date": "2018-08-17",
+      "file": "data/odds/2018-08-17.json.gz",
+      "rows": 21348,
+      "size_bytes": 116181
+    },
+    {
+      "date": "2018-08-18",
+      "file": "data/odds/2018-08-18.json.gz",
+      "rows": 19963,
+      "size_bytes": 110537
+    },
+    {
+      "date": "2018-08-19",
+      "file": "data/odds/2018-08-19.json.gz",
+      "rows": 21924,
+      "size_bytes": 120484
+    },
+    {
+      "date": "2018-08-24",
+      "file": "data/odds/2018-08-24.json.gz",
+      "rows": 20432,
+      "size_bytes": 112021
+    },
+    {
+      "date": "2018-08-25",
+      "file": "data/odds/2018-08-25.json.gz",
+      "rows": 22986,
+      "size_bytes": 125553
+    },
+    {
+      "date": "2018-08-26",
+      "file": "data/odds/2018-08-26.json.gz",
+      "rows": 22813,
+      "size_bytes": 123324
+    },
+    {
+      "date": "2018-08-31",
+      "file": "data/odds/2018-08-31.json.gz",
+      "rows": 18530,
+      "size_bytes": 101036
+    },
+    {
+      "date": "2018-09-01",
+      "file": "data/odds/2018-09-01.json.gz",
+      "rows": 20499,
+      "size_bytes": 113775
+    },
+    {
+      "date": "2018-09-02",
+      "file": "data/odds/2018-09-02.json.gz",
+      "rows": 16944,
+      "size_bytes": 93371
+    },
+    {
+      "date": "2018-09-07",
+      "file": "data/odds/2018-09-07.json.gz",
+      "rows": 16879,
+      "size_bytes": 93884
+    },
+    {
+      "date": "2018-09-08",
+      "file": "data/odds/2018-09-08.json.gz",
+      "rows": 23994,
+      "size_bytes": 131302
+    },
+    {
+      "date": "2018-09-09",
+      "file": "data/odds/2018-09-09.json.gz",
+      "rows": 18903,
+      "size_bytes": 102158
+    },
+    {
+      "date": "2018-09-14",
+      "file": "data/odds/2018-09-14.json.gz",
+      "rows": 19105,
+      "size_bytes": 105877
+    },
+    {
+      "date": "2018-09-15",
+      "file": "data/odds/2018-09-15.json.gz",
+      "rows": 28655,
+      "size_bytes": 156660
+    },
+    {
+      "date": "2018-09-16",
+      "file": "data/odds/2018-09-16.json.gz",
+      "rows": 23675,
+      "size_bytes": 132271
+    },
+    {
+      "date": "2018-09-28",
+      "file": "data/odds/2018-09-28.json.gz",
+      "rows": 22998,
+      "size_bytes": 120611
+    },
+    {
+      "date": "2018-09-29",
+      "file": "data/odds/2018-09-29.json.gz",
+      "rows": 30070,
+      "size_bytes": 159445
+    },
+    {
+      "date": "2018-09-30",
+      "file": "data/odds/2018-09-30.json.gz",
+      "rows": 26789,
+      "size_bytes": 141338
+    },
+    {
+      "date": "2018-10-05",
+      "file": "data/odds/2018-10-05.json.gz",
+      "rows": 21118,
+      "size_bytes": 114851
+    },
+    {
+      "date": "2018-10-06",
+      "file": "data/odds/2018-10-06.json.gz",
+      "rows": 24716,
+      "size_bytes": 130350
+    },
+    {
+      "date": "2018-10-07",
+      "file": "data/odds/2018-10-07.json.gz",
+      "rows": 27598,
+      "size_bytes": 143114
+    },
+    {
+      "date": "2018-10-12",
+      "file": "data/odds/2018-10-12.json.gz",
+      "rows": 22593,
+      "size_bytes": 122921
+    },
+    {
+      "date": "2018-10-13",
+      "file": "data/odds/2018-10-13.json.gz",
+      "rows": 25795,
+      "size_bytes": 138341
+    },
+    {
+      "date": "2018-10-14",
+      "file": "data/odds/2018-10-14.json.gz",
+      "rows": 23524,
+      "size_bytes": 128827
+    },
+    {
+      "date": "2018-10-19",
+      "file": "data/odds/2018-10-19.json.gz",
+      "rows": 18224,
+      "size_bytes": 100840
+    },
+    {
+      "date": "2018-10-20",
+      "file": "data/odds/2018-10-20.json.gz",
+      "rows": 26606,
+      "size_bytes": 143577
+    },
+    {
+      "date": "2018-10-21",
+      "file": "data/odds/2018-10-21.json.gz",
+      "rows": 26229,
+      "size_bytes": 139604
+    },
+    {
+      "date": "2018-10-26",
+      "file": "data/odds/2018-10-26.json.gz",
+      "rows": 24689,
+      "size_bytes": 133502
+    },
+    {
+      "date": "2018-10-27",
+      "file": "data/odds/2018-10-27.json.gz",
+      "rows": 29050,
+      "size_bytes": 155380
+    },
+    {
+      "date": "2018-10-28",
+      "file": "data/odds/2018-10-28.json.gz",
+      "rows": 24569,
+      "size_bytes": 130329
+    },
+    {
+      "date": "2018-11-02",
+      "file": "data/odds/2018-11-02.json.gz",
+      "rows": 17591,
+      "size_bytes": 97259
+    },
+    {
+      "date": "2018-11-03",
+      "file": "data/odds/2018-11-03.json.gz",
+      "rows": 24285,
+      "size_bytes": 128035
+    },
+    {
+      "date": "2018-11-04",
+      "file": "data/odds/2018-11-04.json.gz",
+      "rows": 25749,
+      "size_bytes": 132404
+    },
+    {
+      "date": "2018-11-09",
+      "file": "data/odds/2018-11-09.json.gz",
+      "rows": 22854,
+      "size_bytes": 124103
+    },
+    {
+      "date": "2018-11-10",
+      "file": "data/odds/2018-11-10.json.gz",
+      "rows": 24436,
+      "size_bytes": 133858
+    },
+    {
+      "date": "2018-11-11",
+      "file": "data/odds/2018-11-11.json.gz",
+      "rows": 20925,
+      "size_bytes": 112072
+    },
+    {
+      "date": "2018-11-16",
+      "file": "data/odds/2018-11-16.json.gz",
+      "rows": 25031,
+      "size_bytes": 130870
+    },
+    {
+      "date": "2018-11-17",
+      "file": "data/odds/2018-11-17.json.gz",
+      "rows": 28316,
+      "size_bytes": 147920
+    },
+    {
+      "date": "2018-11-18",
+      "file": "data/odds/2018-11-18.json.gz",
+      "rows": 27576,
+      "size_bytes": 141844
+    },
+    {
+      "date": "2018-11-23",
+      "file": "data/odds/2018-11-23.json.gz",
+      "rows": 25879,
+      "size_bytes": 136837
+    },
+    {
+      "date": "2018-11-24",
+      "file": "data/odds/2018-11-24.json.gz",
+      "rows": 29014,
+      "size_bytes": 155190
+    },
+    {
+      "date": "2018-11-25",
+      "file": "data/odds/2018-11-25.json.gz",
+      "rows": 30450,
+      "size_bytes": 158120
+    },
+    {
+      "date": "2018-11-30",
+      "file": "data/odds/2018-11-30.json.gz",
+      "rows": 22453,
+      "size_bytes": 118132
+    },
+    {
+      "date": "2018-12-01",
+      "file": "data/odds/2018-12-01.json.gz",
+      "rows": 25454,
+      "size_bytes": 137700
+    },
+    {
+      "date": "2018-12-02",
+      "file": "data/odds/2018-12-02.json.gz",
+      "rows": 22943,
+      "size_bytes": 124649
+    },
+    {
+      "date": "2018-12-07",
+      "file": "data/odds/2018-12-07.json.gz",
+      "rows": 20966,
+      "size_bytes": 114063
+    },
+    {
+      "date": "2018-12-08",
+      "file": "data/odds/2018-12-08.json.gz",
+      "rows": 25864,
+      "size_bytes": 138640
+    },
+    {
+      "date": "2018-12-09",
+      "file": "data/odds/2018-12-09.json.gz",
+      "rows": 23764,
+      "size_bytes": 125588
+    },
+    {
+      "date": "2018-12-14",
+      "file": "data/odds/2018-12-14.json.gz",
+      "rows": 26780,
+      "size_bytes": 137626
+    },
+    {
+      "date": "2018-12-15",
+      "file": "data/odds/2018-12-15.json.gz",
+      "rows": 28776,
+      "size_bytes": 152765
+    },
+    {
+      "date": "2018-12-16",
+      "file": "data/odds/2018-12-16.json.gz",
+      "rows": 28705,
+      "size_bytes": 146094
+    },
+    {
+      "date": "2018-12-21",
+      "file": "data/odds/2018-12-21.json.gz",
+      "rows": 16203,
+      "size_bytes": 90034
+    },
+    {
+      "date": "2018-12-22",
+      "file": "data/odds/2018-12-22.json.gz",
+      "rows": 26341,
+      "size_bytes": 136951
+    },
+    {
+      "date": "2018-12-23",
+      "file": "data/odds/2018-12-23.json.gz",
+      "rows": 24031,
+      "size_bytes": 122248
+    },
+    {
+      "date": "2018-12-28",
+      "file": "data/odds/2018-12-28.json.gz",
+      "rows": 16203,
+      "size_bytes": 89083
+    },
+    {
+      "date": "2018-12-29",
+      "file": "data/odds/2018-12-29.json.gz",
+      "rows": 8084,
+      "size_bytes": 44822
+    },
+    {
+      "date": "2018-12-30",
+      "file": "data/odds/2018-12-30.json.gz",
+      "rows": 26201,
+      "size_bytes": 134218
+    },
+    {
+      "date": "2019-01-04",
+      "file": "data/odds/2019-01-04.json.gz",
+      "rows": 18833,
+      "size_bytes": 97237
+    },
+    {
+      "date": "2019-01-05",
+      "file": "data/odds/2019-01-05.json.gz",
+      "rows": 21786,
+      "size_bytes": 110325
+    },
+    {
+      "date": "2019-01-06",
+      "file": "data/odds/2019-01-06.json.gz",
+      "rows": 25565,
+      "size_bytes": 134701
+    },
+    {
+      "date": "2019-01-11",
+      "file": "data/odds/2019-01-11.json.gz",
+      "rows": 20305,
+      "size_bytes": 111836
+    },
+    {
+      "date": "2019-01-12",
+      "file": "data/odds/2019-01-12.json.gz",
+      "rows": 30880,
+      "size_bytes": 164146
+    },
+    {
+      "date": "2019-01-13",
+      "file": "data/odds/2019-01-13.json.gz",
+      "rows": 26766,
+      "size_bytes": 137452
+    },
+    {
+      "date": "2019-01-18",
+      "file": "data/odds/2019-01-18.json.gz",
+      "rows": 23357,
+      "size_bytes": 126748
+    },
+    {
+      "date": "2019-01-19",
+      "file": "data/odds/2019-01-19.json.gz",
+      "rows": 30769,
+      "size_bytes": 165078
+    },
+    {
+      "date": "2019-01-20",
+      "file": "data/odds/2019-01-20.json.gz",
+      "rows": 27451,
+      "size_bytes": 138981
+    },
+    {
+      "date": "2019-01-25",
+      "file": "data/odds/2019-01-25.json.gz",
+      "rows": 24421,
+      "size_bytes": 132803
+    },
+    {
+      "date": "2019-01-26",
+      "file": "data/odds/2019-01-26.json.gz",
+      "rows": 31218,
+      "size_bytes": 165251
+    },
+    {
+      "date": "2019-01-27",
+      "file": "data/odds/2019-01-27.json.gz",
+      "rows": 28779,
+      "size_bytes": 150975
+    },
+    {
+      "date": "2019-02-01",
+      "file": "data/odds/2019-02-01.json.gz",
+      "rows": 27149,
+      "size_bytes": 146973
+    },
+    {
+      "date": "2019-02-02",
+      "file": "data/odds/2019-02-02.json.gz",
+      "rows": 32279,
+      "size_bytes": 177200
+    },
+    {
+      "date": "2019-02-03",
+      "file": "data/odds/2019-02-03.json.gz",
+      "rows": 24973,
+      "size_bytes": 134432
+    },
+    {
+      "date": "2019-02-15",
+      "file": "data/odds/2019-02-15.json.gz",
+      "rows": 31490,
+      "size_bytes": 166593
+    },
+    {
+      "date": "2019-02-16",
+      "file": "data/odds/2019-02-16.json.gz",
+      "rows": 31208,
+      "size_bytes": 163843
+    },
+    {
+      "date": "2019-02-17",
+      "file": "data/odds/2019-02-17.json.gz",
+      "rows": 28274,
+      "size_bytes": 144981
+    },
+    {
+      "date": "2019-02-22",
+      "file": "data/odds/2019-02-22.json.gz",
+      "rows": 27454,
+      "size_bytes": 147216
+    },
+    {
+      "date": "2019-02-23",
+      "file": "data/odds/2019-02-23.json.gz",
+      "rows": 30501,
+      "size_bytes": 163600
+    },
+    {
+      "date": "2019-02-24",
+      "file": "data/odds/2019-02-24.json.gz",
+      "rows": 29857,
+      "size_bytes": 155072
+    },
+    {
+      "date": "2019-03-01",
+      "file": "data/odds/2019-03-01.json.gz",
+      "rows": 28428,
+      "size_bytes": 150491
+    },
+    {
+      "date": "2019-03-02",
+      "file": "data/odds/2019-03-02.json.gz",
+      "rows": 28457,
+      "size_bytes": 149124
+    },
+    {
+      "date": "2019-03-03",
+      "file": "data/odds/2019-03-03.json.gz",
+      "rows": 27203,
+      "size_bytes": 139075
+    },
+    {
+      "date": "2019-03-08",
+      "file": "data/odds/2019-03-08.json.gz",
+      "rows": 26198,
+      "size_bytes": 138200
+    },
+    {
+      "date": "2019-03-09",
+      "file": "data/odds/2019-03-09.json.gz",
+      "rows": 27365,
+      "size_bytes": 147144
+    },
+    {
+      "date": "2019-03-10",
+      "file": "data/odds/2019-03-10.json.gz",
+      "rows": 20247,
+      "size_bytes": 110787
+    },
+    {
+      "date": "2019-03-15",
+      "file": "data/odds/2019-03-15.json.gz",
+      "rows": 25180,
+      "size_bytes": 134445
+    },
+    {
+      "date": "2019-03-16",
+      "file": "data/odds/2019-03-16.json.gz",
+      "rows": 25389,
+      "size_bytes": 136585
+    },
+    {
+      "date": "2019-03-17",
+      "file": "data/odds/2019-03-17.json.gz",
+      "rows": 22304,
+      "size_bytes": 117317
+    },
+    {
+      "date": "2019-03-22",
+      "file": "data/odds/2019-03-22.json.gz",
+      "rows": 27633,
+      "size_bytes": 146562
+    },
+    {
+      "date": "2019-03-23",
+      "file": "data/odds/2019-03-23.json.gz",
+      "rows": 28955,
+      "size_bytes": 154672
+    },
+    {
+      "date": "2019-03-24",
+      "file": "data/odds/2019-03-24.json.gz",
+      "rows": 26119,
+      "size_bytes": 140086
+    },
+    {
+      "date": "2019-03-29",
+      "file": "data/odds/2019-03-29.json.gz",
+      "rows": 29307,
+      "size_bytes": 155898
+    },
+    {
+      "date": "2019-03-30",
+      "file": "data/odds/2019-03-30.json.gz",
+      "rows": 26771,
+      "size_bytes": 140191
+    },
+    {
+      "date": "2019-03-31",
+      "file": "data/odds/2019-03-31.json.gz",
+      "rows": 25977,
+      "size_bytes": 139412
+    },
+    {
+      "date": "2019-04-05",
+      "file": "data/odds/2019-04-05.json.gz",
+      "rows": 27048,
+      "size_bytes": 138759
+    },
+    {
+      "date": "2019-04-06",
+      "file": "data/odds/2019-04-06.json.gz",
+      "rows": 20990,
+      "size_bytes": 116641
+    },
+    {
+      "date": "2019-04-07",
+      "file": "data/odds/2019-04-07.json.gz",
+      "rows": 28969,
+      "size_bytes": 151486
+    },
+    {
+      "date": "2019-04-12",
+      "file": "data/odds/2019-04-12.json.gz",
+      "rows": 25553,
+      "size_bytes": 136664
+    },
+    {
+      "date": "2019-04-13",
+      "file": "data/odds/2019-04-13.json.gz",
+      "rows": 25009,
+      "size_bytes": 134328
+    },
+    {
+      "date": "2019-04-14",
+      "file": "data/odds/2019-04-14.json.gz",
+      "rows": 20060,
+      "size_bytes": 107455
+    },
+    {
+      "date": "2019-04-19",
+      "file": "data/odds/2019-04-19.json.gz",
+      "rows": 26214,
+      "size_bytes": 135735
+    },
+    {
+      "date": "2019-04-20",
+      "file": "data/odds/2019-04-20.json.gz",
+      "rows": 28562,
+      "size_bytes": 150335
+    },
+    {
+      "date": "2019-04-21",
+      "file": "data/odds/2019-04-21.json.gz",
+      "rows": 23586,
+      "size_bytes": 124595
+    },
+    {
+      "date": "2019-04-26",
+      "file": "data/odds/2019-04-26.json.gz",
+      "rows": 24341,
+      "size_bytes": 129660
+    },
+    {
+      "date": "2019-04-27",
+      "file": "data/odds/2019-04-27.json.gz",
+      "rows": 29410,
+      "size_bytes": 156374
+    },
+    {
+      "date": "2019-04-28",
+      "file": "data/odds/2019-04-28.json.gz",
+      "rows": 28368,
+      "size_bytes": 145390
+    },
+    {
+      "date": "2019-05-03",
+      "file": "data/odds/2019-05-03.json.gz",
+      "rows": 23100,
+      "size_bytes": 121594
+    },
+    {
+      "date": "2019-05-04",
+      "file": "data/odds/2019-05-04.json.gz",
+      "rows": 23559,
+      "size_bytes": 128448
+    },
+    {
+      "date": "2019-05-05",
+      "file": "data/odds/2019-05-05.json.gz",
+      "rows": 25315,
+      "size_bytes": 132369
+    },
+    {
+      "date": "2019-05-10",
+      "file": "data/odds/2019-05-10.json.gz",
+      "rows": 24043,
+      "size_bytes": 127388
+    },
+    {
+      "date": "2019-05-11",
+      "file": "data/odds/2019-05-11.json.gz",
+      "rows": 23578,
+      "size_bytes": 128913
+    },
+    {
+      "date": "2019-05-12",
+      "file": "data/odds/2019-05-12.json.gz",
+      "rows": 24827,
+      "size_bytes": 129421
+    },
+    {
+      "date": "2019-05-17",
+      "file": "data/odds/2019-05-17.json.gz",
+      "rows": 26980,
+      "size_bytes": 141518
+    },
+    {
+      "date": "2019-05-18",
+      "file": "data/odds/2019-05-18.json.gz",
+      "rows": 21980,
+      "size_bytes": 120247
+    },
+    {
+      "date": "2019-05-19",
+      "file": "data/odds/2019-05-19.json.gz",
+      "rows": 27381,
+      "size_bytes": 145139
+    },
+    {
+      "date": "2019-05-24",
+      "file": "data/odds/2019-05-24.json.gz",
+      "rows": 18194,
+      "size_bytes": 101618
+    },
+    {
+      "date": "2019-05-25",
+      "file": "data/odds/2019-05-25.json.gz",
+      "rows": 26874,
+      "size_bytes": 145008
+    },
+    {
+      "date": "2019-05-26",
+      "file": "data/odds/2019-05-26.json.gz",
+      "rows": 23962,
+      "size_bytes": 131753
+    },
+    {
+      "date": "2019-05-31",
+      "file": "data/odds/2019-05-31.json.gz",
+      "rows": 22089,
+      "size_bytes": 123182
+    },
+    {
+      "date": "2019-06-01",
+      "file": "data/odds/2019-06-01.json.gz",
+      "rows": 17809,
+      "size_bytes": 100244
+    },
+    {
+      "date": "2019-06-02",
+      "file": "data/odds/2019-06-02.json.gz",
+      "rows": 27223,
+      "size_bytes": 142578
+    },
+    {
+      "date": "2019-06-07",
+      "file": "data/odds/2019-06-07.json.gz",
+      "rows": 16020,
+      "size_bytes": 86070
+    },
+    {
+      "date": "2019-06-08",
+      "file": "data/odds/2019-06-08.json.gz",
+      "rows": 20722,
+      "size_bytes": 115069
+    },
+    {
+      "date": "2019-06-09",
+      "file": "data/odds/2019-06-09.json.gz",
+      "rows": 18722,
+      "size_bytes": 101760
+    },
+    {
+      "date": "2019-06-14",
+      "file": "data/odds/2019-06-14.json.gz",
+      "rows": 18136,
+      "size_bytes": 98309
+    },
+    {
+      "date": "2019-06-15",
+      "file": "data/odds/2019-06-15.json.gz",
+      "rows": 19189,
+      "size_bytes": 105722
+    },
+    {
+      "date": "2019-06-16",
+      "file": "data/odds/2019-06-16.json.gz",
+      "rows": 20290,
+      "size_bytes": 109966
+    },
+    {
+      "date": "2019-06-21",
+      "file": "data/odds/2019-06-21.json.gz",
+      "rows": 21632,
+      "size_bytes": 119426
+    },
+    {
+      "date": "2019-06-22",
+      "file": "data/odds/2019-06-22.json.gz",
+      "rows": 24464,
+      "size_bytes": 132444
+    },
+    {
+      "date": "2019-06-23",
+      "file": "data/odds/2019-06-23.json.gz",
+      "rows": 20841,
+      "size_bytes": 114507
+    },
+    {
+      "date": "2019-06-28",
+      "file": "data/odds/2019-06-28.json.gz",
+      "rows": 18989,
+      "size_bytes": 104021
+    },
+    {
+      "date": "2019-06-29",
+      "file": "data/odds/2019-06-29.json.gz",
+      "rows": 21829,
+      "size_bytes": 121936
+    },
+    {
+      "date": "2019-06-30",
+      "file": "data/odds/2019-06-30.json.gz",
+      "rows": 25518,
+      "size_bytes": 134235
+    },
+    {
+      "date": "2019-07-05",
+      "file": "data/odds/2019-07-05.json.gz",
+      "rows": 17066,
+      "size_bytes": 97407
+    },
+    {
+      "date": "2019-07-06",
+      "file": "data/odds/2019-07-06.json.gz",
+      "rows": 16960,
+      "size_bytes": 93834
+    },
+    {
+      "date": "2019-07-07",
+      "file": "data/odds/2019-07-07.json.gz",
+      "rows": 15527,
+      "size_bytes": 86309
+    },
+    {
+      "date": "2019-07-12",
+      "file": "data/odds/2019-07-12.json.gz",
+      "rows": 18640,
+      "size_bytes": 105344
+    },
+    {
+      "date": "2019-07-13",
+      "file": "data/odds/2019-07-13.json.gz",
+      "rows": 15358,
+      "size_bytes": 86076
+    },
+    {
+      "date": "2019-07-14",
+      "file": "data/odds/2019-07-14.json.gz",
+      "rows": 20120,
+      "size_bytes": 107898
+    },
+    {
+      "date": "2019-07-19",
+      "file": "data/odds/2019-07-19.json.gz",
+      "rows": 21048,
+      "size_bytes": 116872
+    },
+    {
+      "date": "2019-07-20",
+      "file": "data/odds/2019-07-20.json.gz",
+      "rows": 21680,
+      "size_bytes": 120901
+    },
+    {
+      "date": "2019-07-21",
+      "file": "data/odds/2019-07-21.json.gz",
+      "rows": 19042,
+      "size_bytes": 106694
+    },
+    {
+      "date": "2019-07-26",
+      "file": "data/odds/2019-07-26.json.gz",
+      "rows": 20211,
+      "size_bytes": 109970
+    },
+    {
+      "date": "2019-07-27",
+      "file": "data/odds/2019-07-27.json.gz",
+      "rows": 20441,
+      "size_bytes": 111433
+    },
+    {
+      "date": "2019-07-28",
+      "file": "data/odds/2019-07-28.json.gz",
+      "rows": 22878,
+      "size_bytes": 122968
+    },
+    {
+      "date": "2019-08-02",
+      "file": "data/odds/2019-08-02.json.gz",
+      "rows": 15683,
+      "size_bytes": 86195
+    },
+    {
+      "date": "2019-08-03",
+      "file": "data/odds/2019-08-03.json.gz",
+      "rows": 8796,
+      "size_bytes": 48576
+    },
+    {
+      "date": "2019-08-04",
+      "file": "data/odds/2019-08-04.json.gz",
+      "rows": 13038,
+      "size_bytes": 73030
+    },
+    {
+      "date": "2019-08-09",
+      "file": "data/odds/2019-08-09.json.gz",
+      "rows": 14308,
+      "size_bytes": 79157
+    },
+    {
+      "date": "2019-08-10",
+      "file": "data/odds/2019-08-10.json.gz",
+      "rows": 20297,
+      "size_bytes": 108066
+    },
+    {
+      "date": "2019-08-11",
+      "file": "data/odds/2019-08-11.json.gz",
+      "rows": 20656,
+      "size_bytes": 108828
+    },
+    {
+      "date": "2019-08-16",
+      "file": "data/odds/2019-08-16.json.gz",
+      "rows": 20841,
+      "size_bytes": 114697
+    },
+    {
+      "date": "2019-08-17",
+      "file": "data/odds/2019-08-17.json.gz",
+      "rows": 17629,
+      "size_bytes": 98906
+    },
+    {
+      "date": "2019-08-18",
+      "file": "data/odds/2019-08-18.json.gz",
+      "rows": 25222,
+      "size_bytes": 131367
+    },
+    {
+      "date": "2019-08-23",
+      "file": "data/odds/2019-08-23.json.gz",
+      "rows": 21841,
+      "size_bytes": 117511
+    },
+    {
+      "date": "2019-08-24",
+      "file": "data/odds/2019-08-24.json.gz",
+      "rows": 19495,
+      "size_bytes": 105616
+    },
+    {
+      "date": "2019-08-25",
+      "file": "data/odds/2019-08-25.json.gz",
+      "rows": 21353,
+      "size_bytes": 114511
+    },
+    {
+      "date": "2019-08-30",
+      "file": "data/odds/2019-08-30.json.gz",
+      "rows": 24029,
+      "size_bytes": 125691
+    },
+    {
+      "date": "2019-08-31",
+      "file": "data/odds/2019-08-31.json.gz",
+      "rows": 25367,
+      "size_bytes": 135880
+    },
+    {
+      "date": "2019-09-01",
+      "file": "data/odds/2019-09-01.json.gz",
+      "rows": 24439,
+      "size_bytes": 130602
+    },
+    {
+      "date": "2019-09-06",
+      "file": "data/odds/2019-09-06.json.gz",
+      "rows": 25283,
+      "size_bytes": 137752
+    },
+    {
+      "date": "2019-09-07",
+      "file": "data/odds/2019-09-07.json.gz",
+      "rows": 27928,
+      "size_bytes": 150880
+    },
+    {
+      "date": "2019-09-08",
+      "file": "data/odds/2019-09-08.json.gz",
+      "rows": 27675,
+      "size_bytes": 146778
+    },
+    {
+      "date": "2019-09-20",
+      "file": "data/odds/2019-09-20.json.gz",
+      "rows": 27379,
+      "size_bytes": 146718
+    },
+    {
+      "date": "2019-09-21",
+      "file": "data/odds/2019-09-21.json.gz",
+      "rows": 33979,
+      "size_bytes": 176317
+    },
+    {
+      "date": "2019-09-22",
+      "file": "data/odds/2019-09-22.json.gz",
+      "rows": 24959,
+      "size_bytes": 136732
+    },
+    {
+      "date": "2019-09-27",
+      "file": "data/odds/2019-09-27.json.gz",
+      "rows": 26176,
+      "size_bytes": 140470
+    },
+    {
+      "date": "2019-09-28",
+      "file": "data/odds/2019-09-28.json.gz",
+      "rows": 28925,
+      "size_bytes": 157395
+    },
+    {
+      "date": "2019-09-29",
+      "file": "data/odds/2019-09-29.json.gz",
+      "rows": 24817,
+      "size_bytes": 133173
+    },
+    {
+      "date": "2019-10-04",
+      "file": "data/odds/2019-10-04.json.gz",
+      "rows": 22401,
+      "size_bytes": 122179
+    },
+    {
+      "date": "2019-10-05",
+      "file": "data/odds/2019-10-05.json.gz",
+      "rows": 25781,
+      "size_bytes": 137026
+    },
+    {
+      "date": "2019-10-06",
+      "file": "data/odds/2019-10-06.json.gz",
+      "rows": 26163,
+      "size_bytes": 134800
+    },
+    {
+      "date": "2019-10-11",
+      "file": "data/odds/2019-10-11.json.gz",
+      "rows": 19560,
+      "size_bytes": 108447
+    },
+    {
+      "date": "2019-10-12",
+      "file": "data/odds/2019-10-12.json.gz",
+      "rows": 27081,
+      "size_bytes": 141716
+    },
+    {
+      "date": "2019-10-13",
+      "file": "data/odds/2019-10-13.json.gz",
+      "rows": 23450,
+      "size_bytes": 124214
+    },
+    {
+      "date": "2019-10-18",
+      "file": "data/odds/2019-10-18.json.gz",
+      "rows": 23010,
+      "size_bytes": 120514
+    },
+    {
+      "date": "2019-10-19",
+      "file": "data/odds/2019-10-19.json.gz",
+      "rows": 19404,
+      "size_bytes": 107363
+    },
+    {
+      "date": "2019-10-20",
+      "file": "data/odds/2019-10-20.json.gz",
+      "rows": 20595,
+      "size_bytes": 107841
+    },
+    {
+      "date": "2019-10-25",
+      "file": "data/odds/2019-10-25.json.gz",
+      "rows": 23084,
+      "size_bytes": 122899
+    },
+    {
+      "date": "2019-10-26",
+      "file": "data/odds/2019-10-26.json.gz",
+      "rows": 26845,
+      "size_bytes": 140934
+    },
+    {
+      "date": "2019-10-27",
+      "file": "data/odds/2019-10-27.json.gz",
+      "rows": 27776,
+      "size_bytes": 140189
+    },
+    {
+      "date": "2019-11-01",
+      "file": "data/odds/2019-11-01.json.gz",
+      "rows": 19138,
+      "size_bytes": 103079
+    },
+    {
+      "date": "2019-11-02",
+      "file": "data/odds/2019-11-02.json.gz",
+      "rows": 27164,
+      "size_bytes": 140880
+    },
+    {
+      "date": "2019-11-03",
+      "file": "data/odds/2019-11-03.json.gz",
+      "rows": 23733,
+      "size_bytes": 124887
+    },
+    {
+      "date": "2019-11-08",
+      "file": "data/odds/2019-11-08.json.gz",
+      "rows": 18973,
+      "size_bytes": 103245
+    },
+    {
+      "date": "2019-11-09",
+      "file": "data/odds/2019-11-09.json.gz",
+      "rows": 20429,
+      "size_bytes": 108994
+    },
+    {
+      "date": "2019-11-10",
+      "file": "data/odds/2019-11-10.json.gz",
+      "rows": 23593,
+      "size_bytes": 119643
+    },
+    {
+      "date": "2019-11-15",
+      "file": "data/odds/2019-11-15.json.gz",
+      "rows": 19350,
+      "size_bytes": 102822
+    },
+    {
+      "date": "2019-11-16",
+      "file": "data/odds/2019-11-16.json.gz",
+      "rows": 20334,
+      "size_bytes": 109936
+    },
+    {
+      "date": "2019-11-17",
+      "file": "data/odds/2019-11-17.json.gz",
+      "rows": 24781,
+      "size_bytes": 127136
+    },
+    {
+      "date": "2019-11-22",
+      "file": "data/odds/2019-11-22.json.gz",
+      "rows": 24406,
+      "size_bytes": 128005
+    },
+    {
+      "date": "2019-11-23",
+      "file": "data/odds/2019-11-23.json.gz",
+      "rows": 28300,
+      "size_bytes": 146069
+    },
+    {
+      "date": "2019-11-24",
+      "file": "data/odds/2019-11-24.json.gz",
+      "rows": 28241,
+      "size_bytes": 141005
+    },
+    {
+      "date": "2019-11-29",
+      "file": "data/odds/2019-11-29.json.gz",
+      "rows": 8030,
+      "size_bytes": 44342
+    },
+    {
+      "date": "2019-11-30",
+      "file": "data/odds/2019-11-30.json.gz",
+      "rows": 28204,
+      "size_bytes": 148979
+    },
+    {
+      "date": "2019-12-01",
+      "file": "data/odds/2019-12-01.json.gz",
+      "rows": 23280,
+      "size_bytes": 121097
+    },
+    {
+      "date": "2019-12-06",
+      "file": "data/odds/2019-12-06.json.gz",
+      "rows": 25254,
+      "size_bytes": 130011
+    },
+    {
+      "date": "2019-12-07",
+      "file": "data/odds/2019-12-07.json.gz",
+      "rows": 30791,
+      "size_bytes": 156476
+    },
+    {
+      "date": "2019-12-08",
+      "file": "data/odds/2019-12-08.json.gz",
+      "rows": 27917,
+      "size_bytes": 143439
+    },
+    {
+      "date": "2019-12-13",
+      "file": "data/odds/2019-12-13.json.gz",
+      "rows": 26339,
+      "size_bytes": 138141
+    },
+    {
+      "date": "2019-12-14",
+      "file": "data/odds/2019-12-14.json.gz",
+      "rows": 31474,
+      "size_bytes": 164445
+    },
+    {
+      "date": "2019-12-15",
+      "file": "data/odds/2019-12-15.json.gz",
+      "rows": 27493,
+      "size_bytes": 141372
+    },
+    {
+      "date": "2019-12-20",
+      "file": "data/odds/2019-12-20.json.gz",
+      "rows": 12650,
+      "size_bytes": 70204
+    },
+    {
+      "date": "2019-12-21",
+      "file": "data/odds/2019-12-21.json.gz",
+      "rows": 24067,
+      "size_bytes": 125143
+    },
+    {
+      "date": "2019-12-22",
+      "file": "data/odds/2019-12-22.json.gz",
+      "rows": 26558,
+      "size_bytes": 131190
+    },
+    {
+      "date": "2019-12-27",
+      "file": "data/odds/2019-12-27.json.gz",
+      "rows": 14270,
+      "size_bytes": 79015
+    },
+    {
+      "date": "2019-12-28",
+      "file": "data/odds/2019-12-28.json.gz",
+      "rows": 6448,
+      "size_bytes": 36616
+    },
+    {
+      "date": "2019-12-29",
+      "file": "data/odds/2019-12-29.json.gz",
+      "rows": 35864,
+      "size_bytes": 174288
+    },
+    {
+      "date": "2022-01-07",
+      "file": "data/odds/2022-01-07.json.gz",
+      "rows": 20346,
+      "size_bytes": 111689
+    },
+    {
+      "date": "2022-01-08",
+      "file": "data/odds/2022-01-08.json.gz",
+      "rows": 27202,
+      "size_bytes": 141634
+    },
+    {
+      "date": "2022-01-09",
+      "file": "data/odds/2022-01-09.json.gz",
+      "rows": 36172,
+      "size_bytes": 182459
+    },
+    {
+      "date": "2022-01-14",
+      "file": "data/odds/2022-01-14.json.gz",
+      "rows": 16425,
+      "size_bytes": 90540
+    },
+    {
+      "date": "2022-01-15",
+      "file": "data/odds/2022-01-15.json.gz",
+      "rows": 25106,
+      "size_bytes": 133436
+    },
+    {
+      "date": "2022-01-16",
+      "file": "data/odds/2022-01-16.json.gz",
+      "rows": 37742,
+      "size_bytes": 186941
+    },
+    {
+      "date": "2022-01-21",
+      "file": "data/odds/2022-01-21.json.gz",
+      "rows": 23386,
+      "size_bytes": 123455
+    },
+    {
+      "date": "2022-01-22",
+      "file": "data/odds/2022-01-22.json.gz",
+      "rows": 25609,
+      "size_bytes": 132738
+    },
+    {
+      "date": "2022-01-23",
+      "file": "data/odds/2022-01-23.json.gz",
+      "rows": 35848,
+      "size_bytes": 186208
+    },
+    {
+      "date": "2022-01-28",
+      "file": "data/odds/2022-01-28.json.gz",
+      "rows": 21290,
+      "size_bytes": 115188
+    },
+    {
+      "date": "2022-01-29",
+      "file": "data/odds/2022-01-29.json.gz",
+      "rows": 29938,
+      "size_bytes": 155241
+    },
+    {
+      "date": "2022-01-30",
+      "file": "data/odds/2022-01-30.json.gz",
+      "rows": 35518,
+      "size_bytes": 180006
+    },
+    {
+      "date": "2022-02-11",
+      "file": "data/odds/2022-02-11.json.gz",
+      "rows": 24591,
+      "size_bytes": 125319
+    },
+    {
+      "date": "2022-02-12",
+      "file": "data/odds/2022-02-12.json.gz",
+      "rows": 30026,
+      "size_bytes": 149867
+    },
+    {
+      "date": "2022-02-13",
+      "file": "data/odds/2022-02-13.json.gz",
+      "rows": 36003,
+      "size_bytes": 176399
+    },
+    {
+      "date": "2022-02-18",
+      "file": "data/odds/2022-02-18.json.gz",
+      "rows": 29310,
+      "size_bytes": 145066
+    },
+    {
+      "date": "2022-02-19",
+      "file": "data/odds/2022-02-19.json.gz",
+      "rows": 24125,
+      "size_bytes": 122979
+    },
+    {
+      "date": "2022-02-20",
+      "file": "data/odds/2022-02-20.json.gz",
+      "rows": 45356,
+      "size_bytes": 212031
+    },
+    {
+      "date": "2022-02-25",
+      "file": "data/odds/2022-02-25.json.gz",
+      "rows": 25786,
+      "size_bytes": 133797
+    },
+    {
+      "date": "2022-02-26",
+      "file": "data/odds/2022-02-26.json.gz",
+      "rows": 30156,
+      "size_bytes": 154151
+    },
+    {
+      "date": "2022-02-27",
+      "file": "data/odds/2022-02-27.json.gz",
+      "rows": 40544,
+      "size_bytes": 195935
+    },
+    {
+      "date": "2022-03-04",
+      "file": "data/odds/2022-03-04.json.gz",
+      "rows": 15712,
+      "size_bytes": 86630
+    },
+    {
+      "date": "2022-03-05",
+      "file": "data/odds/2022-03-05.json.gz",
+      "rows": 22586,
+      "size_bytes": 117726
+    },
+    {
+      "date": "2022-03-06",
+      "file": "data/odds/2022-03-06.json.gz",
+      "rows": 22305,
+      "size_bytes": 118193
+    },
+    {
+      "date": "2022-03-11",
+      "file": "data/odds/2022-03-11.json.gz",
+      "rows": 16548,
+      "size_bytes": 88478
+    },
+    {
+      "date": "2022-03-12",
+      "file": "data/odds/2022-03-12.json.gz",
+      "rows": 22061,
+      "size_bytes": 116901
+    },
+    {
+      "date": "2022-03-13",
+      "file": "data/odds/2022-03-13.json.gz",
+      "rows": 22705,
+      "size_bytes": 119189
+    },
+    {
+      "date": "2022-03-18",
+      "file": "data/odds/2022-03-18.json.gz",
+      "rows": 14799,
+      "size_bytes": 80538
+    },
+    {
+      "date": "2022-03-19",
+      "file": "data/odds/2022-03-19.json.gz",
+      "rows": 23369,
+      "size_bytes": 120746
+    },
+    {
+      "date": "2022-03-20",
+      "file": "data/odds/2022-03-20.json.gz",
+      "rows": 25087,
+      "size_bytes": 130254
+    },
+    {
+      "date": "2022-03-25",
+      "file": "data/odds/2022-03-25.json.gz",
+      "rows": 17147,
+      "size_bytes": 93069
+    },
+    {
+      "date": "2022-03-26",
+      "file": "data/odds/2022-03-26.json.gz",
+      "rows": 18420,
+      "size_bytes": 99153
+    },
+    {
+      "date": "2022-03-27",
+      "file": "data/odds/2022-03-27.json.gz",
+      "rows": 25658,
+      "size_bytes": 138560
+    },
+    {
+      "date": "2022-04-01",
+      "file": "data/odds/2022-04-01.json.gz",
+      "rows": 16284,
+      "size_bytes": 89538
+    },
+    {
+      "date": "2022-04-02",
+      "file": "data/odds/2022-04-02.json.gz",
+      "rows": 18826,
+      "size_bytes": 105549
+    },
+    {
+      "date": "2022-04-03",
+      "file": "data/odds/2022-04-03.json.gz",
+      "rows": 21992,
+      "size_bytes": 119123
+    },
+    {
+      "date": "2022-04-08",
+      "file": "data/odds/2022-04-08.json.gz",
+      "rows": 18048,
+      "size_bytes": 99480
+    },
+    {
+      "date": "2022-04-09",
+      "file": "data/odds/2022-04-09.json.gz",
+      "rows": 17540,
+      "size_bytes": 97619
+    },
+    {
+      "date": "2022-04-10",
+      "file": "data/odds/2022-04-10.json.gz",
+      "rows": 23172,
+      "size_bytes": 126668
+    },
+    {
+      "date": "2022-04-15",
+      "file": "data/odds/2022-04-15.json.gz",
+      "rows": 15089,
+      "size_bytes": 85320
+    },
+    {
+      "date": "2022-04-16",
+      "file": "data/odds/2022-04-16.json.gz",
+      "rows": 18380,
+      "size_bytes": 100937
+    },
+    {
+      "date": "2022-04-17",
+      "file": "data/odds/2022-04-17.json.gz",
+      "rows": 19868,
+      "size_bytes": 107644
+    },
+    {
+      "date": "2022-04-22",
+      "file": "data/odds/2022-04-22.json.gz",
+      "rows": 14821,
+      "size_bytes": 82961
+    },
+    {
+      "date": "2022-04-23",
+      "file": "data/odds/2022-04-23.json.gz",
+      "rows": 18098,
+      "size_bytes": 100513
+    },
+    {
+      "date": "2022-04-24",
+      "file": "data/odds/2022-04-24.json.gz",
+      "rows": 22178,
+      "size_bytes": 121861
+    },
+    {
+      "date": "2022-04-29",
+      "file": "data/odds/2022-04-29.json.gz",
+      "rows": 19897,
+      "size_bytes": 108111
+    },
+    {
+      "date": "2022-04-30",
+      "file": "data/odds/2022-04-30.json.gz",
+      "rows": 21614,
+      "size_bytes": 117630
+    },
+    {
+      "date": "2022-05-01",
+      "file": "data/odds/2022-05-01.json.gz",
+      "rows": 25775,
+      "size_bytes": 139718
+    },
+    {
+      "date": "2022-05-06",
+      "file": "data/odds/2022-05-06.json.gz",
+      "rows": 15154,
+      "size_bytes": 85024
+    },
+    {
+      "date": "2022-05-07",
+      "file": "data/odds/2022-05-07.json.gz",
+      "rows": 16754,
+      "size_bytes": 92539
+    },
+    {
+      "date": "2022-05-08",
+      "file": "data/odds/2022-05-08.json.gz",
+      "rows": 18522,
+      "size_bytes": 103002
+    },
+    {
+      "date": "2022-05-13",
+      "file": "data/odds/2022-05-13.json.gz",
+      "rows": 14063,
+      "size_bytes": 78565
+    },
+    {
+      "date": "2022-05-14",
+      "file": "data/odds/2022-05-14.json.gz",
+      "rows": 15765,
+      "size_bytes": 87936
+    },
+    {
+      "date": "2022-05-15",
+      "file": "data/odds/2022-05-15.json.gz",
+      "rows": 22934,
+      "size_bytes": 122198
+    },
+    {
+      "date": "2022-05-20",
+      "file": "data/odds/2022-05-20.json.gz",
+      "rows": 15125,
+      "size_bytes": 83682
+    },
+    {
+      "date": "2022-05-21",
+      "file": "data/odds/2022-05-21.json.gz",
+      "rows": 16270,
+      "size_bytes": 91455
+    },
+    {
+      "date": "2022-05-22",
+      "file": "data/odds/2022-05-22.json.gz",
+      "rows": 22276,
+      "size_bytes": 121707
+    },
+    {
+      "date": "2022-05-27",
+      "file": "data/odds/2022-05-27.json.gz",
+      "rows": 13551,
+      "size_bytes": 75245
+    },
+    {
+      "date": "2022-05-28",
+      "file": "data/odds/2022-05-28.json.gz",
+      "rows": 18338,
+      "size_bytes": 101744
+    },
+    {
+      "date": "2022-05-29",
+      "file": "data/odds/2022-05-29.json.gz",
+      "rows": 24195,
+      "size_bytes": 131055
+    },
+    {
+      "date": "2022-06-03",
+      "file": "data/odds/2022-06-03.json.gz",
+      "rows": 15714,
+      "size_bytes": 87668
+    },
+    {
+      "date": "2022-06-04",
+      "file": "data/odds/2022-06-04.json.gz",
+      "rows": 21183,
+      "size_bytes": 117486
+    },
+    {
+      "date": "2022-06-05",
+      "file": "data/odds/2022-06-05.json.gz",
+      "rows": 25181,
+      "size_bytes": 134452
+    },
+    {
+      "date": "2022-06-10",
+      "file": "data/odds/2022-06-10.json.gz",
+      "rows": 16641,
+      "size_bytes": 92658
+    },
+    {
+      "date": "2022-06-11",
+      "file": "data/odds/2022-06-11.json.gz",
+      "rows": 19554,
+      "size_bytes": 108896
+    },
+    {
+      "date": "2022-06-12",
+      "file": "data/odds/2022-06-12.json.gz",
+      "rows": 19933,
+      "size_bytes": 108294
+    },
+    {
+      "date": "2022-06-17",
+      "file": "data/odds/2022-06-17.json.gz",
+      "rows": 17058,
+      "size_bytes": 95808
+    },
+    {
+      "date": "2022-06-18",
+      "file": "data/odds/2022-06-18.json.gz",
+      "rows": 17200,
+      "size_bytes": 96947
+    },
+    {
+      "date": "2022-06-19",
+      "file": "data/odds/2022-06-19.json.gz",
+      "rows": 17444,
+      "size_bytes": 96866
+    },
+    {
+      "date": "2022-06-24",
+      "file": "data/odds/2022-06-24.json.gz",
+      "rows": 17132,
+      "size_bytes": 94488
+    },
+    {
+      "date": "2022-06-25",
+      "file": "data/odds/2022-06-25.json.gz",
+      "rows": 16649,
+      "size_bytes": 92393
+    },
+    {
+      "date": "2022-06-26",
+      "file": "data/odds/2022-06-26.json.gz",
+      "rows": 28165,
+      "size_bytes": 145485
+    },
+    {
+      "date": "2022-07-01",
+      "file": "data/odds/2022-07-01.json.gz",
+      "rows": 15609,
+      "size_bytes": 87396
+    },
+    {
+      "date": "2022-07-02",
+      "file": "data/odds/2022-07-02.json.gz",
+      "rows": 13490,
+      "size_bytes": 76452
+    },
+    {
+      "date": "2022-07-03",
+      "file": "data/odds/2022-07-03.json.gz",
+      "rows": 13663,
+      "size_bytes": 77256
+    },
+    {
+      "date": "2022-07-08",
+      "file": "data/odds/2022-07-08.json.gz",
+      "rows": 14417,
+      "size_bytes": 81640
+    },
+    {
+      "date": "2022-07-09",
+      "file": "data/odds/2022-07-09.json.gz",
+      "rows": 16007,
+      "size_bytes": 89408
+    },
+    {
+      "date": "2022-07-10",
+      "file": "data/odds/2022-07-10.json.gz",
+      "rows": 10728,
+      "size_bytes": 61125
+    },
+    {
+      "date": "2022-07-15",
+      "file": "data/odds/2022-07-15.json.gz",
+      "rows": 14548,
+      "size_bytes": 81657
+    },
+    {
+      "date": "2022-07-16",
+      "file": "data/odds/2022-07-16.json.gz",
+      "rows": 13594,
+      "size_bytes": 77533
+    },
+    {
+      "date": "2022-07-17",
+      "file": "data/odds/2022-07-17.json.gz",
+      "rows": 14036,
+      "size_bytes": 76409
+    },
+    {
+      "date": "2022-07-22",
+      "file": "data/odds/2022-07-22.json.gz",
+      "rows": 16450,
+      "size_bytes": 92048
+    },
+    {
+      "date": "2022-07-23",
+      "file": "data/odds/2022-07-23.json.gz",
+      "rows": 16475,
+      "size_bytes": 92832
+    },
+    {
+      "date": "2022-07-24",
+      "file": "data/odds/2022-07-24.json.gz",
+      "rows": 15138,
+      "size_bytes": 85035
+    },
+    {
+      "date": "2022-07-29",
+      "file": "data/odds/2022-07-29.json.gz",
+      "rows": 18147,
+      "size_bytes": 100463
+    },
+    {
+      "date": "2022-07-30",
+      "file": "data/odds/2022-07-30.json.gz",
+      "rows": 18540,
+      "size_bytes": 102355
+    },
+    {
+      "date": "2022-07-31",
+      "file": "data/odds/2022-07-31.json.gz",
+      "rows": 18559,
+      "size_bytes": 104797
+    },
+    {
+      "date": "2022-08-05",
+      "file": "data/odds/2022-08-05.json.gz",
+      "rows": 12820,
+      "size_bytes": 73239
+    },
+    {
+      "date": "2022-08-06",
+      "file": "data/odds/2022-08-06.json.gz",
+      "rows": 7740,
+      "size_bytes": 44125
+    },
+    {
+      "date": "2022-08-07",
+      "file": "data/odds/2022-08-07.json.gz",
+      "rows": 15298,
+      "size_bytes": 87630
+    },
+    {
+      "date": "2022-08-12",
+      "file": "data/odds/2022-08-12.json.gz",
+      "rows": 12473,
+      "size_bytes": 71556
+    },
+    {
+      "date": "2022-08-13",
+      "file": "data/odds/2022-08-13.json.gz",
+      "rows": 17161,
+      "size_bytes": 98410
+    },
+    {
+      "date": "2022-08-14",
+      "file": "data/odds/2022-08-14.json.gz",
+      "rows": 17036,
+      "size_bytes": 97770
+    },
+    {
+      "date": "2022-08-19",
+      "file": "data/odds/2022-08-19.json.gz",
+      "rows": 17578,
+      "size_bytes": 100052
+    },
+    {
+      "date": "2022-08-20",
+      "file": "data/odds/2022-08-20.json.gz",
+      "rows": 20261,
+      "size_bytes": 113102
+    },
+    {
+      "date": "2022-08-21",
+      "file": "data/odds/2022-08-21.json.gz",
+      "rows": 22803,
+      "size_bytes": 125382
+    },
+    {
+      "date": "2022-08-26",
+      "file": "data/odds/2022-08-26.json.gz",
+      "rows": 20246,
+      "size_bytes": 112303
+    },
+    {
+      "date": "2022-08-27",
+      "file": "data/odds/2022-08-27.json.gz",
+      "rows": 20908,
+      "size_bytes": 114090
+    },
+    {
+      "date": "2022-08-28",
+      "file": "data/odds/2022-08-28.json.gz",
+      "rows": 23375,
+      "size_bytes": 129902
+    },
+    {
+      "date": "2022-09-02",
+      "file": "data/odds/2022-09-02.json.gz",
+      "rows": 19942,
+      "size_bytes": 111045
+    },
+    {
+      "date": "2022-09-03",
+      "file": "data/odds/2022-09-03.json.gz",
+      "rows": 25446,
+      "size_bytes": 137804
+    },
+    {
+      "date": "2022-09-04",
+      "file": "data/odds/2022-09-04.json.gz",
+      "rows": 23019,
+      "size_bytes": 125537
+    },
+    {
+      "date": "2022-09-16",
+      "file": "data/odds/2022-09-16.json.gz",
+      "rows": 19178,
+      "size_bytes": 103886
+    },
+    {
+      "date": "2022-09-17",
+      "file": "data/odds/2022-09-17.json.gz",
+      "rows": 24267,
+      "size_bytes": 130718
+    },
+    {
+      "date": "2022-09-18",
+      "file": "data/odds/2022-09-18.json.gz",
+      "rows": 24743,
+      "size_bytes": 135131
+    },
+    {
+      "date": "2022-09-23",
+      "file": "data/odds/2022-09-23.json.gz",
+      "rows": 20752,
+      "size_bytes": 115994
+    },
+    {
+      "date": "2022-09-24",
+      "file": "data/odds/2022-09-24.json.gz",
+      "rows": 23687,
+      "size_bytes": 128488
+    },
+    {
+      "date": "2022-09-25",
+      "file": "data/odds/2022-09-25.json.gz",
+      "rows": 22870,
+      "size_bytes": 125523
+    },
+    {
+      "date": "2022-09-30",
+      "file": "data/odds/2022-09-30.json.gz",
+      "rows": 21109,
+      "size_bytes": 113976
+    },
+    {
+      "date": "2022-10-01",
+      "file": "data/odds/2022-10-01.json.gz",
+      "rows": 24326,
+      "size_bytes": 135824
+    },
+    {
+      "date": "2022-10-02",
+      "file": "data/odds/2022-10-02.json.gz",
+      "rows": 25119,
+      "size_bytes": 134999
+    },
+    {
+      "date": "2022-10-07",
+      "file": "data/odds/2022-10-07.json.gz",
+      "rows": 20766,
+      "size_bytes": 114612
+    },
+    {
+      "date": "2022-10-08",
+      "file": "data/odds/2022-10-08.json.gz",
+      "rows": 22060,
+      "size_bytes": 123239
+    },
+    {
+      "date": "2022-10-09",
+      "file": "data/odds/2022-10-09.json.gz",
+      "rows": 19287,
+      "size_bytes": 106538
+    },
+    {
+      "date": "2022-10-14",
+      "file": "data/odds/2022-10-14.json.gz",
+      "rows": 21133,
+      "size_bytes": 120260
+    },
+    {
+      "date": "2022-10-15",
+      "file": "data/odds/2022-10-15.json.gz",
+      "rows": 22899,
+      "size_bytes": 129730
+    },
+    {
+      "date": "2022-10-16",
+      "file": "data/odds/2022-10-16.json.gz",
+      "rows": 19108,
+      "size_bytes": 104956
+    },
+    {
+      "date": "2022-10-21",
+      "file": "data/odds/2022-10-21.json.gz",
+      "rows": 23435,
+      "size_bytes": 127649
+    },
+    {
+      "date": "2022-10-22",
+      "file": "data/odds/2022-10-22.json.gz",
+      "rows": 22252,
+      "size_bytes": 122733
+    },
+    {
+      "date": "2022-10-23",
+      "file": "data/odds/2022-10-23.json.gz",
+      "rows": 24408,
+      "size_bytes": 132280
+    },
+    {
+      "date": "2022-10-28",
+      "file": "data/odds/2022-10-28.json.gz",
+      "rows": 21784,
+      "size_bytes": 119610
+    },
+    {
+      "date": "2022-10-29",
+      "file": "data/odds/2022-10-29.json.gz",
+      "rows": 22185,
+      "size_bytes": 123403
+    },
+    {
+      "date": "2022-10-30",
+      "file": "data/odds/2022-10-30.json.gz",
+      "rows": 23881,
+      "size_bytes": 131801
+    },
+    {
+      "date": "2022-11-04",
+      "file": "data/odds/2022-11-04.json.gz",
+      "rows": 20922,
+      "size_bytes": 116638
+    },
+    {
+      "date": "2022-11-05",
+      "file": "data/odds/2022-11-05.json.gz",
+      "rows": 22506,
+      "size_bytes": 123832
+    },
+    {
+      "date": "2022-11-06",
+      "file": "data/odds/2022-11-06.json.gz",
+      "rows": 21466,
+      "size_bytes": 115395
+    },
+    {
+      "date": "2022-11-11",
+      "file": "data/odds/2022-11-11.json.gz",
+      "rows": 20233,
+      "size_bytes": 110331
+    },
+    {
+      "date": "2022-11-12",
+      "file": "data/odds/2022-11-12.json.gz",
+      "rows": 20082,
+      "size_bytes": 113744
+    },
+    {
+      "date": "2022-11-13",
+      "file": "data/odds/2022-11-13.json.gz",
+      "rows": 23960,
+      "size_bytes": 127975
+    },
+    {
+      "date": "2022-11-18",
+      "file": "data/odds/2022-11-18.json.gz",
+      "rows": 23064,
+      "size_bytes": 127444
+    },
+    {
+      "date": "2022-11-19",
+      "file": "data/odds/2022-11-19.json.gz",
+      "rows": 22870,
+      "size_bytes": 130831
+    },
+    {
+      "date": "2022-11-20",
+      "file": "data/odds/2022-11-20.json.gz",
+      "rows": 28672,
+      "size_bytes": 154206
+    },
+    {
+      "date": "2022-11-25",
+      "file": "data/odds/2022-11-25.json.gz",
+      "rows": 23152,
+      "size_bytes": 128888
+    },
+    {
+      "date": "2022-11-26",
+      "file": "data/odds/2022-11-26.json.gz",
+      "rows": 27584,
+      "size_bytes": 151604
+    },
+    {
+      "date": "2022-11-27",
+      "file": "data/odds/2022-11-27.json.gz",
+      "rows": 27726,
+      "size_bytes": 148090
+    },
+    {
+      "date": "2022-12-02",
+      "file": "data/odds/2022-12-02.json.gz",
+      "rows": 19897,
+      "size_bytes": 112609
+    },
+    {
+      "date": "2022-12-03",
+      "file": "data/odds/2022-12-03.json.gz",
+      "rows": 19406,
+      "size_bytes": 109645
+    },
+    {
+      "date": "2022-12-04",
+      "file": "data/odds/2022-12-04.json.gz",
+      "rows": 27206,
+      "size_bytes": 142640
+    },
+    {
+      "date": "2022-12-09",
+      "file": "data/odds/2022-12-09.json.gz",
+      "rows": 17058,
+      "size_bytes": 95433
+    },
+    {
+      "date": "2022-12-10",
+      "file": "data/odds/2022-12-10.json.gz",
+      "rows": 18517,
+      "size_bytes": 104285
+    },
+    {
+      "date": "2022-12-11",
+      "file": "data/odds/2022-12-11.json.gz",
+      "rows": 20100,
+      "size_bytes": 108176
+    },
+    {
+      "date": "2022-12-16",
+      "file": "data/odds/2022-12-16.json.gz",
+      "rows": 23725,
+      "size_bytes": 129252
+    },
+    {
+      "date": "2022-12-17",
+      "file": "data/odds/2022-12-17.json.gz",
+      "rows": 28281,
+      "size_bytes": 153064
+    },
+    {
+      "date": "2022-12-18",
+      "file": "data/odds/2022-12-18.json.gz",
+      "rows": 33193,
+      "size_bytes": 175619
+    },
+    {
+      "date": "2022-12-23",
+      "file": "data/odds/2022-12-23.json.gz",
+      "rows": 25591,
+      "size_bytes": 139084
+    },
+    {
+      "date": "2022-12-24",
+      "file": "data/odds/2022-12-24.json.gz",
+      "rows": 26594,
+      "size_bytes": 140981
+    },
+    {
+      "date": "2022-12-25",
+      "file": "data/odds/2022-12-25.json.gz",
+      "rows": 29136,
+      "size_bytes": 155483
+    },
+    {
+      "date": "2023-01-06",
+      "file": "data/odds/2023-01-06.json.gz",
+      "rows": 25879,
+      "size_bytes": 138621
+    },
+    {
+      "date": "2023-01-07",
+      "file": "data/odds/2023-01-07.json.gz",
+      "rows": 27633,
+      "size_bytes": 150653
+    },
+    {
+      "date": "2023-01-08",
+      "file": "data/odds/2023-01-08.json.gz",
+      "rows": 29857,
+      "size_bytes": 162338
+    },
+    {
+      "date": "2023-01-13",
+      "file": "data/odds/2023-01-13.json.gz",
+      "rows": 23480,
+      "size_bytes": 129753
+    },
+    {
+      "date": "2023-01-14",
+      "file": "data/odds/2023-01-14.json.gz",
+      "rows": 19335,
+      "size_bytes": 104376
+    },
+    {
+      "date": "2023-01-15",
+      "file": "data/odds/2023-01-15.json.gz",
+      "rows": 25770,
+      "size_bytes": 144757
+    },
+    {
+      "date": "2023-01-27",
+      "file": "data/odds/2023-01-27.json.gz",
+      "rows": 25738,
+      "size_bytes": 140519
+    },
+    {
+      "date": "2023-01-28",
+      "file": "data/odds/2023-01-28.json.gz",
+      "rows": 27276,
+      "size_bytes": 150369
+    },
+    {
+      "date": "2023-01-29",
+      "file": "data/odds/2023-01-29.json.gz",
+      "rows": 27560,
+      "size_bytes": 151620
+    },
+    {
+      "date": "2023-02-03",
+      "file": "data/odds/2023-02-03.json.gz",
+      "rows": 21145,
+      "size_bytes": 116532
+    },
+    {
+      "date": "2023-02-04",
+      "file": "data/odds/2023-02-04.json.gz",
+      "rows": 25693,
+      "size_bytes": 143849
+    },
+    {
+      "date": "2023-02-05",
+      "file": "data/odds/2023-02-05.json.gz",
+      "rows": 25843,
+      "size_bytes": 144714
+    },
+    {
+      "date": "2023-02-10",
+      "file": "data/odds/2023-02-10.json.gz",
+      "rows": 21294,
+      "size_bytes": 118238
+    },
+    {
+      "date": "2023-02-11",
+      "file": "data/odds/2023-02-11.json.gz",
+      "rows": 24763,
+      "size_bytes": 134229
+    },
+    {
+      "date": "2023-02-12",
+      "file": "data/odds/2023-02-12.json.gz",
+      "rows": 27055,
+      "size_bytes": 144865
+    },
+    {
+      "date": "2023-02-17",
+      "file": "data/odds/2023-02-17.json.gz",
+      "rows": 21361,
+      "size_bytes": 118029
+    },
+    {
+      "date": "2023-02-18",
+      "file": "data/odds/2023-02-18.json.gz",
+      "rows": 22504,
+      "size_bytes": 125375
+    },
+    {
+      "date": "2023-02-19",
+      "file": "data/odds/2023-02-19.json.gz",
+      "rows": 24973,
+      "size_bytes": 136938
+    },
+    {
+      "date": "2023-02-24",
+      "file": "data/odds/2023-02-24.json.gz",
+      "rows": 22870,
+      "size_bytes": 127566
+    },
+    {
+      "date": "2023-02-25",
+      "file": "data/odds/2023-02-25.json.gz",
+      "rows": 21776,
+      "size_bytes": 123675
+    },
+    {
+      "date": "2023-02-26",
+      "file": "data/odds/2023-02-26.json.gz",
+      "rows": 26707,
+      "size_bytes": 147579
+    },
+    {
+      "date": "2023-03-03",
+      "file": "data/odds/2023-03-03.json.gz",
+      "rows": 20254,
+      "size_bytes": 111116
+    },
+    {
+      "date": "2023-03-04",
+      "file": "data/odds/2023-03-04.json.gz",
+      "rows": 16455,
+      "size_bytes": 92454
+    },
+    {
+      "date": "2023-03-05",
+      "file": "data/odds/2023-03-05.json.gz",
+      "rows": 22081,
+      "size_bytes": 122806
+    },
+    {
+      "date": "2023-03-10",
+      "file": "data/odds/2023-03-10.json.gz",
+      "rows": 18299,
+      "size_bytes": 101719
+    },
+    {
+      "date": "2023-03-11",
+      "file": "data/odds/2023-03-11.json.gz",
+      "rows": 17837,
+      "size_bytes": 100696
+    },
+    {
+      "date": "2023-03-12",
+      "file": "data/odds/2023-03-12.json.gz",
+      "rows": 22803,
+      "size_bytes": 129740
+    },
+    {
+      "date": "2023-03-17",
+      "file": "data/odds/2023-03-17.json.gz",
+      "rows": 19176,
+      "size_bytes": 109302
+    },
+    {
+      "date": "2023-03-18",
+      "file": "data/odds/2023-03-18.json.gz",
+      "rows": 20357,
+      "size_bytes": 113389
+    },
+    {
+      "date": "2023-03-19",
+      "file": "data/odds/2023-03-19.json.gz",
+      "rows": 27917,
+      "size_bytes": 154469
+    },
+    {
+      "date": "2023-03-24",
+      "file": "data/odds/2023-03-24.json.gz",
+      "rows": 20433,
+      "size_bytes": 114214
+    },
+    {
+      "date": "2023-03-25",
+      "file": "data/odds/2023-03-25.json.gz",
+      "rows": 21613,
+      "size_bytes": 121169
+    },
+    {
+      "date": "2023-03-26",
+      "file": "data/odds/2023-03-26.json.gz",
+      "rows": 28207,
+      "size_bytes": 156905
+    },
+    {
+      "date": "2023-03-31",
+      "file": "data/odds/2023-03-31.json.gz",
+      "rows": 18099,
+      "size_bytes": 101612
+    },
+    {
+      "date": "2023-04-01",
+      "file": "data/odds/2023-04-01.json.gz",
+      "rows": 16137,
+      "size_bytes": 91862
+    },
+    {
+      "date": "2023-04-02",
+      "file": "data/odds/2023-04-02.json.gz",
+      "rows": 19745,
+      "size_bytes": 108380
+    },
+    {
+      "date": "2023-04-07",
+      "file": "data/odds/2023-04-07.json.gz",
+      "rows": 18961,
+      "size_bytes": 104973
+    },
+    {
+      "date": "2023-04-08",
+      "file": "data/odds/2023-04-08.json.gz",
+      "rows": 16654,
+      "size_bytes": 94698
+    },
+    {
+      "date": "2023-04-09",
+      "file": "data/odds/2023-04-09.json.gz",
+      "rows": 22610,
+      "size_bytes": 127091
+    },
+    {
+      "date": "2023-04-14",
+      "file": "data/odds/2023-04-14.json.gz",
+      "rows": 14873,
+      "size_bytes": 82850
+    },
+    {
+      "date": "2023-04-15",
+      "file": "data/odds/2023-04-15.json.gz",
+      "rows": 17972,
+      "size_bytes": 102200
+    },
+    {
+      "date": "2023-04-16",
+      "file": "data/odds/2023-04-16.json.gz",
+      "rows": 20046,
+      "size_bytes": 112221
+    },
+    {
+      "date": "2023-04-21",
+      "file": "data/odds/2023-04-21.json.gz",
+      "rows": 16433,
+      "size_bytes": 91180
+    },
+    {
+      "date": "2023-04-22",
+      "file": "data/odds/2023-04-22.json.gz",
+      "rows": 18135,
+      "size_bytes": 102557
+    },
+    {
+      "date": "2023-04-23",
+      "file": "data/odds/2023-04-23.json.gz",
+      "rows": 23882,
+      "size_bytes": 132348
+    },
+    {
+      "date": "2023-04-28",
+      "file": "data/odds/2023-04-28.json.gz",
+      "rows": 18961,
+      "size_bytes": 104439
+    },
+    {
+      "date": "2023-04-29",
+      "file": "data/odds/2023-04-29.json.gz",
+      "rows": 14931,
+      "size_bytes": 85804
+    },
+    {
+      "date": "2023-04-30",
+      "file": "data/odds/2023-04-30.json.gz",
+      "rows": 24464,
+      "size_bytes": 133702
+    },
+    {
+      "date": "2023-05-05",
+      "file": "data/odds/2023-05-05.json.gz",
+      "rows": 15001,
+      "size_bytes": 84195
+    },
+    {
+      "date": "2023-05-06",
+      "file": "data/odds/2023-05-06.json.gz",
+      "rows": 7800,
+      "size_bytes": 44100
+    },
+    {
+      "date": "2023-05-07",
+      "file": "data/odds/2023-05-07.json.gz",
+      "rows": 16308,
+      "size_bytes": 92405
+    },
+    {
+      "date": "2023-05-12",
+      "file": "data/odds/2023-05-12.json.gz",
+      "rows": 16738,
+      "size_bytes": 94290
+    },
+    {
+      "date": "2023-05-13",
+      "file": "data/odds/2023-05-13.json.gz",
+      "rows": 17095,
+      "size_bytes": 94826
+    },
+    {
+      "date": "2023-05-14",
+      "file": "data/odds/2023-05-14.json.gz",
+      "rows": 22884,
+      "size_bytes": 125177
+    },
+    {
+      "date": "2023-05-19",
+      "file": "data/odds/2023-05-19.json.gz",
+      "rows": 15811,
+      "size_bytes": 88020
+    },
+    {
+      "date": "2023-05-20",
+      "file": "data/odds/2023-05-20.json.gz",
+      "rows": 19369,
+      "size_bytes": 108573
+    },
+    {
+      "date": "2023-05-21",
+      "file": "data/odds/2023-05-21.json.gz",
+      "rows": 20567,
+      "size_bytes": 115750
+    },
+    {
+      "date": "2023-05-26",
+      "file": "data/odds/2023-05-26.json.gz",
+      "rows": 18456,
+      "size_bytes": 102593
+    },
+    {
+      "date": "2023-05-27",
+      "file": "data/odds/2023-05-27.json.gz",
+      "rows": 19369,
+      "size_bytes": 108427
+    },
+    {
+      "date": "2023-05-28",
+      "file": "data/odds/2023-05-28.json.gz",
+      "rows": 21964,
+      "size_bytes": 121735
+    },
+    {
+      "date": "2023-06-02",
+      "file": "data/odds/2023-06-02.json.gz",
+      "rows": 15868,
+      "size_bytes": 89152
+    },
+    {
+      "date": "2023-06-03",
+      "file": "data/odds/2023-06-03.json.gz",
+      "rows": 18432,
+      "size_bytes": 104568
+    },
+    {
+      "date": "2023-06-04",
+      "file": "data/odds/2023-06-04.json.gz",
+      "rows": 22538,
+      "size_bytes": 123451
+    },
+    {
+      "date": "2023-06-09",
+      "file": "data/odds/2023-06-09.json.gz",
+      "rows": 18492,
+      "size_bytes": 102772
+    },
+    {
+      "date": "2023-06-10",
+      "file": "data/odds/2023-06-10.json.gz",
+      "rows": 17265,
+      "size_bytes": 98561
+    },
+    {
+      "date": "2023-06-11",
+      "file": "data/odds/2023-06-11.json.gz",
+      "rows": 24129,
+      "size_bytes": 131609
+    },
+    {
+      "date": "2023-06-16",
+      "file": "data/odds/2023-06-16.json.gz",
+      "rows": 15868,
+      "size_bytes": 90292
+    },
+    {
+      "date": "2023-06-17",
+      "file": "data/odds/2023-06-17.json.gz",
+      "rows": 18559,
+      "size_bytes": 104473
+    },
+    {
+      "date": "2023-06-18",
+      "file": "data/odds/2023-06-18.json.gz",
+      "rows": 21995,
+      "size_bytes": 122376
+    },
+    {
+      "date": "2023-06-23",
+      "file": "data/odds/2023-06-23.json.gz",
+      "rows": 18202,
+      "size_bytes": 103731
+    },
+    {
+      "date": "2023-06-24",
+      "file": "data/odds/2023-06-24.json.gz",
+      "rows": 17742,
+      "size_bytes": 98857
+    },
+    {
+      "date": "2023-06-25",
+      "file": "data/odds/2023-06-25.json.gz",
+      "rows": 23217,
+      "size_bytes": 128047
+    },
+    {
+      "date": "2023-06-30",
+      "file": "data/odds/2023-06-30.json.gz",
+      "rows": 18492,
+      "size_bytes": 103966
+    },
+    {
+      "date": "2023-07-01",
+      "file": "data/odds/2023-07-01.json.gz",
+      "rows": 16618,
+      "size_bytes": 94347
+    },
+    {
+      "date": "2023-07-02",
+      "file": "data/odds/2023-07-02.json.gz",
+      "rows": 16745,
+      "size_bytes": 94440
+    },
+    {
+      "date": "2023-07-07",
+      "file": "data/odds/2023-07-07.json.gz",
+      "rows": 16932,
+      "size_bytes": 95150
+    },
+    {
+      "date": "2023-07-08",
+      "file": "data/odds/2023-07-08.json.gz",
+      "rows": 17600,
+      "size_bytes": 99646
+    },
+    {
+      "date": "2023-07-09",
+      "file": "data/odds/2023-07-09.json.gz",
+      "rows": 20434,
+      "size_bytes": 111669
+    },
+    {
+      "date": "2023-07-14",
+      "file": "data/odds/2023-07-14.json.gz",
+      "rows": 16098,
+      "size_bytes": 90608
+    },
+    {
+      "date": "2023-07-15",
+      "file": "data/odds/2023-07-15.json.gz",
+      "rows": 20439,
+      "size_bytes": 114799
+    },
+    {
+      "date": "2023-07-16",
+      "file": "data/odds/2023-07-16.json.gz",
+      "rows": 19563,
+      "size_bytes": 109486
+    },
+    {
+      "date": "2023-07-21",
+      "file": "data/odds/2023-07-21.json.gz",
+      "rows": 17778,
+      "size_bytes": 101657
+    },
+    {
+      "date": "2023-07-22",
+      "file": "data/odds/2023-07-22.json.gz",
+      "rows": 22924,
+      "size_bytes": 125431
+    },
+    {
+      "date": "2023-07-23",
+      "file": "data/odds/2023-07-23.json.gz",
+      "rows": 16908,
+      "size_bytes": 96530
+    },
+    {
+      "date": "2023-07-28",
+      "file": "data/odds/2023-07-28.json.gz",
+      "rows": 14560,
+      "size_bytes": 82624
+    },
+    {
+      "date": "2023-07-29",
+      "file": "data/odds/2023-07-29.json.gz",
+      "rows": 7280,
+      "size_bytes": 41737
+    },
+    {
+      "date": "2023-07-30",
+      "file": "data/odds/2023-07-30.json.gz",
+      "rows": 19951,
+      "size_bytes": 110904
+    },
+    {
+      "date": "2023-08-05",
+      "file": "data/odds/2023-08-05.json.gz",
+      "rows": 18473,
+      "size_bytes": 102412
+    },
+    {
+      "date": "2023-08-06",
+      "file": "data/odds/2023-08-06.json.gz",
+      "rows": 18880,
+      "size_bytes": 104806
+    },
+    {
+      "date": "2023-08-11",
+      "file": "data/odds/2023-08-11.json.gz",
+      "rows": 19139,
+      "size_bytes": 106457
+    },
+    {
+      "date": "2023-08-12",
+      "file": "data/odds/2023-08-12.json.gz",
+      "rows": 18305,
+      "size_bytes": 101472
+    },
+    {
+      "date": "2023-08-13",
+      "file": "data/odds/2023-08-13.json.gz",
+      "rows": 19436,
+      "size_bytes": 109714
+    },
+    {
+      "date": "2023-08-18",
+      "file": "data/odds/2023-08-18.json.gz",
+      "rows": 17845,
+      "size_bytes": 99798
+    },
+    {
+      "date": "2023-08-19",
+      "file": "data/odds/2023-08-19.json.gz",
+      "rows": 19599,
+      "size_bytes": 110244
+    },
+    {
+      "date": "2023-08-20",
+      "file": "data/odds/2023-08-20.json.gz",
+      "rows": 21317,
+      "size_bytes": 119028
+    },
+    {
+      "date": "2023-08-25",
+      "file": "data/odds/2023-08-25.json.gz",
+      "rows": 19785,
+      "size_bytes": 107115
+    },
+    {
+      "date": "2023-08-26",
+      "file": "data/odds/2023-08-26.json.gz",
+      "rows": 20298,
+      "size_bytes": 111723
+    },
+    {
+      "date": "2023-08-27",
+      "file": "data/odds/2023-08-27.json.gz",
+      "rows": 23762,
+      "size_bytes": 129073
+    },
+    {
+      "date": "2023-09-01",
+      "file": "data/odds/2023-09-01.json.gz",
+      "rows": 19354,
+      "size_bytes": 106269
+    },
+    {
+      "date": "2023-09-02",
+      "file": "data/odds/2023-09-02.json.gz",
+      "rows": 16781,
+      "size_bytes": 93016
+    },
+    {
+      "date": "2023-09-03",
+      "file": "data/odds/2023-09-03.json.gz",
+      "rows": 19392,
+      "size_bytes": 110308
+    },
+    {
+      "date": "2023-09-08",
+      "file": "data/odds/2023-09-08.json.gz",
+      "rows": 17131,
+      "size_bytes": 96721
+    },
+    {
+      "date": "2023-09-09",
+      "file": "data/odds/2023-09-09.json.gz",
+      "rows": 20116,
+      "size_bytes": 111407
+    },
+    {
+      "date": "2023-09-10",
+      "file": "data/odds/2023-09-10.json.gz",
+      "rows": 21530,
+      "size_bytes": 111601
+    },
+    {
+      "date": "2023-09-15",
+      "file": "data/odds/2023-09-15.json.gz",
+      "rows": 18202,
+      "size_bytes": 102169
+    },
+    {
+      "date": "2023-09-16",
+      "file": "data/odds/2023-09-16.json.gz",
+      "rows": 16448,
+      "size_bytes": 92361
+    },
+    {
+      "date": "2023-09-17",
+      "file": "data/odds/2023-09-17.json.gz",
+      "rows": 20869,
+      "size_bytes": 114635
+    },
+    {
+      "date": "2023-09-22",
+      "file": "data/odds/2023-09-22.json.gz",
+      "rows": 21146,
+      "size_bytes": 116177
+    },
+    {
+      "date": "2023-09-23",
+      "file": "data/odds/2023-09-23.json.gz",
+      "rows": 20744,
+      "size_bytes": 114857
+    },
+    {
+      "date": "2023-09-24",
+      "file": "data/odds/2023-09-24.json.gz",
+      "rows": 23607,
+      "size_bytes": 127844
+    },
+    {
+      "date": "2023-10-06",
+      "file": "data/odds/2023-10-06.json.gz",
+      "rows": 19927,
+      "size_bytes": 108072
+    },
+    {
+      "date": "2023-10-07",
+      "file": "data/odds/2023-10-07.json.gz",
+      "rows": 19086,
+      "size_bytes": 105449
+    },
+    {
+      "date": "2023-10-08",
+      "file": "data/odds/2023-10-08.json.gz",
+      "rows": 20998,
+      "size_bytes": 116292
+    },
+    {
+      "date": "2023-10-13",
+      "file": "data/odds/2023-10-13.json.gz",
+      "rows": 17706,
+      "size_bytes": 98252
+    },
+    {
+      "date": "2023-10-14",
+      "file": "data/odds/2023-10-14.json.gz",
+      "rows": 17275,
+      "size_bytes": 97129
+    },
+    {
+      "date": "2023-10-15",
+      "file": "data/odds/2023-10-15.json.gz",
+      "rows": 17660,
+      "size_bytes": 100024
+    },
+    {
+      "date": "2023-10-20",
+      "file": "data/odds/2023-10-20.json.gz",
+      "rows": 19354,
+      "size_bytes": 108155
+    },
+    {
+      "date": "2023-10-21",
+      "file": "data/odds/2023-10-21.json.gz",
+      "rows": 20030,
+      "size_bytes": 111021
+    },
+    {
+      "date": "2023-10-22",
+      "file": "data/odds/2023-10-22.json.gz",
+      "rows": 22536,
+      "size_bytes": 124615
+    },
+    {
+      "date": "2023-10-27",
+      "file": "data/odds/2023-10-27.json.gz",
+      "rows": 19927,
+      "size_bytes": 109045
+    },
+    {
+      "date": "2023-10-28",
+      "file": "data/odds/2023-10-28.json.gz",
+      "rows": 20804,
+      "size_bytes": 115016
+    },
+    {
+      "date": "2023-10-29",
+      "file": "data/odds/2023-10-29.json.gz",
+      "rows": 24246,
+      "size_bytes": 132495
+    },
+    {
+      "date": "2023-11-03",
+      "file": "data/odds/2023-11-03.json.gz",
+      "rows": 19496,
+      "size_bytes": 107214
+    },
+    {
+      "date": "2023-11-04",
+      "file": "data/odds/2023-11-04.json.gz",
+      "rows": 15904,
+      "size_bytes": 90722
+    },
+    {
+      "date": "2023-11-05",
+      "file": "data/odds/2023-11-05.json.gz",
+      "rows": 21740,
+      "size_bytes": 121218
+    },
+    {
+      "date": "2023-11-10",
+      "file": "data/odds/2023-11-10.json.gz",
+      "rows": 19570,
+      "size_bytes": 108370
+    },
+    {
+      "date": "2023-11-11",
+      "file": "data/odds/2023-11-11.json.gz",
+      "rows": 16031,
+      "size_bytes": 91380
+    },
+    {
+      "date": "2023-11-12",
+      "file": "data/odds/2023-11-12.json.gz",
+      "rows": 24709,
+      "size_bytes": 131933
+    },
+    {
+      "date": "2023-11-17",
+      "file": "data/odds/2023-11-17.json.gz",
+      "rows": 18566,
+      "size_bytes": 101528
+    },
+    {
+      "date": "2023-11-18",
+      "file": "data/odds/2023-11-18.json.gz",
+      "rows": 21465,
+      "size_bytes": 116773
+    },
+    {
+      "date": "2023-11-19",
+      "file": "data/odds/2023-11-19.json.gz",
+      "rows": 23705,
+      "size_bytes": 124510
+    },
+    {
+      "date": "2023-11-24",
+      "file": "data/odds/2023-11-24.json.gz",
+      "rows": 19280,
+      "size_bytes": 106028
+    },
+    {
+      "date": "2023-11-25",
+      "file": "data/odds/2023-11-25.json.gz",
+      "rows": 20677,
+      "size_bytes": 114741
+    },
+    {
+      "date": "2023-11-26",
+      "file": "data/odds/2023-11-26.json.gz",
+      "rows": 23631,
+      "size_bytes": 126439
+    },
+    {
+      "date": "2023-12-01",
+      "file": "data/odds/2023-12-01.json.gz",
+      "rows": 19994,
+      "size_bytes": 111356
+    },
+    {
+      "date": "2023-12-02",
+      "file": "data/odds/2023-12-02.json.gz",
+      "rows": 20610,
+      "size_bytes": 114740
+    },
+    {
+      "date": "2023-12-03",
+      "file": "data/odds/2023-12-03.json.gz",
+      "rows": 22481,
+      "size_bytes": 124520
+    },
+    {
+      "date": "2023-12-08",
+      "file": "data/odds/2023-12-08.json.gz",
+      "rows": 18559,
+      "size_bytes": 103791
+    },
+    {
+      "date": "2023-12-09",
+      "file": "data/odds/2023-12-09.json.gz",
+      "rows": 15384,
+      "size_bytes": 87429
+    },
+    {
+      "date": "2023-12-10",
+      "file": "data/odds/2023-12-10.json.gz",
+      "rows": 22017,
+      "size_bytes": 114621
+    },
+    {
+      "date": "2023-12-15",
+      "file": "data/odds/2023-12-15.json.gz",
+      "rows": 18278,
+      "size_bytes": 99151
+    },
+    {
+      "date": "2023-12-16",
+      "file": "data/odds/2023-12-16.json.gz",
+      "rows": 21182,
+      "size_bytes": 115502
+    },
+    {
+      "date": "2023-12-17",
+      "file": "data/odds/2023-12-17.json.gz",
+      "rows": 24642,
+      "size_bytes": 131182
+    },
+    {
+      "date": "2023-12-22",
+      "file": "data/odds/2023-12-22.json.gz",
+      "rows": 14404,
+      "size_bytes": 81591
+    },
+    {
+      "date": "2023-12-23",
+      "file": "data/odds/2023-12-23.json.gz",
+      "rows": 16841,
+      "size_bytes": 94723
+    },
+    {
+      "date": "2023-12-24",
+      "file": "data/odds/2023-12-24.json.gz",
+      "rows": 20744,
+      "size_bytes": 117114
+    },
+    {
+      "date": "2023-12-29",
+      "file": "data/odds/2023-12-29.json.gz",
+      "rows": 18240,
+      "size_bytes": 102468
+    },
+    {
+      "date": "2023-12-30",
+      "file": "data/odds/2023-12-30.json.gz",
+      "rows": 19889,
+      "size_bytes": 111779
+    },
+    {
+      "date": "2023-12-31",
+      "file": "data/odds/2023-12-31.json.gz",
+      "rows": 21161,
+      "size_bytes": 116954
+    },
+    {
+      "date": "2024-01-05",
+      "file": "data/odds/2024-01-05.json.gz",
+      "rows": 19637,
+      "size_bytes": 109895
+    },
+    {
+      "date": "2024-01-06",
+      "file": "data/odds/2024-01-06.json.gz",
+      "rows": 17049,
+      "size_bytes": 95589
+    },
+    {
+      "date": "2024-01-07",
+      "file": "data/odds/2024-01-07.json.gz",
+      "rows": 18336,
+      "size_bytes": 102331
+    },
+    {
+      "date": "2024-01-12",
+      "file": "data/odds/2024-01-12.json.gz",
+      "rows": 18336,
+      "size_bytes": 101810
+    },
+    {
+      "date": "2024-01-13",
+      "file": "data/odds/2024-01-13.json.gz",
+      "rows": 19510,
+      "size_bytes": 108429
+    },
+    {
+      "date": "2024-01-14",
+      "file": "data/odds/2024-01-14.json.gz",
+      "rows": 18003,
+      "size_bytes": 100513
+    },
+    {
+      "date": "2024-01-19",
+      "file": "data/odds/2024-01-19.json.gz",
+      "rows": 19927,
+      "size_bytes": 111408
+    },
+    {
+      "date": "2024-01-20",
+      "file": "data/odds/2024-01-20.json.gz",
+      "rows": 19800,
+      "size_bytes": 110192
+    },
+    {
+      "date": "2024-01-21",
+      "file": "data/odds/2024-01-21.json.gz",
+      "rows": 20507,
+      "size_bytes": 114048
+    },
+    {
+      "date": "2024-01-26",
+      "file": "data/odds/2024-01-26.json.gz",
+      "rows": 18782,
+      "size_bytes": 105581
+    },
+    {
+      "date": "2024-01-27",
+      "file": "data/odds/2024-01-27.json.gz",
+      "rows": 20967,
+      "size_bytes": 117561
+    },
+    {
+      "date": "2024-01-28",
+      "file": "data/odds/2024-01-28.json.gz",
+      "rows": 21964,
+      "size_bytes": 123434
+    },
+    {
+      "date": "2024-02-02",
+      "file": "data/odds/2024-02-02.json.gz",
+      "rows": 21435,
+      "size_bytes": 121383
+    },
+    {
+      "date": "2024-02-03",
+      "file": "data/odds/2024-02-03.json.gz",
+      "rows": 24192,
+      "size_bytes": 134221
+    },
+    {
+      "date": "2024-02-04",
+      "file": "data/odds/2024-02-04.json.gz",
+      "rows": 28348,
+      "size_bytes": 152801
+    },
+    {
+      "date": "2024-02-16",
+      "file": "data/odds/2024-02-16.json.gz",
+      "rows": 22944,
+      "size_bytes": 124852
+    },
+    {
+      "date": "2024-02-17",
+      "file": "data/odds/2024-02-17.json.gz",
+      "rows": 22171,
+      "size_bytes": 121978
+    },
+    {
+      "date": "2024-02-18",
+      "file": "data/odds/2024-02-18.json.gz",
+      "rows": 31599,
+      "size_bytes": 164817
+    },
+    {
+      "date": "2024-02-23",
+      "file": "data/odds/2024-02-23.json.gz",
+      "rows": 21651,
+      "size_bytes": 118772
+    },
+    {
+      "date": "2024-02-24",
+      "file": "data/odds/2024-02-24.json.gz",
+      "rows": 26348,
+      "size_bytes": 140535
+    },
+    {
+      "date": "2024-02-25",
+      "file": "data/odds/2024-02-25.json.gz",
+      "rows": 25620,
+      "size_bytes": 138465
+    },
+    {
+      "date": "2024-03-01",
+      "file": "data/odds/2024-03-01.json.gz",
+      "rows": 19496,
+      "size_bytes": 109450
+    },
+    {
+      "date": "2024-03-02",
+      "file": "data/odds/2024-03-02.json.gz",
+      "rows": 18595,
+      "size_bytes": 105704
+    },
+    {
+      "date": "2024-03-03",
+      "file": "data/odds/2024-03-03.json.gz",
+      "rows": 21317,
+      "size_bytes": 118000
+    },
+    {
+      "date": "2024-03-08",
+      "file": "data/odds/2024-03-08.json.gz",
+      "rows": 20484,
+      "size_bytes": 114386
+    },
+    {
+      "date": "2024-03-09",
+      "file": "data/odds/2024-03-09.json.gz",
+      "rows": 18269,
+      "size_bytes": 103201
+    },
+    {
+      "date": "2024-03-10",
+      "file": "data/odds/2024-03-10.json.gz",
+      "rows": 25008,
+      "size_bytes": 135635
+    },
+    {
+      "date": "2024-03-15",
+      "file": "data/odds/2024-03-15.json.gz",
+      "rows": 21576,
+      "size_bytes": 119973
+    },
+    {
+      "date": "2024-03-16",
+      "file": "data/odds/2024-03-16.json.gz",
+      "rows": 20313,
+      "size_bytes": 114850
+    },
+    {
+      "date": "2024-03-17",
+      "file": "data/odds/2024-03-17.json.gz",
+      "rows": 24076,
+      "size_bytes": 130347
+    },
+    {
+      "date": "2024-03-22",
+      "file": "data/odds/2024-03-22.json.gz",
+      "rows": 22513,
+      "size_bytes": 124222
+    },
+    {
+      "date": "2024-03-23",
+      "file": "data/odds/2024-03-23.json.gz",
+      "rows": 19599,
+      "size_bytes": 110880
+    },
+    {
+      "date": "2024-03-24",
+      "file": "data/odds/2024-03-24.json.gz",
+      "rows": 22892,
+      "size_bytes": 128023
+    },
+    {
+      "date": "2024-03-29",
+      "file": "data/odds/2024-03-29.json.gz",
+      "rows": 21725,
+      "size_bytes": 121568
+    },
+    {
+      "date": "2024-03-30",
+      "file": "data/odds/2024-03-30.json.gz",
+      "rows": 19889,
+      "size_bytes": 111435
+    },
+    {
+      "date": "2024-03-31",
+      "file": "data/odds/2024-03-31.json.gz",
+      "rows": 24694,
+      "size_bytes": 130062
+    },
+    {
+      "date": "2024-04-05",
+      "file": "data/odds/2024-04-05.json.gz",
+      "rows": 22156,
+      "size_bytes": 121303
+    },
+    {
+      "date": "2024-04-06",
+      "file": "data/odds/2024-04-06.json.gz",
+      "rows": 16741,
+      "size_bytes": 95796
+    },
+    {
+      "date": "2024-04-07",
+      "file": "data/odds/2024-04-07.json.gz",
+      "rows": 22120,
+      "size_bytes": 122225
+    },
+    {
+      "date": "2024-04-12",
+      "file": "data/odds/2024-04-12.json.gz",
+      "rows": 21435,
+      "size_bytes": 119742
+    },
+    {
+      "date": "2024-04-13",
+      "file": "data/odds/2024-04-13.json.gz",
+      "rows": 15094,
+      "size_bytes": 86571
+    },
+    {
+      "date": "2024-04-14",
+      "file": "data/odds/2024-04-14.json.gz",
+      "rows": 24751,
+      "size_bytes": 130200
+    },
+    {
+      "date": "2024-04-19",
+      "file": "data/odds/2024-04-19.json.gz",
+      "rows": 19837,
+      "size_bytes": 111671
+    },
+    {
+      "date": "2024-04-20",
+      "file": "data/odds/2024-04-20.json.gz",
+      "rows": 17325,
+      "size_bytes": 98577
+    },
+    {
+      "date": "2024-04-21",
+      "file": "data/odds/2024-04-21.json.gz",
+      "rows": 24023,
+      "size_bytes": 129970
+    },
+    {
+      "date": "2024-04-26",
+      "file": "data/odds/2024-04-26.json.gz",
+      "rows": 22082,
+      "size_bytes": 123766
+    },
+    {
+      "date": "2024-04-27",
+      "file": "data/odds/2024-04-27.json.gz",
+      "rows": 19108,
+      "size_bytes": 109050
+    },
+    {
+      "date": "2024-04-28",
+      "file": "data/odds/2024-04-28.json.gz",
+      "rows": 22238,
+      "size_bytes": 122460
+    },
+    {
+      "date": "2024-05-03",
+      "file": "data/odds/2024-05-03.json.gz",
+      "rows": 18098,
+      "size_bytes": 100928
+    },
+    {
+      "date": "2024-05-04",
+      "file": "data/odds/2024-05-04.json.gz",
+      "rows": 15557,
+      "size_bytes": 88005
+    },
+    {
+      "date": "2024-05-05",
+      "file": "data/odds/2024-05-05.json.gz",
+      "rows": 22797,
+      "size_bytes": 121197
+    },
+    {
+      "date": "2024-05-10",
+      "file": "data/odds/2024-05-10.json.gz",
+      "rows": 16752,
+      "size_bytes": 93947
+    },
+    {
+      "date": "2024-05-11",
+      "file": "data/odds/2024-05-11.json.gz",
+      "rows": 17265,
+      "size_bytes": 97718
+    },
+    {
+      "date": "2024-05-12",
+      "file": "data/odds/2024-05-12.json.gz",
+      "rows": 20581,
+      "size_bytes": 114358
+    },
+    {
+      "date": "2024-05-17",
+      "file": "data/odds/2024-05-17.json.gz",
+      "rows": 19428,
+      "size_bytes": 109691
+    },
+    {
+      "date": "2024-05-18",
+      "file": "data/odds/2024-05-18.json.gz",
+      "rows": 17265,
+      "size_bytes": 97618
+    },
+    {
+      "date": "2024-05-19",
+      "file": "data/odds/2024-05-19.json.gz",
+      "rows": 24943,
+      "size_bytes": 129404
+    },
+    {
+      "date": "2024-05-24",
+      "file": "data/odds/2024-05-24.json.gz",
+      "rows": 16522,
+      "size_bytes": 92878
+    },
+    {
+      "date": "2024-05-25",
+      "file": "data/odds/2024-05-25.json.gz",
+      "rows": 18075,
+      "size_bytes": 103031
+    },
+    {
+      "date": "2024-05-26",
+      "file": "data/odds/2024-05-26.json.gz",
+      "rows": 21373,
+      "size_bytes": 115641
+    },
+    {
+      "date": "2024-05-31",
+      "file": "data/odds/2024-05-31.json.gz",
+      "rows": 17035,
+      "size_bytes": 96976
+    },
+    {
+      "date": "2024-06-01",
+      "file": "data/odds/2024-06-01.json.gz",
+      "rows": 16041,
+      "size_bytes": 91264
+    },
+    {
+      "date": "2024-06-02",
+      "file": "data/odds/2024-06-02.json.gz",
+      "rows": 19019,
+      "size_bytes": 105290
+    },
+    {
+      "date": "2024-06-07",
+      "file": "data/odds/2024-06-07.json.gz",
+      "rows": 17198,
+      "size_bytes": 98537
+    },
+    {
+      "date": "2024-06-08",
+      "file": "data/odds/2024-06-08.json.gz",
+      "rows": 16194,
+      "size_bytes": 92939
+    },
+    {
+      "date": "2024-06-09",
+      "file": "data/odds/2024-06-09.json.gz",
+      "rows": 16582,
+      "size_bytes": 94492
+    },
+    {
+      "date": "2024-06-14",
+      "file": "data/odds/2024-06-14.json.gz",
+      "rows": 16144,
+      "size_bytes": 92240
+    },
+    {
+      "date": "2024-06-15",
+      "file": "data/odds/2024-06-15.json.gz",
+      "rows": 16879,
+      "size_bytes": 95220
+    },
+    {
+      "date": "2024-06-16",
+      "file": "data/odds/2024-06-16.json.gz",
+      "rows": 17713,
+      "size_bytes": 98501
+    },
+    {
+      "date": "2024-06-21",
+      "file": "data/odds/2024-06-21.json.gz",
+      "rows": 16908,
+      "size_bytes": 96941
+    },
+    {
+      "date": "2024-06-22",
+      "file": "data/odds/2024-06-22.json.gz",
+      "rows": 18008,
+      "size_bytes": 102872
+    },
+    {
+      "date": "2024-06-23",
+      "file": "data/odds/2024-06-23.json.gz",
+      "rows": 18559,
+      "size_bytes": 105101
+    },
+    {
+      "date": "2024-06-28",
+      "file": "data/odds/2024-06-28.json.gz",
+      "rows": 17615,
+      "size_bytes": 99343
+    },
+    {
+      "date": "2024-06-29",
+      "file": "data/odds/2024-06-29.json.gz",
+      "rows": 16127,
+      "size_bytes": 92684
+    },
+    {
+      "date": "2024-06-30",
+      "file": "data/odds/2024-06-30.json.gz",
+      "rows": 20264,
+      "size_bytes": 109876
+    },
+    {
+      "date": "2024-07-05",
+      "file": "data/odds/2024-07-05.json.gz",
+      "rows": 16551,
+      "size_bytes": 93878
+    },
+    {
+      "date": "2024-07-06",
+      "file": "data/odds/2024-07-06.json.gz",
+      "rows": 16335,
+      "size_bytes": 92681
+    },
+    {
+      "date": "2024-07-07",
+      "file": "data/odds/2024-07-07.json.gz",
+      "rows": 20373,
+      "size_bytes": 115768
+    },
+    {
+      "date": "2024-07-12",
+      "file": "data/odds/2024-07-12.json.gz",
+      "rows": 16671,
+      "size_bytes": 95525
+    },
+    {
+      "date": "2024-07-13",
+      "file": "data/odds/2024-07-13.json.gz",
+      "rows": 14694,
+      "size_bytes": 84016
+    },
+    {
+      "date": "2024-07-14",
+      "file": "data/odds/2024-07-14.json.gz",
+      "rows": 18463,
+      "size_bytes": 105874
+    },
+    {
+      "date": "2024-07-19",
+      "file": "data/odds/2024-07-19.json.gz",
+      "rows": 17452,
+      "size_bytes": 99886
+    },
+    {
+      "date": "2024-07-20",
+      "file": "data/odds/2024-07-20.json.gz",
+      "rows": 16321,
+      "size_bytes": 93041
+    },
+    {
+      "date": "2024-07-21",
+      "file": "data/odds/2024-07-21.json.gz",
+      "rows": 19043,
+      "size_bytes": 108752
+    },
+    {
+      "date": "2024-07-26",
+      "file": "data/odds/2024-07-26.json.gz",
+      "rows": 14270,
+      "size_bytes": 80649
+    },
+    {
+      "date": "2024-07-27",
+      "file": "data/odds/2024-07-27.json.gz",
+      "rows": 16515,
+      "size_bytes": 94211
+    },
+    {
+      "date": "2024-07-28",
+      "file": "data/odds/2024-07-28.json.gz",
+      "rows": 15870,
+      "size_bytes": 89587
+    },
+    {
+      "date": "2024-08-02",
+      "file": "data/odds/2024-08-02.json.gz",
+      "rows": 13625,
+      "size_bytes": 77940
+    },
+    {
+      "date": "2024-08-03",
+      "file": "data/odds/2024-08-03.json.gz",
+      "rows": 10275,
+      "size_bytes": 57268
+    },
+    {
+      "date": "2024-08-04",
+      "file": "data/odds/2024-08-04.json.gz",
+      "rows": 15015,
+      "size_bytes": 84441
+    },
+    {
+      "date": "2024-08-09",
+      "file": "data/odds/2024-08-09.json.gz",
+      "rows": 14560,
+      "size_bytes": 82995
+    },
+    {
+      "date": "2024-08-10",
+      "file": "data/odds/2024-08-10.json.gz",
+      "rows": 6240,
+      "size_bytes": 35787
+    },
+    {
+      "date": "2024-08-11",
+      "file": "data/odds/2024-08-11.json.gz",
+      "rows": 11114,
+      "size_bytes": 63936
+    },
+    {
+      "date": "2024-08-16",
+      "file": "data/odds/2024-08-16.json.gz",
+      "rows": 14368,
+      "size_bytes": 82506
+    },
+    {
+      "date": "2024-08-17",
+      "file": "data/odds/2024-08-17.json.gz",
+      "rows": 18849,
+      "size_bytes": 105916
+    },
+    {
+      "date": "2024-08-18",
+      "file": "data/odds/2024-08-18.json.gz",
+      "rows": 18463,
+      "size_bytes": 103706
+    },
+    {
+      "date": "2024-08-23",
+      "file": "data/odds/2024-08-23.json.gz",
+      "rows": 17035,
+      "size_bytes": 96965
+    },
+    {
+      "date": "2024-08-24",
+      "file": "data/odds/2024-08-24.json.gz",
+      "rows": 18202,
+      "size_bytes": 104252
+    },
+    {
+      "date": "2024-08-25",
+      "file": "data/odds/2024-08-25.json.gz",
+      "rows": 18603,
+      "size_bytes": 104985
+    },
+    {
+      "date": "2024-08-30",
+      "file": "data/odds/2024-08-30.json.gz",
+      "rows": 18492,
+      "size_bytes": 105596
+    },
+    {
+      "date": "2024-08-31",
+      "file": "data/odds/2024-08-31.json.gz",
+      "rows": 19465,
+      "size_bytes": 110869
+    },
+    {
+      "date": "2024-09-01",
+      "file": "data/odds/2024-09-01.json.gz",
+      "rows": 19630,
+      "size_bytes": 113059
+    },
+    {
+      "date": "2024-09-06",
+      "file": "data/odds/2024-09-06.json.gz",
+      "rows": 19206,
+      "size_bytes": 109277
+    },
+    {
+      "date": "2024-09-07",
+      "file": "data/odds/2024-09-07.json.gz",
+      "rows": 25044,
+      "size_bytes": 136119
+    },
+    {
+      "date": "2024-09-08",
+      "file": "data/odds/2024-09-08.json.gz",
+      "rows": 20634,
+      "size_bytes": 110622
+    },
+    {
+      "date": "2024-09-13",
+      "file": "data/odds/2024-09-13.json.gz",
+      "rows": 19139,
+      "size_bytes": 108255
+    },
+    {
+      "date": "2024-09-14",
+      "file": "data/odds/2024-09-14.json.gz",
+      "rows": 20751,
+      "size_bytes": 116514
+    },
+    {
+      "date": "2024-09-15",
+      "file": "data/odds/2024-09-15.json.gz",
+      "rows": 21964,
+      "size_bytes": 124498
+    },
+    {
+      "date": "2024-09-27",
+      "file": "data/odds/2024-09-27.json.gz",
+      "rows": 19927,
+      "size_bytes": 112012
+    },
+    {
+      "date": "2024-09-28",
+      "file": "data/odds/2024-09-28.json.gz",
+      "rows": 21822,
+      "size_bytes": 121101
+    },
+    {
+      "date": "2024-09-29",
+      "file": "data/odds/2024-09-29.json.gz",
+      "rows": 22519,
+      "size_bytes": 124869
+    },
+    {
+      "date": "2024-10-04",
+      "file": "data/odds/2024-10-04.json.gz",
+      "rows": 19280,
+      "size_bytes": 109520
+    },
+    {
+      "date": "2024-10-05",
+      "file": "data/odds/2024-10-05.json.gz",
+      "rows": 18662,
+      "size_bytes": 106726
+    },
+    {
+      "date": "2024-10-06",
+      "file": "data/odds/2024-10-06.json.gz",
+      "rows": 19043,
+      "size_bytes": 108857
+    },
+    {
+      "date": "2024-10-11",
+      "file": "data/odds/2024-10-11.json.gz",
+      "rows": 19280,
+      "size_bytes": 108756
+    },
+    {
+      "date": "2024-10-12",
+      "file": "data/odds/2024-10-12.json.gz",
+      "rows": 19666,
+      "size_bytes": 109964
+    },
+    {
+      "date": "2024-10-13",
+      "file": "data/odds/2024-10-13.json.gz",
+      "rows": 21882,
+      "size_bytes": 116870
+    },
+    {
+      "date": "2024-10-18",
+      "file": "data/odds/2024-10-18.json.gz",
+      "rows": 18329,
+      "size_bytes": 103536
+    },
+    {
+      "date": "2024-10-19",
+      "file": "data/odds/2024-10-19.json.gz",
+      "rows": 18075,
+      "size_bytes": 102471
+    },
+    {
+      "date": "2024-10-20",
+      "file": "data/odds/2024-10-20.json.gz",
+      "rows": 17719,
+      "size_bytes": 98818
+    },
+    {
+      "date": "2024-10-25",
+      "file": "data/odds/2024-10-25.json.gz",
+      "rows": 18930,
+      "size_bytes": 105566
+    },
+    {
+      "date": "2024-10-26",
+      "file": "data/odds/2024-10-26.json.gz",
+      "rows": 18990,
+      "size_bytes": 106112
+    },
+    {
+      "date": "2024-10-27",
+      "file": "data/odds/2024-10-27.json.gz",
+      "rows": 21644,
+      "size_bytes": 121194
+    },
+    {
+      "date": "2024-11-01",
+      "file": "data/odds/2024-11-01.json.gz",
+      "rows": 17370,
+      "size_bytes": 98058
+    },
+    {
+      "date": "2024-11-02",
+      "file": "data/odds/2024-11-02.json.gz",
+      "rows": 16901,
+      "size_bytes": 94903
+    },
+    {
+      "date": "2024-11-03",
+      "file": "data/odds/2024-11-03.json.gz",
+      "rows": 20223,
+      "size_bytes": 114015
+    },
+    {
+      "date": "2024-11-08",
+      "file": "data/odds/2024-11-08.json.gz",
+      "rows": 16725,
+      "size_bytes": 94498
+    },
+    {
+      "date": "2024-11-09",
+      "file": "data/odds/2024-11-09.json.gz",
+      "rows": 16031,
+      "size_bytes": 91902
+    },
+    {
+      "date": "2024-11-10",
+      "file": "data/odds/2024-11-10.json.gz",
+      "rows": 21639,
+      "size_bytes": 117414
+    },
+    {
+      "date": "2024-11-15",
+      "file": "data/odds/2024-11-15.json.gz",
+      "rows": 18529,
+      "size_bytes": 104288
+    },
+    {
+      "date": "2024-11-16",
+      "file": "data/odds/2024-11-16.json.gz",
+      "rows": 19347,
+      "size_bytes": 107519
+    },
+    {
+      "date": "2024-11-17",
+      "file": "data/odds/2024-11-17.json.gz",
+      "rows": 21800,
+      "size_bytes": 118259
+    },
+    {
+      "date": "2024-11-22",
+      "file": "data/odds/2024-11-22.json.gz",
+      "rows": 21294,
+      "size_bytes": 117198
+    },
+    {
+      "date": "2024-11-23",
+      "file": "data/odds/2024-11-23.json.gz",
+      "rows": 18952,
+      "size_bytes": 106089
+    },
+    {
+      "date": "2024-11-24",
+      "file": "data/odds/2024-11-24.json.gz",
+      "rows": 26042,
+      "size_bytes": 135194
+    },
+    {
+      "date": "2024-11-29",
+      "file": "data/odds/2024-11-29.json.gz",
+      "rows": 21725,
+      "size_bytes": 120234
+    },
+    {
+      "date": "2024-11-30",
+      "file": "data/odds/2024-11-30.json.gz",
+      "rows": 16908,
+      "size_bytes": 95547
+    },
+    {
+      "date": "2024-12-01",
+      "file": "data/odds/2024-12-01.json.gz",
+      "rows": 22212,
+      "size_bytes": 119130
+    },
+    {
+      "date": "2024-12-06",
+      "file": "data/odds/2024-12-06.json.gz",
+      "rows": 22082,
+      "size_bytes": 121353
+    },
+    {
+      "date": "2024-12-07",
+      "file": "data/odds/2024-12-07.json.gz",
+      "rows": 17421,
+      "size_bytes": 97893
+    },
+    {
+      "date": "2024-12-08",
+      "file": "data/odds/2024-12-08.json.gz",
+      "rows": 24119,
+      "size_bytes": 131941
+    },
+    {
+      "date": "2024-12-13",
+      "file": "data/odds/2024-12-13.json.gz",
+      "rows": 20788,
+      "size_bytes": 117323
+    },
+    {
+      "date": "2024-12-14",
+      "file": "data/odds/2024-12-14.json.gz",
+      "rows": 18619,
+      "size_bytes": 103982
+    },
+    {
+      "date": "2024-12-15",
+      "file": "data/odds/2024-12-15.json.gz",
+      "rows": 21913,
+      "size_bytes": 123358
+    },
+    {
+      "date": "2024-12-20",
+      "file": "data/odds/2024-12-20.json.gz",
+      "rows": 21435,
+      "size_bytes": 118353
+    },
+    {
+      "date": "2024-12-21",
+      "file": "data/odds/2024-12-21.json.gz",
+      "rows": 21681,
+      "size_bytes": 120861
+    },
+    {
+      "date": "2024-12-22",
+      "file": "data/odds/2024-12-22.json.gz",
+      "rows": 24974,
+      "size_bytes": 137060
+    },
+    {
+      "date": "2024-12-27",
+      "file": "data/odds/2024-12-27.json.gz",
+      "rows": 20788,
+      "size_bytes": 118595
+    },
+    {
+      "date": "2024-12-28",
+      "file": "data/odds/2024-12-28.json.gz",
+      "rows": 22112,
+      "size_bytes": 122707
+    },
+    {
+      "date": "2024-12-29",
+      "file": "data/odds/2024-12-29.json.gz",
+      "rows": 24900,
+      "size_bytes": 138304
+    },
+    {
+      "date": "2025-01-03",
+      "file": "data/odds/2025-01-03.json.gz",
+      "rows": 21361,
+      "size_bytes": 120136
+    },
+    {
+      "date": "2025-01-04",
+      "file": "data/odds/2025-01-04.json.gz",
+      "rows": 19927,
+      "size_bytes": 113388
+    },
+    {
+      "date": "2025-01-05",
+      "file": "data/odds/2025-01-05.json.gz",
+      "rows": 22804,
+      "size_bytes": 126665
+    },
+    {
+      "date": "2025-01-10",
+      "file": "data/odds/2025-01-10.json.gz",
+      "rows": 21272,
+      "size_bytes": 118088
+    },
+    {
+      "date": "2025-01-11",
+      "file": "data/odds/2025-01-11.json.gz",
+      "rows": 20097,
+      "size_bytes": 114190
+    },
+    {
+      "date": "2025-01-12",
+      "file": "data/odds/2025-01-12.json.gz",
+      "rows": 22418,
+      "size_bytes": 126473
+    },
+    {
+      "date": "2025-01-17",
+      "file": "data/odds/2025-01-17.json.gz",
+      "rows": 22223,
+      "size_bytes": 126729
+    },
+    {
+      "date": "2025-01-18",
+      "file": "data/odds/2025-01-18.json.gz",
+      "rows": 20016,
+      "size_bytes": 113232
+    },
+    {
+      "date": "2025-01-19",
+      "file": "data/odds/2025-01-19.json.gz",
+      "rows": 24112,
+      "size_bytes": 134751
+    },
+    {
+      "date": "2025-01-24",
+      "file": "data/odds/2025-01-24.json.gz",
+      "rows": 22223,
+      "size_bytes": 124989
+    },
+    {
+      "date": "2025-01-25",
+      "file": "data/odds/2025-01-25.json.gz",
+      "rows": 20893,
+      "size_bytes": 120064
+    },
+    {
+      "date": "2025-01-26",
+      "file": "data/odds/2025-01-26.json.gz",
+      "rows": 24119,
+      "size_bytes": 138353
+    },
+    {
+      "date": "2025-02-07",
+      "file": "data/odds/2025-02-07.json.gz",
+      "rows": 23732,
+      "size_bytes": 131557
+    },
+    {
+      "date": "2025-02-08",
+      "file": "data/odds/2025-02-08.json.gz",
+      "rows": 20536,
+      "size_bytes": 116704
+    },
+    {
+      "date": "2025-02-09",
+      "file": "data/odds/2025-02-09.json.gz",
+      "rows": 25042,
+      "size_bytes": 142954
+    },
+    {
+      "date": "2025-02-14",
+      "file": "data/odds/2025-02-14.json.gz",
+      "rows": 22290,
+      "size_bytes": 127017
+    },
+    {
+      "date": "2025-02-15",
+      "file": "data/odds/2025-02-15.json.gz",
+      "rows": 20514,
+      "size_bytes": 116921
+    },
+    {
+      "date": "2025-02-16",
+      "file": "data/odds/2025-02-16.json.gz",
+      "rows": 25621,
+      "size_bytes": 142984
+    },
+    {
+      "date": "2025-02-21",
+      "file": "data/odds/2025-02-21.json.gz",
+      "rows": 23212,
+      "size_bytes": 130443
+    },
+    {
+      "date": "2025-02-22",
+      "file": "data/odds/2025-02-22.json.gz",
+      "rows": 20224,
+      "size_bytes": 115148
+    },
+    {
+      "date": "2025-02-23",
+      "file": "data/odds/2025-02-23.json.gz",
+      "rows": 24765,
+      "size_bytes": 136554
+    },
+    {
+      "date": "2025-02-28",
+      "file": "data/odds/2025-02-28.json.gz",
+      "rows": 20424,
+      "size_bytes": 114799
+    },
+    {
+      "date": "2025-03-01",
+      "file": "data/odds/2025-03-01.json.gz",
+      "rows": 19242,
+      "size_bytes": 110670
+    },
+    {
+      "date": "2025-03-02",
+      "file": "data/odds/2025-03-02.json.gz",
+      "rows": 23331,
+      "size_bytes": 132452
+    },
+    {
+      "date": "2025-03-07",
+      "file": "data/odds/2025-03-07.json.gz",
+      "rows": 21703,
+      "size_bytes": 121989
+    },
+    {
+      "date": "2025-03-08",
+      "file": "data/odds/2025-03-08.json.gz",
+      "rows": 19309,
+      "size_bytes": 109437
+    },
+    {
+      "date": "2025-03-09",
+      "file": "data/odds/2025-03-09.json.gz",
+      "rows": 23398,
+      "size_bytes": 131261
+    },
+    {
+      "date": "2025-03-14",
+      "file": "data/odds/2025-03-14.json.gz",
+      "rows": 21866,
+      "size_bytes": 123660
+    },
+    {
+      "date": "2025-03-15",
+      "file": "data/odds/2025-03-15.json.gz",
+      "rows": 18722,
+      "size_bytes": 107280
+    },
+    {
+      "date": "2025-03-16",
+      "file": "data/odds/2025-03-16.json.gz",
+      "rows": 25652,
+      "size_bytes": 139397
+    },
+    {
+      "date": "2025-03-21",
+      "file": "data/odds/2025-03-21.json.gz",
+      "rows": 21844,
+      "size_bytes": 123807
+    },
+    {
+      "date": "2025-03-22",
+      "file": "data/odds/2025-03-22.json.gz",
+      "rows": 18655,
+      "size_bytes": 106717
+    },
+    {
+      "date": "2025-03-23",
+      "file": "data/odds/2025-03-23.json.gz",
+      "rows": 25588,
+      "size_bytes": 137762
+    },
+    {
+      "date": "2025-03-28",
+      "file": "data/odds/2025-03-28.json.gz",
+      "rows": 21933,
+      "size_bytes": 121324
+    },
+    {
+      "date": "2025-03-29",
+      "file": "data/odds/2025-03-29.json.gz",
+      "rows": 19822,
+      "size_bytes": 113025
+    },
+    {
+      "date": "2025-03-30",
+      "file": "data/odds/2025-03-30.json.gz",
+      "rows": 25190,
+      "size_bytes": 140552
+    },
+    {
+      "date": "2025-04-04",
+      "file": "data/odds/2025-04-04.json.gz",
+      "rows": 21272,
+      "size_bytes": 118112
+    },
+    {
+      "date": "2025-04-05",
+      "file": "data/odds/2025-04-05.json.gz",
+      "rows": 18365,
+      "size_bytes": 104258
+    },
+    {
+      "date": "2025-04-06",
+      "file": "data/odds/2025-04-06.json.gz",
+      "rows": 24916,
+      "size_bytes": 133766
+    },
+    {
+      "date": "2025-04-11",
+      "file": "data/odds/2025-04-11.json.gz",
+      "rows": 22074,
+      "size_bytes": 121043
+    },
+    {
+      "date": "2025-04-12",
+      "file": "data/odds/2025-04-12.json.gz",
+      "rows": 17265,
+      "size_bytes": 98412
+    },
+    {
+      "date": "2025-04-13",
+      "file": "data/odds/2025-04-13.json.gz",
+      "rows": 23479,
+      "size_bytes": 124679
+    },
+    {
+      "date": "2025-04-18",
+      "file": "data/odds/2025-04-18.json.gz",
+      "rows": 21643,
+      "size_bytes": 119489
+    },
+    {
+      "date": "2025-04-19",
+      "file": "data/odds/2025-04-19.json.gz",
+      "rows": 20960,
+      "size_bytes": 118100
+    },
+    {
+      "date": "2025-04-20",
+      "file": "data/odds/2025-04-20.json.gz",
+      "rows": 23738,
+      "size_bytes": 128370
+    },
+    {
+      "date": "2025-04-25",
+      "file": "data/odds/2025-04-25.json.gz",
+      "rows": 22156,
+      "size_bytes": 121657
+    },
+    {
+      "date": "2025-04-26",
+      "file": "data/odds/2025-04-26.json.gz",
+      "rows": 19599,
+      "size_bytes": 110243
+    },
+    {
+      "date": "2025-04-27",
+      "file": "data/odds/2025-04-27.json.gz",
+      "rows": 25787,
+      "size_bytes": 139651
+    },
+    {
+      "date": "2025-05-02",
+      "file": "data/odds/2025-05-02.json.gz",
+      "rows": 16968,
+      "size_bytes": 95034
+    },
+    {
+      "date": "2025-05-03",
+      "file": "data/odds/2025-05-03.json.gz",
+      "rows": 15765,
+      "size_bytes": 89357
+    },
+    {
+      "date": "2025-05-04",
+      "file": "data/odds/2025-05-04.json.gz",
+      "rows": 20730,
+      "size_bytes": 114299
+    },
+    {
+      "date": "2025-05-09",
+      "file": "data/odds/2025-05-09.json.gz",
+      "rows": 16642,
+      "size_bytes": 93190
+    },
+    {
+      "date": "2025-05-10",
+      "file": "data/odds/2025-05-10.json.gz",
+      "rows": 16508,
+      "size_bytes": 94972
+    },
+    {
+      "date": "2025-05-11",
+      "file": "data/odds/2025-05-11.json.gz",
+      "rows": 21254,
+      "size_bytes": 114196
+    },
+    {
+      "date": "2025-05-16",
+      "file": "data/odds/2025-05-16.json.gz",
+      "rows": 17912,
+      "size_bytes": 102568
+    },
+    {
+      "date": "2025-05-17",
+      "file": "data/odds/2025-05-17.json.gz",
+      "rows": 15727,
+      "size_bytes": 90579
+    },
+    {
+      "date": "2025-05-18",
+      "file": "data/odds/2025-05-18.json.gz",
+      "rows": 19872,
+      "size_bytes": 110957
+    },
+    {
+      "date": "2025-05-23",
+      "file": "data/odds/2025-05-23.json.gz",
+      "rows": 18492,
+      "size_bytes": 105013
+    },
+    {
+      "date": "2025-05-24",
+      "file": "data/odds/2025-05-24.json.gz",
+      "rows": 14747,
+      "size_bytes": 83583
+    },
+    {
+      "date": "2025-05-25",
+      "file": "data/odds/2025-05-25.json.gz",
+      "rows": 20109,
+      "size_bytes": 109809
+    },
+    {
+      "date": "2025-05-30",
+      "file": "data/odds/2025-05-30.json.gz",
+      "rows": 18269,
+      "size_bytes": 103736
+    },
+    {
+      "date": "2025-05-31",
+      "file": "data/odds/2025-05-31.json.gz",
+      "rows": 16211,
+      "size_bytes": 93516
+    },
+    {
+      "date": "2025-06-01",
+      "file": "data/odds/2025-06-01.json.gz",
+      "rows": 17348,
+      "size_bytes": 96645
+    },
+    {
+      "date": "2025-06-06",
+      "file": "data/odds/2025-06-06.json.gz",
+      "rows": 18202,
+      "size_bytes": 102877
+    },
+    {
+      "date": "2025-06-07",
+      "file": "data/odds/2025-06-07.json.gz",
+      "rows": 14450,
+      "size_bytes": 82903
+    },
+    {
+      "date": "2025-06-08",
+      "file": "data/odds/2025-06-08.json.gz",
+      "rows": 18432,
+      "size_bytes": 104029
+    },
+    {
+      "date": "2025-06-13",
+      "file": "data/odds/2025-06-13.json.gz",
+      "rows": 16381,
+      "size_bytes": 93792
+    },
+    {
+      "date": "2025-06-14",
+      "file": "data/odds/2025-06-14.json.gz",
+      "rows": 16338,
+      "size_bytes": 93345
+    },
+    {
+      "date": "2025-06-15",
+      "file": "data/odds/2025-06-15.json.gz",
+      "rows": 18027,
+      "size_bytes": 101396
+    },
+    {
+      "date": "2025-06-20",
+      "file": "data/odds/2025-06-20.json.gz",
+      "rows": 18849,
+      "size_bytes": 106452
+    },
+    {
+      "date": "2025-06-21",
+      "file": "data/odds/2025-06-21.json.gz",
+      "rows": 15281,
+      "size_bytes": 87126
+    },
+    {
+      "date": "2025-06-22",
+      "file": "data/odds/2025-06-22.json.gz",
+      "rows": 20404,
+      "size_bytes": 114674
+    },
+    {
+      "date": "2025-06-27",
+      "file": "data/odds/2025-06-27.json.gz",
+      "rows": 18262,
+      "size_bytes": 102480
+    },
+    {
+      "date": "2025-06-28",
+      "file": "data/odds/2025-06-28.json.gz",
+      "rows": 17742,
+      "size_bytes": 101678
+    },
+    {
+      "date": "2025-06-29",
+      "file": "data/odds/2025-06-29.json.gz",
+      "rows": 22895,
+      "size_bytes": 123240
+    },
+    {
+      "date": "2025-07-04",
+      "file": "data/odds/2025-07-04.json.gz",
+      "rows": 17883,
+      "size_bytes": 100595
+    },
+    {
+      "date": "2025-07-05",
+      "file": "data/odds/2025-07-05.json.gz",
+      "rows": 13983,
+      "size_bytes": 80465
+    },
+    {
+      "date": "2025-07-06",
+      "file": "data/odds/2025-07-06.json.gz",
+      "rows": 17622,
+      "size_bytes": 100956
+    },
+    {
+      "date": "2025-07-11",
+      "file": "data/odds/2025-07-11.json.gz",
+      "rows": 17593,
+      "size_bytes": 100786
+    },
+    {
+      "date": "2025-07-12",
+      "file": "data/odds/2025-07-12.json.gz",
+      "rows": 16841,
+      "size_bytes": 96461
+    },
+    {
+      "date": "2025-07-13",
+      "file": "data/odds/2025-07-13.json.gz",
+      "rows": 18056,
+      "size_bytes": 101005
+    },
+    {
+      "date": "2025-07-18",
+      "file": "data/odds/2025-07-18.json.gz",
+      "rows": 17862,
+      "size_bytes": 101811
+    },
+    {
+      "date": "2025-07-19",
+      "file": "data/odds/2025-07-19.json.gz",
+      "rows": 15741,
+      "size_bytes": 90114
+    },
+    {
+      "date": "2025-07-20",
+      "file": "data/odds/2025-07-20.json.gz",
+      "rows": 20061,
+      "size_bytes": 114403
+    },
+    {
+      "date": "2025-07-25",
+      "file": "data/odds/2025-07-25.json.gz",
+      "rows": 13170,
+      "size_bytes": 76081
+    },
+    {
+      "date": "2025-07-26",
+      "file": "data/odds/2025-07-26.json.gz",
+      "rows": 14435,
+      "size_bytes": 83046
+    },
+    {
+      "date": "2025-07-27",
+      "file": "data/odds/2025-07-27.json.gz",
+      "rows": 15082,
+      "size_bytes": 85891
+    },
+    {
+      "date": "2025-08-01",
+      "file": "data/odds/2025-08-01.json.gz",
+      "rows": 17320,
+      "size_bytes": 97976
+    },
+    {
+      "date": "2025-08-02",
+      "file": "data/odds/2025-08-02.json.gz",
+      "rows": 8981,
+      "size_bytes": 51204
+    },
+    {
+      "date": "2025-08-03",
+      "file": "data/odds/2025-08-03.json.gz",
+      "rows": 15350,
+      "size_bytes": 86589
+    },
+    {
+      "date": "2025-08-08",
+      "file": "data/odds/2025-08-08.json.gz",
+      "rows": 12243,
+      "size_bytes": 70437
+    },
+    {
+      "date": "2025-08-09",
+      "file": "data/odds/2025-08-09.json.gz",
+      "rows": 4620,
+      "size_bytes": 26777
+    },
+    {
+      "date": "2025-08-10",
+      "file": "data/odds/2025-08-10.json.gz",
+      "rows": 12221,
+      "size_bytes": 70067
+    },
+    {
+      "date": "2025-08-15",
+      "file": "data/odds/2025-08-15.json.gz",
+      "rows": 12363,
+      "size_bytes": 71076
+    },
+    {
+      "date": "2025-08-16",
+      "file": "data/odds/2025-08-16.json.gz",
+      "rows": 16515,
+      "size_bytes": 94340
+    },
+    {
+      "date": "2025-08-17",
+      "file": "data/odds/2025-08-17.json.gz",
+      "rows": 18619,
+      "size_bytes": 105505
+    },
+    {
+      "date": "2025-08-22",
+      "file": "data/odds/2025-08-22.json.gz",
+      "rows": 14835,
+      "size_bytes": 84256
+    },
+    {
+      "date": "2025-08-23",
+      "file": "data/odds/2025-08-23.json.gz",
+      "rows": 19096,
+      "size_bytes": 109238
+    },
+    {
+      "date": "2025-08-24",
+      "file": "data/odds/2025-08-24.json.gz",
+      "rows": 20047,
+      "size_bytes": 112916
+    },
+    {
+      "date": "2025-08-29",
+      "file": "data/odds/2025-08-29.json.gz",
+      "rows": 15451,
+      "size_bytes": 88920
+    },
+    {
+      "date": "2025-08-30",
+      "file": "data/odds/2025-08-30.json.gz",
+      "rows": 19539,
+      "size_bytes": 112106
+    },
+    {
+      "date": "2025-08-31",
+      "file": "data/odds/2025-08-31.json.gz",
+      "rows": 22388,
+      "size_bytes": 124747
+    },
+    {
+      "date": "2025-09-05",
+      "file": "data/odds/2025-09-05.json.gz",
+      "rows": 18202,
+      "size_bytes": 104656
+    },
+    {
+      "date": "2025-09-06",
+      "file": "data/odds/2025-09-06.json.gz",
+      "rows": 18718,
+      "size_bytes": 107195
+    },
+    {
+      "date": "2025-09-07",
+      "file": "data/odds/2025-09-07.json.gz",
+      "rows": 20573,
+      "size_bytes": 115107
+    },
+    {
+      "date": "2025-09-12",
+      "file": "data/odds/2025-09-12.json.gz",
+      "rows": 17922,
+      "size_bytes": 102930
+    },
+    {
+      "date": "2025-09-13",
+      "file": "data/odds/2025-09-13.json.gz",
+      "rows": 15897,
+      "size_bytes": 91287
+    },
+    {
+      "date": "2025-09-14",
+      "file": "data/odds/2025-09-14.json.gz",
+      "rows": 18172,
+      "size_bytes": 102396
+    },
+    {
+      "date": "2025-09-19",
+      "file": "data/odds/2025-09-19.json.gz",
+      "rows": 17615,
+      "size_bytes": 99532
+    },
+    {
+      "date": "2025-09-20",
+      "file": "data/odds/2025-09-20.json.gz",
+      "rows": 20610,
+      "size_bytes": 115181
+    },
+    {
+      "date": "2025-09-21",
+      "file": "data/odds/2025-09-21.json.gz",
+      "rows": 21767,
+      "size_bytes": 119586
+    },
+    {
+      "date": "2025-09-26",
+      "file": "data/odds/2025-09-26.json.gz",
+      "rows": 18849,
+      "size_bytes": 107432
+    },
+    {
+      "date": "2025-09-27",
+      "file": "data/odds/2025-09-27.json.gz",
+      "rows": 20108,
+      "size_bytes": 113983
+    },
+    {
+      "date": "2025-09-28",
+      "file": "data/odds/2025-09-28.json.gz",
+      "rows": 21659,
+      "size_bytes": 121554
+    },
+    {
+      "date": "2025-10-03",
+      "file": "data/odds/2025-10-03.json.gz",
+      "rows": 7280,
+      "size_bytes": 41515
+    },
+    {
+      "date": "2025-10-04",
+      "file": "data/odds/2025-10-04.json.gz",
+      "rows": 14006,
+      "size_bytes": 78885
+    },
+    {
+      "date": "2025-10-17",
+      "file": "data/odds/2025-10-17.json.gz",
+      "rows": 22654,
+      "size_bytes": 122946
+    },
+    {
+      "date": "2025-10-18",
+      "file": "data/odds/2025-10-18.json.gz",
+      "rows": 19807,
+      "size_bytes": 112150
+    },
+    {
+      "date": "2025-10-19",
+      "file": "data/odds/2025-10-19.json.gz",
+      "rows": 26475,
+      "size_bytes": 143558
+    },
+    {
+      "date": "2025-10-24",
+      "file": "data/odds/2025-10-24.json.gz",
+      "rows": 22654,
+      "size_bytes": 123741
+    },
+    {
+      "date": "2025-10-25",
+      "file": "data/odds/2025-10-25.json.gz",
+      "rows": 21161,
+      "size_bytes": 117332
+    },
+    {
+      "date": "2025-10-26",
+      "file": "data/odds/2025-10-26.json.gz",
+      "rows": 29305,
+      "size_bytes": 146709
+    },
+    {
+      "date": "2025-10-31",
+      "file": "data/odds/2025-10-31.json.gz",
+      "rows": 22082,
+      "size_bytes": 120235
+    },
+    {
+      "date": "2025-11-01",
+      "file": "data/odds/2025-11-01.json.gz",
+      "rows": 21324,
+      "size_bytes": 118922
+    },
+    {
+      "date": "2025-11-02",
+      "file": "data/odds/2025-11-02.json.gz",
+      "rows": 24239,
+      "size_bytes": 131536
+    },
+    {
+      "date": "2025-11-07",
+      "file": "data/odds/2025-11-07.json.gz",
+      "rows": 22616,
+      "size_bytes": 123390
+    },
+    {
+      "date": "2025-11-08",
+      "file": "data/odds/2025-11-08.json.gz",
+      "rows": 20083,
+      "size_bytes": 112651
+    },
+    {
+      "date": "2025-11-09",
+      "file": "data/odds/2025-11-09.json.gz",
+      "rows": 22372,
+      "size_bytes": 123387
+    },
+    {
+      "date": "2025-11-14",
+      "file": "data/odds/2025-11-14.json.gz",
+      "rows": 21895,
+      "size_bytes": 119647
+    },
+    {
+      "date": "2025-11-15",
+      "file": "data/odds/2025-11-15.json.gz",
+      "rows": 18202,
+      "size_bytes": 102898
+    },
+    {
+      "date": "2025-11-16",
+      "file": "data/odds/2025-11-16.json.gz",
+      "rows": 22054,
+      "size_bytes": 118706
+    },
+    {
+      "date": "2025-11-21",
+      "file": "data/odds/2025-11-21.json.gz",
+      "rows": 22542,
+      "size_bytes": 122254
+    },
+    {
+      "date": "2025-11-22",
+      "file": "data/odds/2025-11-22.json.gz",
+      "rows": 21108,
+      "size_bytes": 116638
+    },
+    {
+      "date": "2025-11-23",
+      "file": "data/odds/2025-11-23.json.gz",
+      "rows": 24649,
+      "size_bytes": 128992
+    },
+    {
+      "date": "2025-11-28",
+      "file": "data/odds/2025-11-28.json.gz",
+      "rows": 24341,
+      "size_bytes": 132471
+    },
+    {
+      "date": "2025-11-29",
+      "file": "data/odds/2025-11-29.json.gz",
+      "rows": 20804,
+      "size_bytes": 114965
+    },
+    {
+      "date": "2025-11-30",
+      "file": "data/odds/2025-11-30.json.gz",
+      "rows": 25615,
+      "size_bytes": 136395
+    },
+    {
+      "date": "2025-12-05",
+      "file": "data/odds/2025-12-05.json.gz",
+      "rows": 23287,
+      "size_bytes": 128113
+    },
+    {
+      "date": "2025-12-06",
+      "file": "data/odds/2025-12-06.json.gz",
+      "rows": 20313,
+      "size_bytes": 113620
+    },
+    {
+      "date": "2025-12-07",
+      "file": "data/odds/2025-12-07.json.gz",
+      "rows": 21443,
+      "size_bytes": 118396
+    },
+    {
+      "date": "2025-12-12",
+      "file": "data/odds/2025-12-12.json.gz",
+      "rows": 19227,
+      "size_bytes": 108191
+    },
+    {
+      "date": "2025-12-13",
+      "file": "data/odds/2025-12-13.json.gz",
+      "rows": 18403,
+      "size_bytes": 102625
+    },
+    {
+      "date": "2025-12-14",
+      "file": "data/odds/2025-12-14.json.gz",
+      "rows": 19170,
+      "size_bytes": 107900
+    },
+    {
+      "date": "2025-12-19",
+      "file": "data/odds/2025-12-19.json.gz",
+      "rows": 22401,
+      "size_bytes": 124309
+    },
+    {
+      "date": "2025-12-20",
+      "file": "data/odds/2025-12-20.json.gz",
+      "rows": 19994,
+      "size_bytes": 110727
+    },
+    {
+      "date": "2025-12-21",
+      "file": "data/odds/2025-12-21.json.gz",
+      "rows": 24833,
+      "size_bytes": 132794
+    },
+    {
+      "date": "2025-12-26",
+      "file": "data/odds/2025-12-26.json.gz",
+      "rows": 21294,
+      "size_bytes": 117713
+    },
+    {
+      "date": "2025-12-27",
+      "file": "data/odds/2025-12-27.json.gz",
+      "rows": 22469,
+      "size_bytes": 125394
+    },
+    {
+      "date": "2025-12-28",
+      "file": "data/odds/2025-12-28.json.gz",
+      "rows": 24045,
+      "size_bytes": 130524
+    }
+  ],
+  "fields": [
+    "race_id",
+    "meet",
+    "market",
+    "combination",
+    "odds",
+    "is_hit",
+    "is_capped_odds",
+    "arrival_order"
+  ],
+  "generated_at": "2026-06-16T05:45:20.054426+00:00"
+}

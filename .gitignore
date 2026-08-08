@@ -1,0 +1,7 @@
+KRA/raw_collected_v3_15w/
+.venv/
+.vscode/
+__pycache__/
+*.pyc
+*.zip
+.DS_Store

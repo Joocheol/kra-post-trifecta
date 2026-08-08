@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KRA Post-Trifecta Data Browser</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">KRA betting market dataset</p>
+        <h1>Post-Trifecta Data Browser</h1>
+      </div>
+      <nav class="topnav" aria-label="Page sections">
+        <a href="#coverage">Coverage</a>
+        <a href="#parsed">Parsed</a>
+        <a href="#schemas">Schemas</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="overview" aria-labelledby="overview-title">
+        <div>
+          <h2 id="overview-title">2016-06-10 through 2025-12-31</h2>
+          <p>
+            A compact view of the copied raw JSON and parsed parquet data in this repository.
+          </p>
+        </div>
+        <div class="range-rail" aria-label="Dataset timeline">
+          <span>2016-06-10</span>
+          <div class="rail"><span></span></div>
+          <span>2025-12-31</span>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="Dataset metrics">
+        <article class="metric">
+          <span class="metric-label">Raw files</span>
+          <strong id="raw-files">-</strong>
+          <small id="raw-size">-</small>
+        </article>
+        <article class="metric">
+          <span class="metric-label">Parquet files</span>
+          <strong id="parquet-files">-</strong>
+          <small id="parquet-size">-</small>
+        </article>
+        <article class="metric">
+          <span class="metric-label">Parsed rows</span>
+          <strong id="parsed-rows">-</strong>
+          <small>metadata row count</small>
+        </article>
+        <article class="metric">
+          <span class="metric-label">Market era</span>
+          <strong>Trifecta</strong>
+          <small>post-cutover subset</small>
+        </article>
+      </section>
+
+      <section id="coverage" class="panel" aria-labelledby="coverage-title">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Coverage</p>
+            <h2 id="coverage-title">Raw race files by year</h2>
+          </div>
+          <div class="segmented" role="tablist" aria-label="Coverage view">
+            <button class="active" data-chart="raw">Raw</button>
+            <button data-chart="parsed">Parsed</button>
+          </div>
+        </div>
+        <div id="year-chart" class="bar-chart" aria-live="polite"></div>
+      </section>
+
+      <section id="parsed" class="split">
+        <article class="panel" aria-labelledby="market-title">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Parquet</p>
+              <h2 id="market-title">Rows by dataset kind</h2>
+            </div>
+          </div>
+          <div id="kind-chart" class="bar-chart compact" aria-live="polite"></div>
+        </article>
+
+        <article class="panel" aria-labelledby="sample-title">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Raw samples</p>
+              <h2 id="sample-title">Readable JSON snapshots</h2>
+            </div>
+          </div>
+          <div id="sample-list" class="sample-list" aria-live="polite"></div>
+        </article>
+      </section>
+
+      <section id="odds" class="panel" aria-labelledby="odds-title">
+        <div class="panel-header odds-header">
+          <div>
+            <p class="eyebrow">Odds table</p>
+            <h2 id="odds-title">Daily market odds</h2>
+          </div>
+          <div class="odds-controls">
+            <label class="filter">
+              <span>Date</span>
+              <select id="date-select"></select>
+            </label>
+            <label class="filter">
+              <span>Market</span>
+              <select id="market-select">
+                <option value="all">All markets</option>
+                <option value="win">win</option>
+                <option value="place">place</option>
+                <option value="quinella">quinella</option>
+                <option value="exacta">exacta</option>
+                <option value="quinella_place">quinella_place</option>
+                <option value="trio">trio</option>
+                <option value="trifecta">trifecta</option>
+              </select>
+            </label>
+            <button id="load-odds" class="command-button">Load</button>
+          </div>
+        </div>
+        <div id="odds-status" class="table-status">
+          Start the local API server to load date-level odds.
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Race</th>
+                <th>Meet</th>
+                <th>Market</th>
+                <th>Combination</th>
+                <th>Odds</th>
+                <th>Hit</th>
+                <th>Capped</th>
+                <th>Arrival order</th>
+              </tr>
+            </thead>
+            <tbody id="odds-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="schemas" class="panel" aria-labelledby="schemas-title">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Schemas</p>
+            <h2 id="schemas-title">Parquet columns</h2>
+          </div>
+          <label class="filter">
+            <span>Dataset</span>
+            <select id="schema-select"></select>
+          </label>
+        </div>
+        <div id="schema-columns" class="columns"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span id="generated-at">Generated metadata: -</span>
+      <a href="https://github.com/Joocheol/kra-post-trifecta-analysis">GitHub repository</a>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
