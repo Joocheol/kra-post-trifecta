@@ -85,6 +85,9 @@ jobs:
       - name: Render sample-selection diagnostics table
         run: python -m analysis.main_analysis_selection
 
+      - name: Render Panel B heterogeneity comparison
+        run: python -m analysis.main_analysis_heterogeneity_b
+
       - name: Verify frozen compact main-analysis results
         shell: bash
         run: |
@@ -100,12 +103,14 @@ jobs:
             outputs/main_sample_composition.csv \
             outputs/main_sample_tail.csv \
             outputs/main_heterogeneity_summary.csv \
+            outputs/main_heterogeneity_comparison.csv \
             tables/main_panel_a.tex \
             tables/main_panel_b.tex \
             tables/main_benchmark_comparison.tex \
             tables/main_order_information.tex \
             tables/main_order_information_bounds.tex \
-            tables/main_sample_selection.tex
+            tables/main_sample_selection.tex \
+            tables/main_heterogeneity_comparison.tex
           echo "PASS: frozen compact main-analysis results are reproducible"
 
       - name: Upload full analysis outputs
