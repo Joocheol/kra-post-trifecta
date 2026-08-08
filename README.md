@@ -1,7 +1,30 @@
-# KRA Post-Trifecta Dataset
+# KRA Post-Trifecta: 데이터와 논문
 
-Parsed KRA betting-market data for the post-trifecta era, with the scripts
-used to build it and a static data browser.
+이 저장소는 삼쌍승식 도입 이후 한국 경마 베팅시장 데이터와 이를 이용한
+한글 LaTeX 논문을 함께 관리합니다. 데이터·브라우저의 기존 기능은 유지하며,
+논문은 삼쌍승식의 순위 상태가격을 주변화하여 단승·쌍승·복승·삼복승 가격을
+얼마나 재구성할 수 있는지를 분석합니다.
+
+## Paper
+
+- 가제: **복권식 경마시장의 정보 집계: 삼쌍승식 상태가격을 이용한 교차시장 재구성**
+- 원고: `main.tex`, `preamble.tex`, `sections/`
+- 연구 설계: `RESEARCH_PLAN.md`
+- 집필 원칙: `WRITING_GUIDE.md`
+- Claude 검토 규칙: `CLAUDE.md`
+
+로컬 빌드 환경에 XeLaTeX, ko.TeX, BibTeX이 설치되어 있다면 다음 두 명령으로
+검증하고 PDF를 만듭니다.
+
+```bash
+bash scripts/validate.sh
+bash scripts/build.sh
+```
+
+PR에서는 `paper-ci.yml`이 같은 검증을 수행하고 `paper-pdf` artifact를 남깁니다.
+`ai-review` 라벨은 별도의 읽기 전용 Claude 전수 검토를 한 번 실행합니다. 이
+검토는 PDF의 한글 추출을 확인하고, 모든 쪽을 PNG로 변환한 뒤 전 페이지를
+읽습니다. Claude는 파일을 수정하거나 병합하지 않습니다.
 
 ## Data Scope
 
@@ -54,6 +77,8 @@ Parsed files are parquet datasets intended to be read with `pyarrow`.
 - `scripts/build_site_data.py` — regenerates site metadata
 - `scripts/build_static_odds_data.py` — regenerates static odds files
 - `scripts/serve_data_browser.py` — local preview server
+- `scripts/validate.sh` — 논문 소스와 저장소의 정적 검증
+- `scripts/build.sh` — XeLaTeX/BibTeX 논문 빌드
 
 ## Data Browser
 

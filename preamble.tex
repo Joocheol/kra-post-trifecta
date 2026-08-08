@@ -1,0 +1,83 @@
+% Korean academic article preamble -- XeLaTeX
+\usepackage{kotex}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage{mathtools,amssymb,amsthm}
+\usepackage{booktabs,threeparttable,array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{titlesec}
+\usepackage[
+  a4paper,
+  top=25mm,
+  bottom=25mm,
+  left=28mm,
+  right=28mm
+]{geometry}
+
+\defaultfontfeatures{Ligatures=TeX}
+\IfFontExistsTF{STIX Two Text}{
+  \setmainfont{STIX Two Text}
+}{
+  \setmainfont{TeX Gyre Termes}
+}
+\IfFontExistsTF{STIX Two Math}{
+  \setmathfont{STIX Two Math}
+}{
+  \setmathfont{Latin Modern Math}
+}
+\IfFontExistsTF{KoPubWorld Batang Pro}{
+  \setmainhangulfont{KoPubWorld Batang Pro}
+  \setsanshangulfont{KoPubWorld Dotum Pro}
+}{
+  \IfFontExistsTF{Noto Serif CJK KR}{
+    \setmainhangulfont{Noto Serif CJK KR}
+    \setsanshangulfont{Noto Sans CJK KR}
+  }{}
+}
+
+\definecolor{LinkBlue}{HTML}{2457A6}
+\definecolor{MutedGray}{HTML}{5F6368}
+
+\usepackage[round,authoryear]{natbib}
+\usepackage{hyperref}
+\hypersetup{
+  unicode=true,
+  colorlinks=true,
+  linkcolor=LinkBlue,
+  citecolor=LinkBlue,
+  urlcolor=LinkBlue,
+  pdftitle={복권식 경마시장의 정보 집계},
+  pdfauthor={김주철}
+}
+
+\setstretch{1.38}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlist{nosep,leftmargin=2em}
+\emergencystretch=2em
+
+\titleformat{\section}
+  {\large\sffamily\bfseries}{\thesection.}{0.65em}{}
+\titleformat{\subsection}
+  {\normalsize\sffamily\bfseries}{\thesubsection.}{0.65em}{}
+\titlespacing*{\section}{0pt}{2.8ex plus 0.6ex minus 0.3ex}{1.1ex}
+\titlespacing*{\subsection}{0pt}{2.2ex plus 0.5ex minus 0.2ex}{0.8ex}
+
+\newtheorem{proposition}{명제}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\W}{\mathsf{W}}
+\newcommand{\Eact}{\mathsf{E}}
+\newcommand{\Q}{\mathsf{Q}}
+\newcommand{\Trio}{\mathsf{R}}
+
+\renewcommand{\abstractname}{초록}
+\renewcommand{\refname}{참고문헌}
+\renewcommand{\tablename}{표}
+\renewcommand{\figurename}{그림}

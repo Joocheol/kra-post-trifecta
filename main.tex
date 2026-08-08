@@ -1,0 +1,48 @@
+\documentclass[11pt]{article}
+
+\input{preamble}
+
+\title{\textbf{복권식 경마시장의 정보 집계}\\
+  \large 삼쌍승식 상태가격을 이용한 교차시장 재구성}
+\author{김주철\\\small 연세대학교}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+하나의 경주에는 단승식, 복승식, 쌍승식, 삼복승식, 삼쌍승식처럼 서로 다른
+조건부 청구권이 동시에 거래된다. 이 논문은 가장 세분된 삼쌍승식의 순위별
+배당률로부터 완전한 1--3위 상태가격 분포를 구성하고, 이를 주변화하여 더
+단순한 승식의 가격을 재구성한다. 2016년 6월부터 2025년 12월까지 한국마사회
+경주를 대상으로, 교차시장 가격 일관성을 경주별 거리, 확률발산, 로그가격
+보정식으로 평가하고 단승 확률에 기초한 Harville 모형과 장내·장외 귀무모형을
+비교한다. 이 접근은 실제 승률을 먼저 추정하지 않고도 동일 사건에 대한 여러
+시장 가격이 하나의 공통 상태분포와 양립하는지를 검정한다. 따라서 전통적인
+인기마--비인기마 편향 연구를 넘어, 복잡한 시장에 집계된 순위 정보가 단순한
+시장의 가격을 얼마나 설명하는지를 직접 측정하는 연구 설계를 제공한다.
+
+\medskip
+\noindent\textbf{핵심어:} 경마시장, 정보 집계, 상태가격, 삼쌍승식,
+패리뮤추얼, 시장 효율성
+\end{abstract}
+
+\begin{center}
+\small
+\textbf{Information Aggregation Across Parimutuel Wagering Markets:}
+Reconstructing Prices from Trifecta State Prices
+\end{center}
+
+\input{sections/01-introduction}
+\input{sections/02-institutions-literature}
+\input{sections/03-framework}
+\input{sections/04-data}
+\input{sections/05-empirical-strategy}
+\input{sections/06-reporting}
+\input{sections/07-conclusion}
+
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}

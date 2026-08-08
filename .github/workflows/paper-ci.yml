@@ -1,0 +1,71 @@
+name: Paper CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: paper-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      image: ghcr.io/joocheol/latex-book-ci@sha256:e09de48df329e11b1a8f453a04fc60ee162861ff7a7accefb3d7a6d61d7688a9
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Trust checked-out workspace
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Check pull-request whitespace
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: git diff --check "$BASE_SHA...$HEAD_SHA"
+
+      - name: Validate manuscript source
+        run: bash scripts/validate.sh
+
+      - name: Build diagnostic PDF
+        env:
+          PAPER_KEEP_AUX: "1"
+        run: bash scripts/build.sh
+
+      - name: Reject LaTeX warnings after build
+        run: bash scripts/validate.sh
+
+      - name: Verify Korean text extraction
+        run: |
+          test -s main.pdf
+          pdftotext -layout main.pdf manuscript.txt
+          python3 .github/ai-review/check-korean-text.py \
+            manuscript.txt main.tex sections
+
+      - name: Upload paper PDF
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: paper-pdf
+          path: main.pdf
+          if-no-files-found: error
+          retention-days: 7
