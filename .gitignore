@@ -25,3 +25,8 @@ main.pdf
 # outputs/data_audit_manifest.json.
 outputs/data_quality.csv
 outputs/analysis_sample.csv
+
+# Large deterministic race-level main-analysis outputs. Compact summaries and
+# the manifest are tracked; the manifest records SHA-256 for these CSVs.
+outputs/main_metrics.csv
+outputs/main_metrics_bounds.csv
