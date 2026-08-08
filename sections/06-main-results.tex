@@ -1,0 +1,88 @@
+\section{주분석 결과}
+\label{sec:main-results}
+
+이 절은 사전에 고정한 두 공동 주패널을 같은 위계로 보고한다. Panel A는
+삼쌍승 배당상한이 없는 공통 clean 표본의 점가격 비교이고, Panel B는 전체
+분석표본에서 반올림과 상한이 허용하는 가격집합을 그대로 유지한
+부분식별 결과다. 모든 수치는 재현 스크립트가 생성한 표를 직접 불러온다.
+
+\subsection{Clean 표본의 점가격 비교}
+
+\begin{table}[htbp]
+\centering
+\caption{Panel A: 삼쌍승 주변가격과 실제 승식 가격의 거리}
+\label{tab:main-panel-a}
+\resizebox{\textwidth}{!}{\input{tables/main_panel_a}}
+\end{table}
+
+표~\ref{tab:main-panel-a}에서 삼쌍승 상태가격을 실제 경주의 단승·쌍승·복승·
+삼복승 결과공간으로 주변화한 주모형은, 단승을 제외한 세 복합승식에서
+Harville보다 작은 TV를 보인다. 동일 경주에서 삼쌍승 가격을 무작위로 섞은
+순열 기준, 같은 출전두수의 다른 경주를 가져온 기준, 균등분포 기준과의 격차는
+더 크다. 이는 높은 적합도가 단순히 상태공간의 차원이나 출전두수만으로 생긴
+기계적 결과가 아님을 보여준다.
+
+단승의 Harville 열은 별도의 예측모형 검정으로 해석하지 않는다. Harville의
+입력 자체가 같은 경주의 정규화 단승 가격이므로 단승으로 다시 주변화하면
+구성상 단승 가격을 재현한다. 단승 열은 삼쌍승 주변가격이 단승 가격과 얼마나
+가까운지를 보여주는 교차풀 진단이고, Harville 대비 우위의 의미 있는 검정은
+쌍승·복승·삼복승에서 이루어진다.
+
+\subsection{전체표본의 부분식별 결과}
+
+\begin{table}[htbp]
+\centering
+\caption{Panel B: 전체표본의 TV 부분식별 경계}
+\label{tab:main-panel-b}
+\resizebox{\textwidth}{!}{\input{tables/main_panel_b}}
+\end{table}
+
+Panel B에서도 복합승식에 대한 순위는 유지된다. 주모형의 보수적 TV 상한조차
+Harville의 TV 하한보다 낮은 경주가 충분히 많아, 쌍승·복승·삼복승에서
+Harville 대비 우위라는 사전 판정이 전체표본에서도 유지된다. 순열·타경주·
+균등 기준에 대해서는 그 차이가 더욱 뚜렷하다. 따라서 Panel A의 결과는
+상한 없는 17.2\% 표본에서만 나타난 현상으로 설명하기 어렵다.
+
+그러나 이 결과를 ``완전한 공통 상태가격''의 증거로 읽어서는 안 된다.
+사전에 정한 절대 TV 기준 0.05에서는 어느 목표 승식도 Panel A와 Panel B를
+동시에 통과하지 않는다. clean 표본에서 가장 작은 절대오차를 보이는 삼복승도
+전체표본의 보수적 상한까지 고려하면 이 강한 기준을 인증하지 못한다. 반면
+민감도 기준 0.10에서는 두 패널이 모두 통과한다. 따라서 주결론은 ``정확한
+등식''보다 ``기준모형을 크게 능가하는 높은 교차풀 정합성, 그러나 무시할 수
+없는 잔여 가격차''로 제한한다.
+
+\subsection{기준모형 대비 개선과 순서정보}
+
+\begin{table}[htbp]
+\centering
+\caption{기준모형 대비 TV 개선폭}
+\label{tab:main-benchmarks}
+\resizebox{\textwidth}{!}{\input{tables/main_benchmark_comparison}}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Panel A의 쌍승--복승 순서정보 비교}
+\label{tab:main-order-a}
+\resizebox{0.86\textwidth}{!}{\input{tables/main_order_information}}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Panel B의 쌍승--복승 순서정보 부분식별}
+\label{tab:main-order-b}
+\resizebox{0.96\textwidth}{!}{\input{tables/main_order_information_bounds}}
+\end{table}
+
+Panel A에서는 Harville 대비 개선폭이 쌍승과 복승 사이에서 유의하게 다르다.
+하지만 Panel B의 보수적 차이 구간은 0을 사이에 둔다. 따라서 순서를 구분하는
+쌍승에서 추가적인 가격정보가 더 강하다는 패턴은 clean 표본의 진단으로는
+남지만, 전체 시장에 일반화되는 확정적 P3 결과로 보지 않는다. 이 결과는
+처음부터 P3를 복합복권 비축약의 구조적 검정과 구분한 이유와도 일치한다.
+
+종합하면, 삼쌍승식의 완전한 순서 가격벡터는 하위 복합승식의 가격을 단승 기반
+Harville과 비정보적 기준보다 일관되게 더 잘 재구성한다. 동시에 Panel B는
+배당상한과 반올림을 보수적으로 반영한 뒤에도 잔여 가격차가 경제적으로 0이라고
+주장할 수 없음을 보여준다. 이후 행동모형 분석은 이 잔여 차이가 위험선호와
+확률가중, 그리고 복합사건의 축약 방식과 어떤 관계를 갖는지를 별도의 식별
+문제로 다룬다.
