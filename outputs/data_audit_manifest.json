@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "analysis_sample.csv": {
+      "rows": 77204,
+      "sha256": "e5296bdfe99e30f3fbf9d46ac1137ee6de4eef0ad25bce6aa3ac7e8bb7bdd8c1"
+    },
+    "data_quality.csv": {
+      "rows": 19301,
+      "sha256": "a7cd0198814eadb176ff95924e84113249c598615e7cf1111586f8c2158e3477"
+    },
+    "sample_flow.csv": {
+      "rows": 36,
+      "sha256": "4fe78c1e3c3ffed6ddf6907bb11108ad73e1bdf0f4ad385d206879c32427f0d7"
+    }
+  },
+  "candidate_races": 19301,
+  "in_date_scope_races": 19284,
+  "schema_version": 1,
+  "target_samples": {
+    "exacta": {
+      "capped_interval": 15963,
+      "clean_point": 3321,
+      "complete": 19284
+    },
+    "quinella": {
+      "capped_interval": 15963,
+      "clean_point": 3321,
+      "complete": 19284
+    },
+    "trio": {
+      "capped_interval": 15963,
+      "clean_point": 3321,
+      "complete": 19284
+    },
+    "win": {
+      "capped_interval": 15963,
+      "clean_point": 3321,
+      "complete": 19284
+    }
+  }
+}
