@@ -82,6 +82,25 @@ jobs:
       - name: Run full Panel A and Panel B analysis
         run: python -m analysis.main_analysis
 
+      - name: Verify frozen compact main-analysis results
+        shell: bash
+        run: |
+          git diff --exit-code -- \
+            outputs/main_panel_a_summary.csv \
+            outputs/main_panel_b_summary.csv \
+            outputs/main_panel_a_improvements.csv \
+            outputs/main_panel_b_improvements.csv \
+            outputs/main_order_information.csv \
+            outputs/main_order_information_bounds.csv \
+            outputs/main_threshold_decisions.csv \
+            outputs/main_sample_selection.csv \
+            tables/main_panel_a.tex \
+            tables/main_panel_b.tex \
+            tables/main_benchmark_comparison.tex \
+            tables/main_order_information.tex \
+            tables/main_order_information_bounds.tex
+          echo "PASS: frozen compact main-analysis results are reproducible"
+
       - name: Upload full analysis outputs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
