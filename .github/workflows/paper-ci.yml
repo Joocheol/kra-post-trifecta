@@ -94,6 +94,53 @@ jobs:
       - name: Run shared-source P3 sharpness diagnostic
         run: python -m analysis.main_analysis_p3_joint_fast
 
+      - name: Validate time-limited P3 diagnostic and restore frozen compact files
+        shell: bash
+        run: |
+          cp outputs/main_order_information_joint.csv /tmp/main_order_information_joint.generated.csv
+          cp tables/main_order_information_joint.tex /tmp/main_order_information_joint.generated.tex
+          git checkout -- outputs/main_order_information_joint.csv tables/main_order_information_joint.tex
+          python - <<'PY'
+          import numpy as np
+          import pandas as pd
+
+          frozen = pd.read_csv('outputs/main_order_information_joint.csv')
+          generated = pd.read_csv('/tmp/main_order_information_joint.generated.csv')
+          keys = ['race_id', 'n_valid_horses']
+          if frozen[keys].to_dict('records') != generated[keys].to_dict('records'):
+              raise SystemExit('FAIL: P3 representative-race membership changed')
+
+          deterministic = generated['joint_min_optimal'] & generated['joint_max_optimal']
+          cols = [
+              'conservative_lower', 'conservative_upper',
+              'joint_milp_lower', 'joint_milp_upper',
+              'conservative_width', 'joint_milp_width',
+              'width_ratio_joint_to_conservative',
+          ]
+          if not np.allclose(
+              frozen.loc[deterministic, cols].to_numpy(float),
+              generated.loc[deterministic, cols].to_numpy(float),
+              rtol=1e-9, atol=1e-10, equal_nan=True,
+          ):
+              raise SystemExit('FAIL: sharp P3 joint rows changed')
+
+          limited = ~deterministic
+          if not limited.any():
+              raise SystemExit('FAIL: expected certified time-limited P3 row is absent')
+          for row in generated.loc[limited].itertuples(index=False):
+              if row.joint_min_optimal and row.joint_max_optimal:
+                  raise SystemExit('FAIL: time-limited row mislabeled sharp')
+              if row.joint_milp_lower > row.joint_min_incumbent + 1e-10:
+                  raise SystemExit('FAIL: certified lower bound exceeds incumbent')
+              if row.joint_milp_lower < row.conservative_lower - 1e-10:
+                  raise SystemExit('FAIL: joint lower bound escapes conservative interval')
+              if row.joint_milp_upper > row.conservative_upper + 1e-10:
+                  raise SystemExit('FAIL: joint upper bound escapes conservative interval')
+              if row.joint_milp_lower > 0 or row.joint_milp_upper < 0:
+                  raise SystemExit('FAIL: time-limited P3 row changes sign-identification conclusion')
+          print('PASS: sharp P3 rows reproduce; time-limited rows retain certified outer-bound invariants')
+          PY
+
       - name: Verify frozen compact main-analysis results
         shell: bash
         run: |
