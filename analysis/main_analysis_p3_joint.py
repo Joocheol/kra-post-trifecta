@@ -1,11 +1,18 @@
 """Sharpness diagnostic for Panel B P3 using a shared-source joint MILP.
 
 The co-primary Panel B decision keeps the pre-registered conservative endpoint
-combination.  This module does not replace that decision rule.  Instead it solves
+combination. This module does not replace that decision rule. Instead it solves
 an exact mixed-integer linear program on one deterministic race per field-size
-stratum to quantify how much width is introduced when four TV extrema are combined
-separately.  The MILP preserves the shared normalized trifecta price vector across
-exacta and quinella.
+stratum to quantify how much width is introduced when four TV extrema are
+combined separately.
+
+For P3, quinella is a deterministic coarsening of exacta: each unordered first-
+two pair is the sum of its two ordered exacta outcomes. Because exacta cells
+partition the trifecta state space, the aggregated exacta PriceSet is an exact
+representation of all feasible exacta marginals of the source interval box.
+Optimizing on that marginal, then coarsening it to quinella, preserves exactly
+the shared normalized trifecta price uncertainty relevant for P3 while avoiding
+thousands of unnecessary trifecta-state variables.
 """
 from __future__ import annotations
 
@@ -21,6 +28,7 @@ from analysis.main_analysis_core import (
     LP_TOL,
     PriceSet,
     aggregate_point,
+    aggregate_price_set,
     harville_trifecta,
     source_group_index,
     stable_uint,
@@ -35,6 +43,30 @@ def _scale_bounds(price_set: PriceSet) -> tuple[float, float]:
     lower_sum = float(price_set.lower.sum())
     upper_sum = float(price_set.upper.sum())
     return 1.0 / upper_sum, np.inf if lower_sum <= 0 else 1.0 / lower_sum
+
+
+def _exacta_to_quinella_map(
+    exacta_groups: np.ndarray,
+    quinella_groups: np.ndarray,
+    edim: int,
+    qdim: int,
+) -> np.ndarray:
+    """Map each exacta outcome to its unique quinella coarsening cell."""
+    exacta_groups = np.asarray(exacta_groups, dtype=np.int64)
+    quinella_groups = np.asarray(quinella_groups, dtype=np.int64)
+    if exacta_groups.shape != quinella_groups.shape:
+        raise ValueError("exacta and quinella group maps must have equal length")
+    mapping = np.empty(edim, dtype=np.int64)
+    for eidx in range(edim):
+        qcells = np.unique(quinella_groups[exacta_groups == eidx])
+        if len(qcells) != 1:
+            raise ValueError("each exacta outcome must map to exactly one quinella outcome")
+        mapping[eidx] = int(qcells[0])
+    if np.any(mapping < 0) or np.any(mapping >= qdim):
+        raise ValueError("invalid exacta-to-quinella coarsening map")
+    if len(np.unique(mapping)) != qdim:
+        raise ValueError("exacta coarsening does not cover every quinella outcome")
+    return mapping
 
 
 def joint_p3_extrema(
@@ -54,10 +86,13 @@ def joint_p3_extrema(
 
       TV(A_E,H_E) - TV(A_E,M_E) - TV(A_Q,H_Q) + TV(A_Q,M_Q),
 
-    where M_E and M_Q are both marginals of the *same* normalized trifecta
-    price vector.  Signed absolute-value terms make the problem non-convex as a
-    pure LP; binary sign indicators yield an exact MILP rather than an invalid
-    linear relaxation.
+    where M_Q is the deterministic quinella coarsening of M_E and M_E ranges
+    over the exact marginal PriceSet induced by the shared trifecta source box.
+
+    Absolute-value terms that enter with a positive coefficient in the active
+    minimization objective need only the standard epigraph inequalities. Terms
+    entering with a negative coefficient require binary sign indicators. The
+    minimum and maximum models therefore use binaries for only two TV terms each.
     """
     exacta_groups = np.asarray(exacta_groups, dtype=np.int64)
     quinella_groups = np.asarray(quinella_groups, dtype=np.int64)
@@ -77,140 +112,168 @@ def joint_p3_extrema(
     if not np.isclose(h_e.sum(), 1.0) or not np.isclose(h_q.sum(), 1.0):
         raise ValueError("Harville marginals must sum to one")
 
-    cursor = 0
+    main_exacta_set = aggregate_price_set(source_set, exacta_groups, edim)
+    e_to_q = _exacta_to_quinella_map(exacta_groups, quinella_groups, edim, qdim)
+    q_members = [np.flatnonzero(e_to_q == qidx) for qidx in range(qdim)]
 
-    def alloc(size: int) -> slice:
-        nonlocal cursor
-        out = slice(cursor, cursor + size)
-        cursor += size
-        return out
+    def solve(*, maximize: bool) -> float:
+        cursor = 0
 
-    q = alloc(tdim)
-    s_idx = cursor
-    cursor += 1
-    a_e = alloc(edim)
-    se_idx = cursor
-    cursor += 1
-    a_q = alloc(qdim)
-    sq_idx = cursor
-    cursor += 1
+        def alloc(size: int) -> slice:
+            nonlocal cursor
+            out = slice(cursor, cursor + size)
+            cursor += size
+            return out
 
-    z_eh, b_eh = alloc(edim), alloc(edim)
-    z_em, b_em = alloc(edim), alloc(edim)
-    z_qh, b_qh = alloc(qdim), alloc(qdim)
-    z_qm, b_qm = alloc(qdim), alloc(qdim)
-    nvar = cursor
+        m_e = alloc(edim)
+        sm_idx = cursor
+        cursor += 1
+        a_e = alloc(edim)
+        se_idx = cursor
+        cursor += 1
+        a_q = alloc(qdim)
+        sq_idx = cursor
+        cursor += 1
 
-    var_lb = np.zeros(nvar, dtype=float)
-    var_ub = np.ones(nvar, dtype=float)
-    var_lb[s_idx], var_ub[s_idx] = _scale_bounds(source_set)
-    var_lb[se_idx], var_ub[se_idx] = _scale_bounds(exacta_actual)
-    var_lb[sq_idx], var_ub[sq_idx] = _scale_bounds(quinella_actual)
-    integrality = np.zeros(nvar, dtype=np.int8)
-    for b in (b_eh, b_em, b_qh, b_qm):
-        integrality[b] = 1
+        z_eh = alloc(edim)
+        z_em = alloc(edim)
+        z_qh = alloc(qdim)
+        z_qm = alloc(qdim)
 
-    rows: list[int] = []
-    cols: list[int] = []
-    data: list[float] = []
-    lower_rows: list[float] = []
-    upper_rows: list[float] = []
+        exact_terms = ("eh", "qm") if maximize else ("em", "qh")
+        binary_slices: dict[str, slice] = {}
+        for name, size in (("eh", edim), ("em", edim), ("qh", qdim), ("qm", qdim)):
+            if name in exact_terms:
+                binary_slices[name] = alloc(size)
 
-    def add_row(items: list[tuple[int, float]], lower: float, upper: float) -> None:
-        row = len(lower_rows)
-        for col, value in items:
-            if value:
-                rows.append(row)
-                cols.append(col)
-                data.append(float(value))
-        lower_rows.append(float(lower))
-        upper_rows.append(float(upper))
+        nvar = cursor
+        var_lb = np.zeros(nvar, dtype=float)
+        var_ub = np.ones(nvar, dtype=float)
+        var_lb[sm_idx], var_ub[sm_idx] = _scale_bounds(main_exacta_set)
+        var_lb[se_idx], var_ub[se_idx] = _scale_bounds(exacta_actual)
+        var_lb[sq_idx], var_ub[sq_idx] = _scale_bounds(quinella_actual)
+        integrality = np.zeros(nvar, dtype=np.int8)
+        for b in binary_slices.values():
+            integrality[b] = 1
 
-    def add_price_set(prob_slice: slice, scale_idx: int, ps: PriceSet) -> None:
-        for i, (lo, hi) in enumerate(zip(ps.lower, ps.upper)):
-            pidx = prob_slice.start + i
-            add_row([(pidx, 1.0), (scale_idx, -float(hi))], -np.inf, 0.0)
-            add_row([(pidx, -1.0), (scale_idx, float(lo))], -np.inf, 0.0)
-        add_row(
-            [(prob_slice.start + i, 1.0) for i in range(prob_slice.stop - prob_slice.start)],
-            1.0,
-            1.0,
+        rows: list[int] = []
+        cols: list[int] = []
+        data: list[float] = []
+        lower_rows: list[float] = []
+        upper_rows: list[float] = []
+
+        def add_row(items: list[tuple[int, float]], lower: float, upper: float) -> None:
+            row = len(lower_rows)
+            for col, value in items:
+                if value:
+                    rows.append(row)
+                    cols.append(col)
+                    data.append(float(value))
+            lower_rows.append(float(lower))
+            upper_rows.append(float(upper))
+
+        def add_price_set(prob_slice: slice, scale_idx: int, ps: PriceSet) -> None:
+            for i, (lo, hi) in enumerate(zip(ps.lower, ps.upper)):
+                pidx = prob_slice.start + i
+                add_row([(pidx, 1.0), (scale_idx, -float(hi))], -np.inf, 0.0)
+                add_row([(pidx, -1.0), (scale_idx, float(lo))], -np.inf, 0.0)
+            add_row(
+                [(prob_slice.start + i, 1.0) for i in range(prob_slice.stop - prob_slice.start)],
+                1.0,
+                1.0,
+            )
+
+        add_price_set(m_e, sm_idx, main_exacta_set)
+        add_price_set(a_e, se_idx, exacta_actual)
+        add_price_set(a_q, sq_idx, quinella_actual)
+
+        def add_abs(
+            coeffs: list[tuple[int, float]],
+            constant: float,
+            zidx: int,
+            *,
+            bidx: int | None,
+        ) -> None:
+            add_row(coeffs + [(zidx, -1.0)], -np.inf, -constant)
+            add_row(
+                [(col, -value) for col, value in coeffs] + [(zidx, -1.0)],
+                -np.inf,
+                constant,
+            )
+            if bidx is None:
+                return
+            add_row(
+                [(col, -value) for col, value in coeffs]
+                + [(zidx, 1.0), (bidx, BIG_M)],
+                -np.inf,
+                BIG_M + constant,
+            )
+            add_row(
+                coeffs + [(zidx, 1.0), (bidx, -BIG_M)],
+                -np.inf,
+                -constant,
+            )
+
+        for i in range(edim):
+            ai = a_e.start + i
+            mei = m_e.start + i
+            add_abs(
+                [(ai, 1.0)],
+                -float(h_e[i]),
+                z_eh.start + i,
+                bidx=(binary_slices["eh"].start + i if "eh" in binary_slices else None),
+            )
+            add_abs(
+                [(ai, 1.0), (mei, -1.0)],
+                0.0,
+                z_em.start + i,
+                bidx=(binary_slices["em"].start + i if "em" in binary_slices else None),
+            )
+
+        for i in range(qdim):
+            ai = a_q.start + i
+            main_q_coeffs = [(m_e.start + int(eidx), -1.0) for eidx in q_members[i]]
+            add_abs(
+                [(ai, 1.0)],
+                -float(h_q[i]),
+                z_qh.start + i,
+                bidx=(binary_slices["qh"].start + i if "qh" in binary_slices else None),
+            )
+            add_abs(
+                [(ai, 1.0)] + main_q_coeffs,
+                0.0,
+                z_qm.start + i,
+                bidx=(binary_slices["qm"].start + i if "qm" in binary_slices else None),
+            )
+
+        matrix = sparse.coo_matrix((data, (rows, cols)), shape=(len(lower_rows), nvar)).tocsr()
+        constraints = LinearConstraint(
+            matrix,
+            np.asarray(lower_rows, dtype=float),
+            np.asarray(upper_rows, dtype=float),
         )
+        objective = np.zeros(nvar, dtype=float)
+        objective[z_eh] = 0.5
+        objective[z_em] = -0.5
+        objective[z_qh] = -0.5
+        objective[z_qm] = 0.5
+        if maximize:
+            objective = -objective
 
-    add_price_set(q, s_idx, source_set)
-    add_price_set(a_e, se_idx, exacta_actual)
-    add_price_set(a_q, sq_idx, quinella_actual)
-
-    exacta_members = [np.flatnonzero(exacta_groups == i) for i in range(edim)]
-    quinella_members = [np.flatnonzero(quinella_groups == i) for i in range(qdim)]
-
-    def add_exact_abs(
-        coeffs: list[tuple[int, float]], constant: float, zidx: int, bidx: int
-    ) -> None:
-        # d = coeffs @ x + constant, z = |d|.  BIG_M=2 is valid because
-        # differences between probability components lie in [-1,1].
-        add_row(coeffs + [(zidx, -1.0)], -np.inf, -constant)
-        add_row([(col, -value) for col, value in coeffs] + [(zidx, -1.0)], -np.inf, constant)
-        add_row(
-            [(col, -value) for col, value in coeffs]
-            + [(zidx, 1.0), (bidx, BIG_M)],
-            -np.inf,
-            BIG_M + constant,
+        result = milp(
+            objective,
+            integrality=integrality,
+            bounds=Bounds(var_lb, var_ub),
+            constraints=constraints,
+            options={"time_limit": float(time_limit), "mip_rel_gap": 1e-8, "presolve": True},
         )
-        add_row(
-            coeffs + [(zidx, 1.0), (bidx, -BIG_M)],
-            -np.inf,
-            -constant,
-        )
+        if not result.success:
+            direction = "maximum" if maximize else "minimum"
+            raise RuntimeError(f"P3 joint {direction} MILP failed: {result.message}")
+        return float(-result.fun if maximize else result.fun)
 
-    for i in range(edim):
-        ai = a_e.start + i
-        add_exact_abs([(ai, 1.0)], -float(h_e[i]), z_eh.start + i, b_eh.start + i)
-        coeffs = [(ai, 1.0)] + [(q.start + int(j), -1.0) for j in exacta_members[i]]
-        add_exact_abs(coeffs, 0.0, z_em.start + i, b_em.start + i)
-    for i in range(qdim):
-        ai = a_q.start + i
-        add_exact_abs([(ai, 1.0)], -float(h_q[i]), z_qh.start + i, b_qh.start + i)
-        coeffs = [(ai, 1.0)] + [(q.start + int(j), -1.0) for j in quinella_members[i]]
-        add_exact_abs(coeffs, 0.0, z_qm.start + i, b_qm.start + i)
-
-    matrix = sparse.coo_matrix(
-        (data, (rows, cols)), shape=(len(lower_rows), nvar)
-    ).tocsr()
-    constraints = LinearConstraint(
-        matrix, np.asarray(lower_rows, dtype=float), np.asarray(upper_rows, dtype=float)
-    )
-    objective = np.zeros(nvar, dtype=float)
-    objective[z_eh] = 0.5
-    objective[z_em] = -0.5
-    objective[z_qh] = -0.5
-    objective[z_qm] = 0.5
-    options = {
-        "time_limit": float(time_limit),
-        "mip_rel_gap": 1e-8,
-        "presolve": True,
-    }
-
-    minimum = milp(
-        objective,
-        integrality=integrality,
-        bounds=Bounds(var_lb, var_ub),
-        constraints=constraints,
-        options=options,
-    )
-    maximum = milp(
-        -objective,
-        integrality=integrality,
-        bounds=Bounds(var_lb, var_ub),
-        constraints=constraints,
-        options=options,
-    )
-    if not minimum.success:
-        raise RuntimeError(f"P3 joint minimum MILP failed: {minimum.message}")
-    if not maximum.success:
-        raise RuntimeError(f"P3 joint maximum MILP failed: {maximum.message}")
-    lower = float(minimum.fun)
-    upper = float(-maximum.fun)
+    lower = solve(maximize=False)
+    upper = solve(maximize=True)
     if lower - upper > 10 * LP_TOL:
         raise RuntimeError("P3 joint MILP bounds are inverted")
     return max(-1.0, lower), min(1.0, upper)
@@ -263,6 +326,8 @@ def run_sharpness_diagnostic(
 
     rows: list[dict[str, object]] = []
     for race_id in selected:
+        n_horses = int(n_map[race_id])
+        print(f"P3 joint MILP: race={race_id} field_size={n_horses}", flush=True)
         source_frame = source.get(race_id)
         win_frame = win.get(race_id)
         e_frame = exacta.get(race_id)
@@ -290,7 +355,7 @@ def run_sharpness_diagnostic(
         rows.append(
             {
                 "race_id": race_id,
-                "n_valid_horses": int(n_map[race_id]),
+                "n_valid_horses": n_horses,
                 "conservative_lower": cons_lo,
                 "conservative_upper": cons_hi,
                 "joint_milp_lower": joint_lo,
@@ -301,6 +366,12 @@ def run_sharpness_diagnostic(
                     joint_width / cons_width if cons_width > 0 else np.nan
                 ),
             }
+        )
+        print(
+            "P3 joint MILP result: "
+            f"[{joint_lo:.6f}, {joint_hi:.6f}] vs conservative "
+            f"[{cons_lo:.6f}, {cons_hi:.6f}]",
+            flush=True,
         )
     return pd.DataFrame(rows).sort_values(["n_valid_horses", "race_id"]).reset_index(drop=True)
 
