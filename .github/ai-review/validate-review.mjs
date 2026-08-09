@@ -86,6 +86,12 @@ for (const [index, question] of review.author_questions.entries()) {
 const computedNeedsChanges = review.findings.some(
   (finding) => !finding.requires_author_decision,
 );
+if (review.needs_changes !== computedNeedsChanges) {
+  console.warn(
+    `::warning::Claude review needs_changes normalized from ${review.needs_changes} ` +
+      `to ${computedNeedsChanges}; findings remain unchanged.`,
+  );
+}
 review.needs_changes = computedNeedsChanges;
 
 const canonical = JSON.stringify(review);
