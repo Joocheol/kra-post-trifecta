@@ -88,18 +88,61 @@ jobs:
       - name: Verify frozen compact calibration results
         shell: bash
         run: |
-          paths=(
-            outputs/main_calibration_robustness.csv
-            tables/main_calibration_robustness.tex
-          )
-          for path in "${paths[@]}"; do
+          csv=outputs/main_calibration_robustness.csv
+          tex=tables/main_calibration_robustness.tex
+          for path in "$csv" "$tex"; do
             git ls-files --error-unmatch "$path" >/dev/null || {
               echo "FAIL: frozen calibration result is not tracked: $path" >&2
               exit 1
             }
           done
-          git diff --exit-code -- "${paths[@]}"
+
+          cp "$csv" /tmp/main_calibration_robustness.generated.csv
+          cp "$tex" /tmp/main_calibration_robustness.generated.tex
+          git checkout -- "$csv" "$tex"
+
+          python - <<'PY'
+          import numpy as np
+          import pandas as pd
+
+          frozen = pd.read_csv('outputs/main_calibration_robustness.csv')
+          generated = pd.read_csv('/tmp/main_calibration_robustness.generated.csv')
+          if list(frozen.columns) != list(generated.columns):
+              raise SystemExit('FAIL: calibration output columns changed')
+          if len(frozen) != len(generated):
+              raise SystemExit('FAIL: calibration output row count changed')
+
+          key_cols = ['target_market', 'weighting', 'n_races', 'n_dates', 'n_combinations']
+          if frozen[key_cols].to_dict('records') != generated[key_cols].to_dict('records'):
+              raise SystemExit('FAIL: calibration sample membership or weighting rows changed')
+
+          numeric_cols = [c for c in frozen.columns if c not in key_cols]
+          if not np.allclose(
+              frozen[numeric_cols].to_numpy(float),
+              generated[numeric_cols].to_numpy(float),
+              rtol=1e-9,
+              atol=1e-11,
+              equal_nan=True,
+          ):
+              delta = np.nanmax(np.abs(
+                  frozen[numeric_cols].to_numpy(float) - generated[numeric_cols].to_numpy(float)
+              ))
+              raise SystemExit(f'FAIL: calibration results changed materially; max_abs_delta={delta:.6g}')
+          print('PASS: frozen calibration CSV reproduces within numerical tolerance')
+          PY
+
+          cmp -s "$tex" /tmp/main_calibration_robustness.generated.tex || {
+            echo "FAIL: rendered calibration table changed" >&2
+            diff -u "$tex" /tmp/main_calibration_robustness.generated.tex >&2 || true
+            exit 1
+          }
           test -s outputs/main_calibration_by_race.csv
+
+          # Restore generated files for the uploaded diagnostic artifact.  The
+          # tolerance above is many orders tighter than the four-decimal table
+          # reporting precision and only absorbs BLAS/LAPACK roundoff drift.
+          cp /tmp/main_calibration_robustness.generated.csv "$csv"
+          cp /tmp/main_calibration_robustness.generated.tex "$tex"
           echo "PASS: compact calibration results are tracked and reproducible; race-level detail remains a generated artifact"
 
       - name: Upload robustness outputs
