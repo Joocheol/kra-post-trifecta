@@ -9,6 +9,7 @@ import pandas as pd
 
 from analysis.data_audit import TARGET_MARKETS, parse_horse_list, prepare_races
 from analysis.main_analysis_core import SOURCE_MARKET
+from analysis.main_analysis_guards import assert_win_uncapped
 from analysis.main_analysis_p3 import (
     order_information_bounds,
     write_order_information_bounds_table,
@@ -174,11 +175,7 @@ def main() -> None:
         raise ValueError("race metadata does not cover the frozen analysis sample")
     trifecta = load_market(args.data_root, SOURCE_MARKET, source_ids)
     win = load_market(args.data_root, "win", source_ids)
-    if bool(win.frame["is_capped_odds"].fillna(False).any()):
-        raise ValueError(
-            "Harville benchmark requires uncapped win odds; current frozen design "
-            "does not silently point-value capped win observations"
-        )
+    assert_win_uncapped(win.frame)
     clean_peers = grouped_ids_by_field(races, all_clean_ids)
     full_peers = grouped_ids_by_field(races, all_full_ids)
 
