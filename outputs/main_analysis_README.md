@@ -8,6 +8,14 @@ composition summaries, and Panel A/B heterogeneity comparison summaries/tables a
 repository. Paper CI regenerates the full analysis once and rejects any change in these checked-in
 compact outputs, providing a deterministic result-freeze check without a second full run.
 
+`main_other_race_donor_reuse.csv` is an auxiliary benchmark-dependence diagnostic generated with the
+full analysis. It reports, by panel and field-size stratum, the number of target races with a donor,
+the number of distinct deterministic donors, targets per distinct donor, and maximum donor reuse.
+Because several target races can share the same donor price vector, the ordinary race bootstrap for
+the `other_race` benchmark can understate dependence in thin field-size strata. This diagnostic does
+not replace the pre-specified race bootstrap, alter the co-primary decision rule, or introduce a new
+primary inference procedure; it only makes the benchmark dependence visible.
+
 The historical `main-analysis-full` artifact from Paper CI run 31278482505 had SHA-256
 `5f89a5ea3f28b6a05086ba4ce2cec52413184f2676718d9580e41da5c9ce6aba`. This artifact reference is
 provenance only: the manifest and large race-level files are CI artifacts rather than independent
