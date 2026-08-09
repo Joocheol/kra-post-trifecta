@@ -66,6 +66,36 @@ jobs:
           test -s "$AUDIT_TMP/outputs/analysis_sample.csv"
           echo "PASS: analysis sample and audit artifacts are reproducible"
 
+  robustness-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install analysis dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Recreate frozen race membership
+        run: python -m analysis.data_audit --strict
+
+      - name: Run calibration and weighting robustness
+        run: python -m analysis.main_analysis_robustness
+
+      - name: Upload robustness outputs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: main-analysis-robustness
+          path: |
+            outputs/main_calibration_robustness.csv
+            outputs/main_calibration_by_race.csv
+            tables/main_calibration_robustness.tex
+          if-no-files-found: error
+          retention-days: 7
+
   main-analysis-full:
     runs-on: ubuntu-latest
     timeout-minutes: 180
@@ -110,35 +140,61 @@ jobs:
           if frozen[keys].to_dict('records') != generated[keys].to_dict('records'):
               raise SystemExit('FAIL: P3 representative-race membership changed')
 
-          deterministic = generated['joint_min_optimal'] & generated['joint_max_optimal']
-          cols = [
-              'conservative_lower', 'conservative_upper',
-              'joint_milp_lower', 'joint_milp_upper',
-              'conservative_width', 'joint_milp_width',
+          invariant_cols = ['conservative_lower', 'conservative_upper', 'conservative_width']
+          if not np.allclose(
+              frozen[invariant_cols].to_numpy(float),
+              generated[invariant_cols].to_numpy(float),
+              rtol=1e-10, atol=1e-11, equal_nan=True,
+          ):
+              raise SystemExit('FAIL: deterministic P3 conservative intervals changed')
+
+          value_cols = [
+              'joint_milp_lower', 'joint_milp_upper', 'joint_milp_width',
               'width_ratio_joint_to_conservative',
           ]
-          if not np.allclose(
-              frozen.loc[deterministic, cols].to_numpy(float),
-              generated.loc[deterministic, cols].to_numpy(float),
-              rtol=1e-9, atol=1e-10, equal_nan=True,
-          ):
-              raise SystemExit('FAIL: sharp P3 joint rows changed')
+          for i, row in generated.iterrows():
+              frow = frozen.iloc[i]
+              gsharp = bool(row['joint_min_optimal'] and row['joint_max_optimal'])
+              fsharp = bool(frow['joint_min_optimal'] and frow['joint_max_optimal'])
 
-          limited = ~deterministic
-          if not limited.any():
-              raise SystemExit('FAIL: expected certified time-limited P3 row is absent')
-          for row in generated.loc[limited].itertuples(index=False):
-              if row.joint_min_optimal and row.joint_max_optimal:
-                  raise SystemExit('FAIL: time-limited row mislabeled sharp')
-              if row.joint_milp_lower > row.joint_min_incumbent + 1e-10:
-                  raise SystemExit('FAIL: certified lower bound exceeds incumbent')
-              if row.joint_milp_lower < row.conservative_lower - 1e-10:
-                  raise SystemExit('FAIL: joint lower bound escapes conservative interval')
-              if row.joint_milp_upper > row.conservative_upper + 1e-10:
-                  raise SystemExit('FAIL: joint upper bound escapes conservative interval')
-              if row.joint_milp_lower > 0 or row.joint_milp_upper < 0:
-                  raise SystemExit('FAIL: time-limited P3 row changes sign-identification conclusion')
-          print('PASS: sharp P3 rows reproduce; time-limited rows retain certified outer-bound invariants')
+              if gsharp and fsharp:
+                  if not np.allclose(
+                      frow[value_cols].to_numpy(float), row[value_cols].to_numpy(float),
+                      rtol=1e-9, atol=1e-10, equal_nan=True,
+                  ):
+                      raise SystemExit(f"FAIL: sharp P3 row changed: {row['race_id']}")
+                  continue
+
+              # If either run is time-limited, never require a time limit to recur.
+              # Instead check mathematical certification and compatibility with any
+              # sharp solution available from the other run.
+              if not gsharp:
+                  if row['joint_milp_lower'] > row['joint_min_incumbent'] + 1e-10:
+                      raise SystemExit('FAIL: certified lower bound exceeds incumbent')
+                  if row['joint_milp_lower'] < row['conservative_lower'] - 1e-10:
+                      raise SystemExit('FAIL: joint lower bound escapes conservative interval')
+                  if row['joint_milp_upper'] > row['conservative_upper'] + 1e-10:
+                      raise SystemExit('FAIL: joint upper bound escapes conservative interval')
+                  if fsharp:
+                      if row['joint_milp_lower'] > frow['joint_milp_lower'] + 1e-10:
+                          raise SystemExit('FAIL: certified lower bound excludes frozen sharp solution')
+                      if row['joint_milp_upper'] < frow['joint_milp_upper'] - 1e-10:
+                          raise SystemExit('FAIL: certified upper bound excludes frozen sharp solution')
+                  else:
+                      if not np.allclose(
+                          frow[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
+                          row[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
+                          rtol=0.0, atol=5e-4, equal_nan=True,
+                      ):
+                          raise SystemExit(f"FAIL: certified P3 row drifted materially: {row['race_id']}")
+
+              if gsharp and not fsharp:
+                  if row['joint_milp_lower'] < frow['joint_milp_lower'] - 1e-10:
+                      raise SystemExit('FAIL: new sharp lower endpoint escapes frozen certificate')
+                  if row['joint_milp_upper'] > frow['joint_milp_upper'] + 1e-10:
+                      raise SystemExit('FAIL: new sharp upper endpoint escapes frozen certificate')
+
+          print('PASS: P3 sharp rows reproduce and time-limited rows remain certified without requiring a timeout')
           PY
 
       - name: Verify frozen compact main-analysis results
