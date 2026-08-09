@@ -85,6 +85,23 @@ jobs:
       - name: Run calibration and weighting robustness
         run: python -m analysis.main_analysis_robustness
 
+      - name: Verify frozen compact calibration results
+        shell: bash
+        run: |
+          paths=(
+            outputs/main_calibration_robustness.csv
+            tables/main_calibration_robustness.tex
+          )
+          for path in "${paths[@]}"; do
+            git ls-files --error-unmatch "$path" >/dev/null || {
+              echo "FAIL: frozen calibration result is not tracked: $path" >&2
+              exit 1
+            }
+          done
+          git diff --exit-code -- "${paths[@]}"
+          test -s outputs/main_calibration_by_race.csv
+          echo "PASS: compact calibration results are tracked and reproducible; race-level detail remains a generated artifact"
+
       - name: Upload robustness outputs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
