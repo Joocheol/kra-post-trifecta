@@ -97,29 +97,37 @@ jobs:
       - name: Verify frozen compact main-analysis results
         shell: bash
         run: |
-          git diff --exit-code -- \
-            outputs/main_panel_a_summary.csv \
-            outputs/main_panel_b_summary.csv \
-            outputs/main_panel_a_improvements.csv \
-            outputs/main_panel_b_improvements.csv \
-            outputs/main_order_information.csv \
-            outputs/main_order_information_bounds.csv \
-            outputs/main_order_information_joint.csv \
-            outputs/main_threshold_decisions.csv \
-            outputs/main_sample_selection.csv \
-            outputs/main_sample_composition.csv \
-            outputs/main_sample_tail.csv \
-            outputs/main_heterogeneity_summary.csv \
-            outputs/main_heterogeneity_comparison.csv \
-            tables/main_panel_a.tex \
-            tables/main_panel_b.tex \
-            tables/main_benchmark_comparison.tex \
-            tables/main_order_information.tex \
-            tables/main_order_information_bounds.tex \
-            tables/main_order_information_joint.tex \
-            tables/main_sample_selection.tex \
+          paths=(
+            outputs/main_panel_a_summary.csv
+            outputs/main_panel_b_summary.csv
+            outputs/main_panel_a_improvements.csv
+            outputs/main_panel_b_improvements.csv
+            outputs/main_order_information.csv
+            outputs/main_order_information_bounds.csv
+            outputs/main_order_information_joint.csv
+            outputs/main_threshold_decisions.csv
+            outputs/main_sample_selection.csv
+            outputs/main_sample_composition.csv
+            outputs/main_sample_tail.csv
+            outputs/main_heterogeneity_summary.csv
+            outputs/main_heterogeneity_comparison.csv
+            tables/main_panel_a.tex
+            tables/main_panel_b.tex
+            tables/main_benchmark_comparison.tex
+            tables/main_order_information.tex
+            tables/main_order_information_bounds.tex
+            tables/main_order_information_joint.tex
+            tables/main_sample_selection.tex
             tables/main_heterogeneity_comparison.tex
-          echo "PASS: frozen compact main-analysis results are reproducible"
+          )
+          for path in "${paths[@]}"; do
+            git ls-files --error-unmatch "$path" >/dev/null || {
+              echo "FAIL: frozen compact result is not tracked: $path" >&2
+              exit 1
+            }
+          done
+          git diff --exit-code -- "${paths[@]}"
+          echo "PASS: frozen compact main-analysis results are tracked and reproducible"
 
       - name: Upload full analysis outputs
         if: always()
