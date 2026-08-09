@@ -9,6 +9,7 @@ import pandas as pd
 
 from analysis.data_audit import TARGET_MARKETS, parse_horse_list, prepare_races
 from analysis.main_analysis_core import SOURCE_MARKET
+from analysis.main_analysis_donor_reuse import donor_reuse_diagnostic
 from analysis.main_analysis_guards import assert_win_uncapped
 from analysis.main_analysis_p3 import (
     order_information_bounds,
@@ -224,6 +225,7 @@ def main() -> None:
     composition = sample_composition(races, set(all_clean_ids), set(all_full_ids))
     tails = tail_summary(trifecta.frame, set(all_clean_ids), set(all_full_ids))
     heterogeneity = heterogeneity_summary(metrics_a, races)
+    donor_reuse = donor_reuse_diagnostic(metrics_a, bounds_b)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     args.table_dir.mkdir(parents=True, exist_ok=True)
@@ -238,6 +240,7 @@ def main() -> None:
         (args.output_dir / "main_sample_composition.csv", composition),
         (args.output_dir / "main_sample_tail.csv", tails),
         (args.output_dir / "main_heterogeneity.csv", heterogeneity),
+        (args.output_dir / "main_other_race_donor_reuse.csv", donor_reuse),
     ]
     if bounds_b is not None and summary_b is not None and improve_b is not None:
         outputs.extend(
@@ -277,4 +280,5 @@ def main() -> None:
         print(summary_b[summary_b["model"].eq("main")].to_string(index=False))
     if p3_bounds is not None:
         print(p3_bounds.to_string(index=False))
+    print(donor_reuse.to_string(index=False))
     print("PASS: main cross-pool analysis completed")
