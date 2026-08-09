@@ -10,6 +10,7 @@ from scipy import sparse
 from scipy.optimize import linprog
 
 from analysis.data_audit import MARKET_SPECS
+from analysis.main_analysis_guards import assert_win_uncapped
 
 SOURCE_MARKET = "trifecta"
 MODELS = ("main", "harville", "permutation", "other_race", "uniform")
@@ -308,6 +309,7 @@ def source_group_index(source: pd.DataFrame, target: pd.DataFrame, target_name: 
 
 
 def harville_trifecta(source: pd.DataFrame, win: pd.DataFrame) -> np.ndarray:
+    assert_win_uncapped(win)
     win_keys = [int(value) for value in win["horse_no"].to_numpy()]
     probabilities = normalize_inverse_odds(win["odds"].to_numpy(dtype=float))
     pmap = dict(zip(win_keys, probabilities))
