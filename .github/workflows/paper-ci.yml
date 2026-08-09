@@ -37,6 +37,9 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
 
+      - name: Verify one-decimal KRA display grid
+        run: python -m analysis.display_precision_audit
+
       - name: Reproduce and verify the frozen sample
         shell: bash
         run: |
@@ -88,6 +91,9 @@ jobs:
       - name: Render Panel B heterogeneity comparison
         run: python -m analysis.main_analysis_heterogeneity_b
 
+      - name: Run shared-source P3 sharpness diagnostic
+        run: python -m analysis.main_analysis_p3_joint
+
       - name: Verify frozen compact main-analysis results
         shell: bash
         run: |
@@ -98,6 +104,7 @@ jobs:
             outputs/main_panel_b_improvements.csv \
             outputs/main_order_information.csv \
             outputs/main_order_information_bounds.csv \
+            outputs/main_order_information_joint.csv \
             outputs/main_threshold_decisions.csv \
             outputs/main_sample_selection.csv \
             outputs/main_sample_composition.csv \
@@ -109,11 +116,13 @@ jobs:
             tables/main_benchmark_comparison.tex \
             tables/main_order_information.tex \
             tables/main_order_information_bounds.tex \
+            tables/main_order_information_joint.tex \
             tables/main_sample_selection.tex \
             tables/main_heterogeneity_comparison.tex
           echo "PASS: frozen compact main-analysis results are reproducible"
 
       - name: Upload full analysis outputs
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: main-analysis-full
