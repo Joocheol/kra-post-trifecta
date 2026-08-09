@@ -41,7 +41,15 @@ def _wls_fit(y: np.ndarray, x: np.ndarray, field: np.ndarray, weights: np.ndarra
     xw = design * root_w[:, None]
     yw = y * root_w
     xtwx = xw.T @ xw
-    bread = np.linalg.pinv(xtwx, rcond=1e-12)
+    rank = int(np.linalg.matrix_rank(xtwx, hermitian=True))
+    if rank != xtwx.shape[0]:
+        raise ValueError(
+            f"calibration design matrix is rank deficient: rank={rank}, columns={xtwx.shape[0]}"
+        )
+    condition = float(np.linalg.cond(xtwx))
+    if not np.isfinite(condition) or condition > 1e14:
+        raise ValueError(f"calibration design matrix is ill-conditioned: condition={condition:.6g}")
+    bread = np.linalg.inv(xtwx)
     beta = bread @ (xw.T @ yw)
     residual = y - design @ beta
     return beta, design, residual, bread
