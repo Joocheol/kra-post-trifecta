@@ -46,6 +46,12 @@ class CalibrationRobustnessTest(unittest.TestCase):
         self.assertGreaterEqual(float(result["beta_se_race_cluster"]), 0.0)
         self.assertGreaterEqual(float(result["beta_se_race_date_two_way"]), 0.0)
 
+    def test_rank_deficient_design_is_rejected(self) -> None:
+        frame = self._frame().copy()
+        frame["log_predicted"] = -2.0
+        with self.assertRaisesRegex(ValueError, "rank deficient"):
+            calibration_regression(frame, weighting="race_equal")
+
     def test_unknown_weighting_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "unknown calibration weighting"):
             calibration_regression(self._frame(), weighting="bad")
