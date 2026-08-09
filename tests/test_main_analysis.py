@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from analysis.data_audit import TARGET_MARKETS
+from analysis.display_precision_audit import off_tenth_grid_mask
 from analysis.main_analysis import (
     PriceSet,
     aggregate_price_set,
@@ -20,7 +21,9 @@ from analysis.main_analysis import (
     tv_upper_outer,
 )
 from analysis.main_analysis_core import aggregate_point, choose_other_race
+from analysis.main_analysis_guards import assert_win_uncapped
 from analysis.main_analysis_p3 import order_information_bounds
+from analysis.main_analysis_p3_joint import joint_p3_extrema
 from analysis.main_analysis_runner import common_race_ids
 
 
@@ -76,6 +79,24 @@ class PriceSetTest(unittest.TestCase):
             tv = 0.5 * np.abs(p - q).sum()
             self.assertGreaterEqual(tv + 1e-9, lower)
             self.assertLessEqual(tv, upper + 1e-9)
+
+
+class DisplayPrecisionTest(unittest.TestCase):
+    def test_uncapped_tenth_grid_detection(self) -> None:
+        odds = np.array([1.0, 2.3, 99.9, 1000.0, 9999.9, 2.35])
+        capped = np.array([False, False, False, False, True, False])
+        mask = off_tenth_grid_mask(odds, capped)
+        np.testing.assert_array_equal(mask, [False, False, False, False, False, True])
+
+
+class GuardTest(unittest.TestCase):
+    def test_win_cap_guard_rejects_capped_observation(self) -> None:
+        frame = pd.DataFrame({"is_capped_odds": [False, True]})
+        with self.assertRaisesRegex(ValueError, "requires uncapped win odds"):
+            assert_win_uncapped(frame)
+
+    def test_win_cap_guard_accepts_uncapped_observations(self) -> None:
+        assert_win_uncapped(pd.DataFrame({"is_capped_odds": [False, False]}))
 
 
 class MappingTest(unittest.TestCase):
@@ -219,6 +240,45 @@ class OrderInformationBoundsTest(unittest.TestCase):
         self.assertAlmostEqual(result["median_difference_lower"], expected_lower)
         self.assertAlmostEqual(result["median_difference_upper"], expected_upper)
         self.assertTrue(result["robust_positive_difference"])
+
+    def test_joint_milp_collapses_to_direct_difference_for_point_sets(self) -> None:
+        source = MappingTest._trifecta_frame([1, 2, 3])
+        exacta = pd.DataFrame(
+            sorted((i, j) for i in [1, 2, 3] for j in [1, 2, 3] if i != j),
+            columns=["first_no", "second_no"],
+        )
+        quinella = pd.DataFrame(
+            [(1, 2), (1, 3), (2, 3)], columns=["horse_a", "horse_b"]
+        )
+        e_groups = source_group_index(source, exacta, "exacta")
+        q_groups = source_group_index(source, quinella, "quinella")
+        source_p = np.array([0.20, 0.15, 0.10, 0.20, 0.15, 0.20])
+        actual_e = np.array([0.18, 0.17, 0.12, 0.18, 0.16, 0.19])
+        actual_q = np.array([0.31, 0.29, 0.40])
+        h_source = np.array([0.17, 0.13, 0.11, 0.21, 0.16, 0.22])
+        main_e = aggregate_point(source_p, e_groups, len(exacta))
+        main_q = aggregate_point(source_p, q_groups, len(quinella))
+        h_e = aggregate_point(h_source, e_groups, len(exacta))
+        h_q = aggregate_point(h_source, q_groups, len(quinella))
+        tv = lambda left, right: 0.5 * float(np.abs(left - right).sum())
+        expected = (
+            tv(actual_e, h_e)
+            - tv(actual_e, main_e)
+            - tv(actual_q, h_q)
+            + tv(actual_q, main_q)
+        )
+        lower, upper = joint_p3_extrema(
+            point_price_set(source_p),
+            e_groups,
+            point_price_set(actual_e),
+            h_e,
+            q_groups,
+            point_price_set(actual_q),
+            h_q,
+            time_limit=10.0,
+        )
+        self.assertAlmostEqual(lower, expected, places=8)
+        self.assertAlmostEqual(upper, expected, places=8)
 
 
 if __name__ == "__main__":
