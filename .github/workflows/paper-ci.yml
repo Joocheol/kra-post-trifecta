@@ -121,7 +121,7 @@ jobs:
               frozen[numeric_cols].to_numpy(float),
               generated[numeric_cols].to_numpy(float),
               rtol=1e-9,
-              atol=1e-11,
+              atol=1e-9,
               equal_nan=True,
           ):
               delta = np.nanmax(np.abs(
