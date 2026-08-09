@@ -92,7 +92,7 @@ jobs:
         run: python -m analysis.main_analysis_heterogeneity_b
 
       - name: Run shared-source P3 sharpness diagnostic
-        run: python -m analysis.main_analysis_p3_joint
+        run: python -m analysis.main_analysis_p3_joint_fast
 
       - name: Verify frozen compact main-analysis results
         shell: bash
