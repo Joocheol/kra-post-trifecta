@@ -27,6 +27,11 @@
   - 동결 자료에는 단승 상한 경주가 0건이다.
   - 코드가 이를 명시적으로 검사하며, 향후 단승 상한이 생기면 조용히 점값으로 처리하지 않고 실패시킨다.
     그 경우 Harville의 구간화를 별도 방법 변경으로 심의한다.
+  - 현재 Panel B의 Harville 기준은 게시된 비상한 단승 배당의 정규화 점벡터에 조건부로
+    계산한다. 단승 배당의 ±0.05 반올림 불확실성을 비선형 Harville 순차식 안으로
+    전파하지 않는다. 따라서 Harville의 TV 경계는 주모형·타경주 기준처럼 예측측 가격집합의
+    모든 반올림 불확실성을 포함한 경계가 아니라, 게시 단승벡터에 조건부인 기준모형 비교다.
+    이 비대칭을 원고에 명시하며, 이를 포함한 완전한 Harville 구간화는 별도 방법 변경으로 본다.
 - Panel A 주집계: 경주균등가중 중앙값
 - Panel B: TV exact lower bound와 componentwise extrema를 합한 certified outer upper bound
 - 기준모형 우위: Panel A `TV_benchmark-TV_main`, Panel B `TV_lower_benchmark-TV_upper_main`의
@@ -56,8 +61,10 @@ TV 하한 LP는 목표 승식 차원에서만 풀며, 삼쌍승 전체 상태변
 race date에 속하므로 race cluster가 date cluster 안에 중첩되어 있고, 이 경우
 Cameron--Gelbach--Miller의 `V_race + V_date - V_intersection`에서 intersection이
 race 자체가 되어 이중군집 공분산은 날짜 군집 공분산과 대수적으로 같다. 경주별
-보정기울기의 중앙값과 `[0.9,1.1]` 비율도 함께 보고한다. 이 보정회귀는 Panel A의
-설명적 강건성 결과이며, 공동 주판정은 계속 사전 고정 TV/MAE 규칙을 따른다.
+보정기울기의 중앙값과 `[0.9,1.1]` 비율도 함께 보고한다. 보정회귀의 가중 설계행렬은
+full rank와 유한한 조건수를 명시적으로 검사하며, 랭크 결핍 또는 심한 ill-conditioning을
+의사역행렬로 조용히 넘기지 않고 실패시킨다. 이 보정회귀는 Panel A의 설명적 강건성
+결과이며, 공동 주판정은 계속 사전 고정 TV/MAE 규칙을 따른다.
 
 `--max-races`는 개발용으로만 사용한다. donor 후보군은 항상 동결된 전체 표본에서 정하므로
 개발 부분표본을 바꾸어도 donor 배정 규칙은 달라지지 않는다.
