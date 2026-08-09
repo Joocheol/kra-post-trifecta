@@ -138,7 +138,11 @@ class MappingTest(unittest.TestCase):
         horses = [1, 2, 3, 4]
         source = self._trifecta_frame(horses)
         win = pd.DataFrame(
-            {"horse_no": horses, "odds": [2.0, 3.0, 4.0, 5.0]}
+            {
+                "horse_no": horses,
+                "odds": [2.0, 3.0, 4.0, 5.0],
+                "is_capped_odds": [False, False, False, False],
+            }
         )
         q = harville_trifecta(source, win)
         self.assertAlmostEqual(float(q.sum()), 1.0, places=12)
