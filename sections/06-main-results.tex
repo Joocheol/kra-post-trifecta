@@ -139,7 +139,13 @@ Panel A의 결과는 상한 없는 17.2\% 표본에서만 나타난 현상으로
 표~\ref{tab:main-benchmarks}의 여러 기준모형 행과 사전 민감도 기준에 대해
 별도의 다중비교 보정은 적용하지 않는다. 따라서 각 95\% 신뢰구간을 가족단위
 오류율이 통제된 동시 신뢰진술로 해석하지 않으며, 주결론은 사전에 정한 두 패널의
-방향 일치와 개선폭의 경제적 크기를 함께 사용해 제한적으로 해석한다.
+방향 일치와 개선폭의 경제적 크기를 함께 사용해 제한적으로 해석한다. 또한
+타경주(``other\_race'') 기준은 동일 출전두수 안에서 결정론적으로 donor를 고르므로
+얇은 출전두수 계층에서는 같은 donor 가격벡터가 여러 대상경주에 재사용될 수 있다.
+따라서 표의 other\_race 95\% 신뢰구간은 donor 재사용을 별도 군집보정하지 않은
+경주단위 bootstrap 개별구간이며, 이 기준은 주모형의 우월성을 확인하는 보조적
+benchmark로 해석한다. 재사용 정도는 \texttt{outputs/main\_other\_race\_donor\_reuse.csv}에
+패널·출전두수별로 별도 보고한다.
 
 \begin{table}[htbp]
 \centering
@@ -157,7 +163,9 @@ Panel A의 결과는 상한 없는 17.2\% 표본에서만 나타난 현상으로
 
 \begin{table}[htbp]
 \centering
-\caption{P3 공유 삼쌍승 가격집합을 강제한 출전두수별 1개 대표경주 sharpness 진단}
+\caption{P3 공유 삼쌍승 가격집합을 강제한 출전두수별 1개 대표경주 sharpness 진단.
+해 상태가 ``certified''인 행은 적어도 한 방향이 시간제한 때문에 sharp하지 않음을 뜻하며,
+현재 16두 대표경주는 하한만 certified outer bound이고 상한은 sharp하다.}
 \label{tab:main-order-joint}
 \resizebox{\textwidth}{!}{\input{tables/main_order_information_joint}}
 \end{table}
