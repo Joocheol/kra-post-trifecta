@@ -79,8 +79,10 @@ def joint_p3_certified(
 
     When both directions are solved to optimality, the returned interval is the
     sharp interval for the selected race under the maintained price sets.  On a
-    time limit, the appropriate MIP dual bound is used so that the interval is
-    still a valid outer bound on the sharp interval.
+    solver limit (SciPy MILP status 1), a finite MIP dual bound is required and
+    used so that the interval remains a valid outer bound on the sharp interval.
+    Infeasible, unbounded, or other solver failures are fatal and are never
+    converted into a seemingly certified endpoint.
     """
     exacta_groups = np.asarray(exacta_groups, dtype=np.int64)
     quinella_groups = np.asarray(quinella_groups, dtype=np.int64)
@@ -311,18 +313,28 @@ def joint_p3_certified(
         fun = _finite_float(getattr(result, "fun", np.nan), np.nan)
         dual = _finite_float(getattr(result, "mip_dual_bound", np.nan), np.nan)
         gap = _finite_float(getattr(result, "mip_gap", np.nan), np.nan)
+        status = int(getattr(result, "status", -1))
         if result.success:
             value = -fun if maximize else fun
             return DirectionResult(value, value, True, gap, str(result.message))
 
-        # A time-limited MIP can still provide a mathematically useful certified
-        # bound.  For min f, dual<=min f.  For max f we solved min(-f), so
-        # -dual>=max f.  The incumbent is recorded separately and never promoted
-        # to a certified endpoint.
-        if np.isfinite(dual):
-            certified = -dual if maximize else dual
-        else:
-            certified = 1.0 if maximize else -1.0
+        if status != 1:
+            direction = "maximum" if maximize else "minimum"
+            raise RuntimeError(
+                f"P3 joint {direction} MILP failed with status {status}: {result.message}"
+            )
+        if not np.isfinite(dual):
+            direction = "maximum" if maximize else "minimum"
+            raise RuntimeError(
+                f"P3 joint {direction} MILP hit a solver limit without a finite dual bound: "
+                f"{result.message}"
+            )
+
+        # A limited MIP with a finite dual bound still provides a mathematically
+        # useful certificate. For min f, dual<=min f. For max f we solved
+        # min(-f), so -dual>=max f. The incumbent is recorded separately and
+        # never promoted to a certified endpoint.
+        certified = -dual if maximize else dual
         incumbent = (-fun if maximize else fun) if np.isfinite(fun) else np.nan
         return DirectionResult(
             max(-1.0, min(1.0, certified)),
@@ -407,7 +419,7 @@ def run_sharpness_diagnostic(
                 "joint_max_mip_gap": max_result.mip_gap,
             }
         )
-        status = "sharp" if min_result.optimal and max_result.optimal else "certified outer"
+        status = _solution_status(min_result.optimal, max_result.optimal)
         print(
             "P3 tight joint result: "
             f"[{joint_lo:.6f}, {joint_hi:.6f}] ({status}) vs conservative "
@@ -415,6 +427,23 @@ def run_sharpness_diagnostic(
             flush=True,
         )
     return pd.DataFrame(rows).sort_values(["n_valid_horses", "race_id"]).reset_index(drop=True)
+
+
+def _solution_status(min_optimal: bool, max_optimal: bool) -> str:
+    if min_optimal and max_optimal:
+        return "sharp"
+    if not min_optimal and max_optimal:
+        return "lower-certified"
+    if min_optimal and not max_optimal:
+        return "upper-certified"
+    return "both-certified"
+
+
+def _row_solution_status(row: object) -> str:
+    return _solution_status(
+        bool(row.joint_min_optimal),
+        bool(row.joint_max_optimal),
+    )
 
 
 def write_table(frame: pd.DataFrame, output: Path) -> None:
@@ -425,7 +454,7 @@ def write_table(frame: pd.DataFrame, output: Path) -> None:
         r"\midrule",
     ]
     for row in frame.itertuples(index=False):
-        status = "sharp" if row.joint_min_optimal and row.joint_max_optimal else "certified"
+        status = _row_solution_status(row)
         lines.append(
             f"{int(row.n_valid_horses)} & "
             f"[{row.conservative_lower:.4f}, {row.conservative_upper:.4f}] & "
