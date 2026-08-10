@@ -190,7 +190,8 @@ jobs:
           cp outputs/main_order_information_joint.csv /tmp/main_order_information_joint.generated.csv
           cp tables/main_order_information_joint.tex /tmp/main_order_information_joint.generated.tex
 
-          # The fresh CSV and fresh TeX must agree under the current renderer.
+          # This guards the pipeline connection: the TeX saved by the analysis
+          # command must equal a direct rendering of that command's fresh CSV.
           python - <<'PY'
           from pathlib import Path
           import pandas as pd
