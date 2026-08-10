@@ -1,0 +1,13 @@
+target_market,threshold,panel_a_pass,panel_b_pass,co_primary_pass
+win,0.05,False,False,False
+win,0.025,False,False,False
+win,0.1,True,True,True
+exacta,0.05,False,False,False
+exacta,0.025,False,False,False
+exacta,0.1,True,True,True
+quinella,0.05,False,False,False
+quinella,0.025,False,False,False
+quinella,0.1,True,True,True
+trio,0.05,True,False,False
+trio,0.025,False,False,False
+trio,0.1,True,True,True

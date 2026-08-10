@@ -1,0 +1,2 @@
+panel,measure,n_races,median_difference_lower,difference_lower_ci_low,difference_lower_ci_high,median_difference_upper,difference_upper_ci_low,difference_upper_ci_high,robust_positive_difference
+B,tv,19284,-0.0094824103232,-0.00984526221409,-0.00909511762501,0.0313844552667,0.0310025204316,0.0317558133526,False

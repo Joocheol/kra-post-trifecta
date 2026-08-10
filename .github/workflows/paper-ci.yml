@@ -37,6 +37,9 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
 
+      - name: Verify one-decimal KRA display grid
+        run: python -m analysis.display_precision_audit
+
       - name: Reproduce and verify the frozen sample
         shell: bash
         run: |
@@ -62,6 +65,245 @@ jobs:
           test -s "$AUDIT_TMP/outputs/data_quality.csv"
           test -s "$AUDIT_TMP/outputs/analysis_sample.csv"
           echo "PASS: analysis sample and audit artifacts are reproducible"
+
+  robustness-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install analysis dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Recreate frozen race membership
+        run: python -m analysis.data_audit --strict
+
+      - name: Run calibration and weighting robustness
+        run: python -m analysis.main_analysis_robustness
+
+      - name: Verify frozen compact calibration results
+        shell: bash
+        run: |
+          csv=outputs/main_calibration_robustness.csv
+          tex=tables/main_calibration_robustness.tex
+          for path in "$csv" "$tex"; do
+            git ls-files --error-unmatch "$path" >/dev/null || {
+              echo "FAIL: frozen calibration result is not tracked: $path" >&2
+              exit 1
+            }
+          done
+
+          cp "$csv" /tmp/main_calibration_robustness.generated.csv
+          cp "$tex" /tmp/main_calibration_robustness.generated.tex
+          git checkout -- "$csv" "$tex"
+
+          python - <<'PY'
+          import numpy as np
+          import pandas as pd
+
+          frozen = pd.read_csv('outputs/main_calibration_robustness.csv')
+          generated = pd.read_csv('/tmp/main_calibration_robustness.generated.csv')
+          if list(frozen.columns) != list(generated.columns):
+              raise SystemExit('FAIL: calibration output columns changed')
+          if len(frozen) != len(generated):
+              raise SystemExit('FAIL: calibration output row count changed')
+
+          key_cols = ['target_market', 'weighting', 'n_races', 'n_dates', 'n_combinations']
+          if frozen[key_cols].to_dict('records') != generated[key_cols].to_dict('records'):
+              raise SystemExit('FAIL: calibration sample membership or weighting rows changed')
+
+          numeric_cols = [c for c in frozen.columns if c not in key_cols]
+          if not np.allclose(
+              frozen[numeric_cols].to_numpy(float),
+              generated[numeric_cols].to_numpy(float),
+              rtol=1e-9,
+              atol=1e-9,
+              equal_nan=True,
+          ):
+              delta = np.nanmax(np.abs(
+                  frozen[numeric_cols].to_numpy(float) - generated[numeric_cols].to_numpy(float)
+              ))
+              raise SystemExit(f'FAIL: calibration results changed materially; max_abs_delta={delta:.6g}')
+          print('PASS: frozen calibration CSV reproduces within numerical tolerance')
+          PY
+
+          cmp -s "$tex" /tmp/main_calibration_robustness.generated.tex || {
+            echo "FAIL: rendered calibration table changed" >&2
+            diff -u "$tex" /tmp/main_calibration_robustness.generated.tex >&2 || true
+            exit 1
+          }
+          test -s outputs/main_calibration_by_race.csv
+
+          # Restore generated files for the uploaded diagnostic artifact.  The
+          # tolerance above is many orders tighter than the four-decimal table
+          # reporting precision and only absorbs BLAS/LAPACK roundoff drift.
+          cp /tmp/main_calibration_robustness.generated.csv "$csv"
+          cp /tmp/main_calibration_robustness.generated.tex "$tex"
+          echo "PASS: compact calibration results are tracked and reproducible; race-level detail remains a generated artifact"
+
+      - name: Upload robustness outputs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: main-analysis-robustness
+          path: |
+            outputs/main_calibration_robustness.csv
+            outputs/main_calibration_by_race.csv
+            tables/main_calibration_robustness.tex
+          if-no-files-found: error
+          retention-days: 7
+
+  main-analysis-full:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install analysis dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Recreate frozen race membership
+        run: python -m analysis.data_audit --strict
+
+      - name: Run full Panel A and Panel B analysis
+        run: python -m analysis.main_analysis
+
+      - name: Render sample-selection diagnostics table
+        run: python -m analysis.main_analysis_selection
+
+      - name: Render Panel B heterogeneity comparison
+        run: python -m analysis.main_analysis_heterogeneity_b
+
+      - name: Run shared-source P3 sharpness diagnostic
+        run: python -m analysis.main_analysis_p3_joint_fast
+
+      - name: Validate time-limited P3 diagnostic and restore frozen compact files
+        shell: bash
+        run: |
+          cp outputs/main_order_information_joint.csv /tmp/main_order_information_joint.generated.csv
+          cp tables/main_order_information_joint.tex /tmp/main_order_information_joint.generated.tex
+          git checkout -- outputs/main_order_information_joint.csv tables/main_order_information_joint.tex
+          python - <<'PY'
+          import numpy as np
+          import pandas as pd
+
+          frozen = pd.read_csv('outputs/main_order_information_joint.csv')
+          generated = pd.read_csv('/tmp/main_order_information_joint.generated.csv')
+          keys = ['race_id', 'n_valid_horses']
+          if frozen[keys].to_dict('records') != generated[keys].to_dict('records'):
+              raise SystemExit('FAIL: P3 representative-race membership changed')
+
+          invariant_cols = ['conservative_lower', 'conservative_upper', 'conservative_width']
+          if not np.allclose(
+              frozen[invariant_cols].to_numpy(float),
+              generated[invariant_cols].to_numpy(float),
+              rtol=1e-10, atol=1e-11, equal_nan=True,
+          ):
+              raise SystemExit('FAIL: deterministic P3 conservative intervals changed')
+
+          value_cols = [
+              'joint_milp_lower', 'joint_milp_upper', 'joint_milp_width',
+              'width_ratio_joint_to_conservative',
+          ]
+          for i, row in generated.iterrows():
+              frow = frozen.iloc[i]
+              gsharp = bool(row['joint_min_optimal'] and row['joint_max_optimal'])
+              fsharp = bool(frow['joint_min_optimal'] and frow['joint_max_optimal'])
+
+              if gsharp and fsharp:
+                  if not np.allclose(
+                      frow[value_cols].to_numpy(float), row[value_cols].to_numpy(float),
+                      rtol=1e-9, atol=1e-10, equal_nan=True,
+                  ):
+                      raise SystemExit(f"FAIL: sharp P3 row changed: {row['race_id']}")
+                  continue
+
+              # If either run is time-limited, never require a time limit to recur.
+              # Instead check mathematical certification and compatibility with any
+              # sharp solution available from the other run.
+              if not gsharp:
+                  if row['joint_milp_lower'] > row['joint_min_incumbent'] + 1e-10:
+                      raise SystemExit('FAIL: certified lower bound exceeds incumbent')
+                  if row['joint_milp_lower'] < row['conservative_lower'] - 1e-10:
+                      raise SystemExit('FAIL: joint lower bound escapes conservative interval')
+                  if row['joint_milp_upper'] > row['conservative_upper'] + 1e-10:
+                      raise SystemExit('FAIL: joint upper bound escapes conservative interval')
+                  if fsharp:
+                      if row['joint_milp_lower'] > frow['joint_milp_lower'] + 1e-10:
+                          raise SystemExit('FAIL: certified lower bound excludes frozen sharp solution')
+                      if row['joint_milp_upper'] < frow['joint_milp_upper'] - 1e-10:
+                          raise SystemExit('FAIL: certified upper bound excludes frozen sharp solution')
+                  else:
+                      if not np.allclose(
+                          frow[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
+                          row[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
+                          rtol=0.0, atol=5e-4, equal_nan=True,
+                      ):
+                          raise SystemExit(f"FAIL: certified P3 row drifted materially: {row['race_id']}")
+
+              if gsharp and not fsharp:
+                  if row['joint_milp_lower'] < frow['joint_milp_lower'] - 1e-10:
+                      raise SystemExit('FAIL: new sharp lower endpoint escapes frozen certificate')
+                  if row['joint_milp_upper'] > frow['joint_milp_upper'] + 1e-10:
+                      raise SystemExit('FAIL: new sharp upper endpoint escapes frozen certificate')
+
+          print('PASS: P3 sharp rows reproduce and time-limited rows remain certified without requiring a timeout')
+          PY
+
+      - name: Verify frozen compact main-analysis results
+        shell: bash
+        run: |
+          paths=(
+            outputs/main_panel_a_summary.csv
+            outputs/main_panel_b_summary.csv
+            outputs/main_panel_a_improvements.csv
+            outputs/main_panel_b_improvements.csv
+            outputs/main_order_information.csv
+            outputs/main_order_information_bounds.csv
+            outputs/main_order_information_joint.csv
+            outputs/main_other_race_donor_reuse.csv
+            outputs/main_threshold_decisions.csv
+            outputs/main_sample_selection.csv
+            outputs/main_sample_composition.csv
+            outputs/main_sample_tail.csv
+            outputs/main_heterogeneity_summary.csv
+            outputs/main_heterogeneity_comparison.csv
+            tables/main_panel_a.tex
+            tables/main_panel_b.tex
+            tables/main_benchmark_comparison.tex
+            tables/main_order_information.tex
+            tables/main_order_information_bounds.tex
+            tables/main_order_information_joint.tex
+            tables/main_sample_selection.tex
+            tables/main_heterogeneity_comparison.tex
+          )
+          for path in "${paths[@]}"; do
+            git ls-files --error-unmatch "$path" >/dev/null || {
+              echo "FAIL: frozen compact result is not tracked: $path" >&2
+              exit 1
+            }
+          done
+          git diff --exit-code -- "${paths[@]}"
+          echo "PASS: frozen compact main-analysis results are tracked and reproducible"
+
+      - name: Upload full analysis outputs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: main-analysis-full
+          path: |
+            outputs/main_*.csv
+            outputs/main_analysis_manifest.json
+            tables/main_*.tex
+          if-no-files-found: error
+          retention-days: 7
 
   validate-and-build:
     runs-on: ubuntu-latest

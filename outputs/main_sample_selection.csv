@@ -1,0 +1,3 @@
+sample_group,n_races,field_size_median,field_size_q25,field_size_q75,first_year,last_year,n_meets,trifecta_capped_rows_median
+capped,15963,11,10,12,2016,2025,3,156
+clean,3321,9,8,10,2016,2025,3,0

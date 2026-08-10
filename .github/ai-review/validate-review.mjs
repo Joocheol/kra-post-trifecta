@@ -77,13 +77,22 @@ for (const [index, question] of review.author_questions.entries()) {
   assertText(question, `author_questions[${index}]`, 2000);
 }
 
+// Treat the structured findings as the source of truth for the derived verdict.
+// Claude may occasionally emit an internally inconsistent boolean (for example,
+// needs_changes=false while also returning a concrete non-author-decision fix).
+// That is a serialization inconsistency, not a reason to discard an otherwise
+// valid academic review. Normalize only this derived field; never alter findings,
+// severities, evidence, recommendations, or author-decision flags.
 const computedNeedsChanges = review.findings.some(
   (finding) => !finding.requires_author_decision,
 );
-assert(
-  review.needs_changes === computedNeedsChanges,
-  "needs_changes must match the presence of a concrete non-author-decision finding.",
-);
+if (review.needs_changes !== computedNeedsChanges) {
+  console.warn(
+    `::warning::Claude review needs_changes normalized from ${review.needs_changes} ` +
+      `to ${computedNeedsChanges}; findings remain unchanged.`,
+  );
+}
+review.needs_changes = computedNeedsChanges;
 
 const canonical = JSON.stringify(review);
 const delimiter = `CLAUDE_REVIEW_${crypto.randomUUID()}`;

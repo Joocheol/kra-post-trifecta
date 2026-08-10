@@ -1,6 +1,7 @@
 \section{주분석의 실증전략}
 
 \subsection{공동 주결과의 두 패널}
+\label{subsec:co-primary-panels}
 
 Panel A는 삼쌍승과 비교 승식의 배당이 모두 상한에 걸리지 않은 3,321개 경주에서
 점가격을 비교한다. Panel B는 완전 지지집합을 가진 전체 19,284개 경주에서
@@ -45,14 +46,22 @@ $[a_{r,m,c},b_{r,m,c}]$라 하고,
 참 식별집합이 이 구간 안에 놓인다는 보장만 사용한다. MAE 경계는 TV 경계에
 $2/C_{r,m}$를 곱한다.
 
-각 기준모형에도 같은 방식으로 TV의 하한과 인증 상한을 계산한다. 삼쌍승 타경주
-기준의 donor가 상한 경주이면 donor의 $\mathcal P^T_{r'}$ 전체를 포함하며 점값으로
-대체하지 않는다. 삼쌍승 주변가격이 기준보다 강건하게 우월하다는 판정은 보수적으로
+주모형과 삼쌍승에서 직접 구성하는 순열·타경주 기준은 같은 가격집합 방식으로
+TV의 하한과 인증 상한을 계산한다. 타경주 donor가 상한 경주이면 donor의
+$\mathcal P^T_{r'}$ 전체를 포함하며 점값으로 대체하지 않는다. 반면 Harville은
+게시된 비상한 단승 배당의 정규화 점벡터에서 순차확률을 만든 뒤 이를 고정된
+기준모형으로 사용한다. 따라서 Panel B의 Harville TV 경계는 단승 배당의
+$\pm0.05$ 반올림 불확실성을 비선형 Harville 식 안으로 전파한 경계가 아니라,
+게시 단승벡터에 조건부인 경계다. 동결 자료에는 단승 상한 경주가 없지만 이 작은
+반올림 불확실성은 0이 아니므로, 기준모형 비교가 모든 예측측 불확실성을 완전히
+대칭적으로 처리한다고 해석하지 않는다.
+
+삼쌍승 주변가격이 기준보다 강건하게 우월하다는 판정은 보수적으로
 $\overline{\operatorname{TV}}^{\mathrm{out}}_{\mathrm{main}}
  <\underline{\operatorname{TV}}_{\mathrm{benchmark}}$일 때만 내린다. 구간이 겹치면 순위를
 식별하지 못한 것으로 보고한다. Jensen--Shannon 발산, log-ratio 거리와
-calibration은 Panel A의 주지표로 유지하되, Panel B에서는 사전 고정한 허용
-가격 시나리오의 설명적 민감도 분석으로만 제시하고 확정 판정에는 사용하지 않는다.
+calibration은 Panel A의 설명적 지표로 제시한다. 현재 Panel B에는 이 세 지표의
+대응값을 구성하지 않으며, 확정 판정은 TV와 이에 비례하는 MAE 경계로 제한한다.
 표본불확실성은 경주 단위 부트스트랩으로 각 경계에 반영한다.
 
 패널 집계는 조합 수와 무관하게 경주에 같은 가중치를 주고 중앙값을 사용한다.
@@ -65,7 +74,7 @@ Panel A에서 기준모형 $b$ 대비 경주별 개선폭을
 \[
   \underline\Delta^B_{r,m,b}
   =\underline{\operatorname{TV}}_{r,m,b}
-   -\overline{\operatorname{TV}}^{\mathrm{out}}_{r,m,\mathrm{main}}
+   -\overline{\operatorname{TV}}^{\rm out}_{r,m,\mathrm{main}}
 \]
 을 사용한다. Panel A와 Panel B의 기준모형 우위는 각각
 $\operatorname{median}_r(\Delta^A_{r,m,b})$와
@@ -134,6 +143,8 @@ $0\log 0=0$으로 둔다. $\operatorname{MAE}$는 경주 안의 조합별 확률
 모든 비교는 같은 표본, 같은 정규화, 같은 손실함수에서 수행한다. 주 분석의
 우위 판정은 하나의 전체표본 $R^2$가 아니라 경주별 손실 차이의 분포와 연도·
 경마장 밖 검증에서의 재현 여부에 근거한다.
+순열 기준은 고정 난수시드에서 경주×목표승식×패널마다 정확히 하나의 순열을
+결정론적으로 생성하며, 반복 순열 평균을 사용하지 않는다.
 
 \subsection{순서정보 가설의 검정}
 

@@ -1,5 +1,6 @@
 pyarrow
 pandas
+scipy
 lxml
 beautifulsoup4
 html5lib
