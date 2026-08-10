@@ -270,7 +270,10 @@ jobs:
                       # are non-sharp. The n=16 representative race is already
                       # lower-certified in the frozen fixture, so the branch is
                       # exercised if its fresh rerun is also non-sharp. The 5e-4
-                      # envelope is for solver stability, not reporting precision.
+                      # value is a solver-stability envelope for these certified,
+                      # non-sharp endpoints; it is small relative to the roughly
+                      # 0.03-wide n=16 certified interval, although it can affect
+                      # the fourth decimal shown in the rendered table.
                       if not np.allclose(
                           frow[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
                           row[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
