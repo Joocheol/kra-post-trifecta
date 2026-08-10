@@ -84,6 +84,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="run only the rank-probability cross-validation stage",
     )
+    parser.add_argument(
+        "--skip-time-forward",
+        action="store_true",
+        help="development-only: skip the expanding-window sensitivity analysis",
+    )
     return parser.parse_args()
 
 
@@ -111,6 +116,19 @@ def deterministic_race_cap(races: pd.DataFrame, max_races: int) -> pd.DataFrame:
     if len(result) != max_races:
         raise ValueError("development race cap could not be allocated across years")
     return result.reset_index(drop=True)
+
+
+def training_year_mask(
+    years: pd.Series,
+    validation_year: int,
+    scheme: str,
+) -> pd.Series:
+    """Select training rows without admitting the validation year itself."""
+    if scheme == "leave_one_year_out":
+        return years.ne(validation_year)
+    if scheme == "time_forward":
+        return years.lt(validation_year)
+    raise ValueError(f"unknown validation scheme: {scheme}")
 
 
 def load_horse_panel(data_root: Path, max_races: int = 0) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -951,14 +969,83 @@ def paired_model_improvements(frame: pd.DataFrame) -> pd.DataFrame:
     ).reset_index(drop=True)
 
 
+def run_time_forward_validation(
+    data_root: Path,
+    races: pd.DataFrame,
+    horses: pd.DataFrame,
+    pool_level_frame: pd.DataFrame,
+    *,
+    skip_price_models: bool,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Evaluate each post-2016 year using only strictly earlier training years."""
+    years = sorted(int(value) for value in races["year"].unique())
+    rank_rows: list[pd.DataFrame] = []
+    price_rows: list[pd.DataFrame] = []
+    parameter_rows: list[dict[str, object]] = []
+    for year in years[1:]:
+        train = horses.loc[
+            training_year_mask(horses["year"], year, "time_forward")
+        ].copy()
+        validation_raw = horses.loc[horses["year"].eq(year)].copy()
+        if train.empty or validation_raw.empty:
+            raise ValueError(f"time-forward fold {year} has an empty split")
+        fold, calibrated_train = fit_fold(train, year)
+        validation = apply_calibration(validation_raw, fold.calibration)
+        rank_rows.append(rank_validation(validation, fold))
+        fold_pool_levels = {
+            market: float(
+                pool_level_frame.loc[
+                    pool_level_frame["target_market"].eq(market)
+                    & pool_level_frame["year"].lt(year)
+                    & ~pool_level_frame["any_capped"],
+                    "pool_level",
+                ].median()
+            )
+            for market in TARGET_MARKETS
+        } if not skip_price_models else {}
+        parameter_rows.append(parameter_row(fold, calibrated_train, fold_pool_levels))
+        print(
+            f"time-forward {year}: train={train['race_id'].nunique():,}, "
+            f"validation={validation['race_id'].nunique():,}",
+            flush=True,
+        )
+        if skip_price_models:
+            continue
+        validation_ids = set(validation["race_id"])
+        for market in TARGET_MARKETS:
+            target = uncapped_target(data_root, market, year, validation_ids)
+            if target.empty:
+                continue
+            metrics = behavioral_price_metrics(
+                target,
+                validation,
+                fold,
+                market,
+                fold_pool_levels[market],
+            )
+            price_rows.append(
+                metrics[
+                    metrics["probability_model"].eq("stage_temperature")
+                    & metrics["tail_model"].eq("prelec")
+                ].copy()
+            )
+    return (
+        pd.concat(rank_rows, ignore_index=True),
+        pd.concat(price_rows, ignore_index=True) if price_rows else pd.DataFrame(),
+        pd.DataFrame(parameter_rows),
+    )
+
+
 def write_manifest(
     output_dir: Path,
     races: pd.DataFrame,
     rank_rows: pd.DataFrame,
     price_rows: pd.DataFrame,
+    time_forward_rank_rows: pd.DataFrame,
+    time_forward_price_rows: pd.DataFrame,
 ) -> None:
     manifest = {
-        "schema_version": 2,
+        "schema_version": 3,
         "date_scope": {
             "start": START_DATE,
             "end": END_DATE,
@@ -989,6 +1076,26 @@ def write_manifest(
             else 0
             for market in TARGET_MARKETS
         },
+        "time_forward_validation": {
+            "training_rule": "years strictly earlier than the validation year",
+            "validation_years": sorted(
+                int(value)
+                for value in time_forward_rank_rows["validation_year"].unique()
+            ),
+            "rank_validation_rows": int(len(time_forward_rank_rows)),
+            "preferred_price_metric_rows": int(len(time_forward_price_rows)),
+            "uncapped_price_races": {
+                market: int(
+                    time_forward_price_rows.loc[
+                        time_forward_price_rows["target_market"].eq(market),
+                        "race_id",
+                    ].nunique()
+                )
+                if not time_forward_price_rows.empty
+                else 0
+                for market in TARGET_MARKETS
+            },
+        },
     }
     (output_dir / "behavioral_analysis_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
@@ -1013,7 +1120,9 @@ def main() -> None:
         else load_pool_levels(args.data_root, races)
     )
     for year in years:
-        train = horses.loc[~horses["year"].eq(year)].copy()
+        train = horses.loc[
+            training_year_mask(horses["year"], year, "leave_one_year_out")
+        ].copy()
         validation_raw = horses.loc[horses["year"].eq(year)].copy()
         fold, calibrated_train = fit_fold(train, year)
         validation = apply_calibration(validation_raw, fold.calibration)
@@ -1082,7 +1191,52 @@ def main() -> None:
         )
     else:
         price_frame = pd.DataFrame()
-    write_manifest(args.output_dir, races, rank_frame, price_frame)
+    if args.skip_time_forward:
+        time_forward_rank = pd.DataFrame(
+            columns=["validation_year", "probability_model", "stage"]
+        )
+        time_forward_price = pd.DataFrame(columns=["target_market", "race_id"])
+    else:
+        (
+            time_forward_rank,
+            time_forward_price,
+            time_forward_parameters,
+        ) = run_time_forward_validation(
+            args.data_root,
+            races,
+            horses,
+            pool_level_frame,
+            skip_price_models=args.skip_price_models,
+        )
+        time_forward_rank.to_csv(
+            args.output_dir / "rank_probability_time_forward_by_year.csv",
+            index=False,
+        )
+        rank_validation_summary(time_forward_rank).to_csv(
+            args.output_dir / "rank_probability_time_forward.csv",
+            index=False,
+        )
+        time_forward_parameters.to_csv(
+            args.output_dir / "behavioral_time_forward_parameters.csv",
+            index=False,
+        )
+        if not time_forward_price.empty:
+            price_summary(time_forward_price).to_csv(
+                args.output_dir / "behavioral_time_forward_comparison.csv",
+                index=False,
+            )
+            paired_model_improvements(time_forward_price).to_csv(
+                args.output_dir / "behavioral_time_forward_improvements.csv",
+                index=False,
+            )
+    write_manifest(
+        args.output_dir,
+        races,
+        rank_frame,
+        price_frame,
+        time_forward_rank,
+        time_forward_price,
+    )
 
 
 if __name__ == "__main__":

@@ -44,12 +44,32 @@
     "stage_temperature"
   ],
   "rank_validation_rows": 48,
-  "schema_version": 2,
+  "schema_version": 3,
   "tail_models": [
     "isotonic_clip",
     "prelec",
     "power"
   ],
+  "time_forward_validation": {
+    "preferred_price_metric_rows": 144484,
+    "rank_validation_rows": 42,
+    "training_rule": "years strictly earlier than the validation year",
+    "uncapped_price_races": {
+      "exacta": 17324,
+      "quinella": 17736,
+      "trifecta": 3130,
+      "trio": 14840
+    },
+    "validation_years": [
+      2017,
+      2018,
+      2019,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
   "uncapped_price_races": {
     "exacta": 18703,
     "quinella": 19269,

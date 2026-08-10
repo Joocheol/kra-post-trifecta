@@ -135,9 +135,13 @@ def main() -> None:
     rank = pd.read_csv(args.output_dir / "rank_probability_validation.csv")
     comparison = pd.read_csv(args.output_dir / "behavioral_model_comparison.csv")
     improvements = pd.read_csv(args.output_dir / "behavioral_model_improvements.csv")
+    time_forward = pd.read_csv(
+        args.output_dir / "behavioral_time_forward_improvements.csv"
+    )
     _write(args.table_dir / "behavioral_rank_validation.tex", rank_table(rank))
     _write(args.table_dir / "behavioral_model_comparison.tex", comparison_table(comparison))
     _write(args.table_dir / "behavioral_model_improvements.tex", improvement_table(improvements))
+    _write(args.table_dir / "behavioral_time_forward.tex", improvement_table(time_forward))
 
 
 if __name__ == "__main__":

@@ -10,6 +10,8 @@
    가격벡터로 이동시킨 M-U/M-R/M-S2/M-S3 비교
 3. 복승·삼복승에서 순서 없는 사건을 한 번 평가한 M-R과, 대응하는 두 개 또는
    여섯 개 순서형 청구권의 M-S2/M-S3 예측가격을 합한 외부검증
+4. 각 검증연도보다 엄격히 앞선 연도만 훈련에 사용하는 expanding-window
+   시간순 민감도 분석
 
 실현 1--3위는 `valid_horses.arrival_order`에서 읽는다. 분석기간의 19,284개
 경주는 모두 서로 다른 1--3위와 유효 출전마의 대응을 통과한다. 가격모형은
@@ -99,6 +101,19 @@ power 음성대조는 하나의 순서형 사건을 곱으로 분해할 때에�
 함수형 하나가 아니라 isotonic/Prelec 방향 일치와 power 음성대조를 함께
 보고해야 한다.
 
+## 시간순 검증
+
+leave-one-year-out 결과가 미래 연도 훈련자료에 의존하는지 확인하기 위해,
+2017--2025년의 각 검증연도에서 이전 연도만 누적해 동일 모형을 다시 추정한다.
+2016년은 이전 훈련연도가 없어 제외한다. 시간순 표본은 착순확률 17,745개 경주,
+쌍승 17,324개, 삼쌍승 3,130개, 복승 17,736개와 삼복승 14,840개 경주다.
+
+단계조정 모형의 Harville 대비 로그손실 감소율은 2위 1.47%, 3위 3.65%다.
+선호 명세의 TV 중앙값은 쌍승 M-R/M-S2가 0.2664/0.1326, 삼쌍승
+M-R/M-S2/M-S3이 0.3258/0.2143/0.1596이다. 복승은
+0.1955/0.1341, 삼복승은 0.2906/0.2317/0.1599이며, 여덟 TV
+대비는 모두 7개 검증연도에서 같은 방향이다.
+
 ## 재현 명령
 
 ```bash
@@ -118,6 +133,11 @@ bash scripts/validate.sh
 - `outputs/behavioral_model_parameters.csv`
 - `outputs/behavioral_model_comparison.csv`
 - `outputs/behavioral_model_improvements.csv`
+- `outputs/rank_probability_time_forward.csv`
+- `outputs/rank_probability_time_forward_by_year.csv`
+- `outputs/behavioral_time_forward_parameters.csv`
+- `outputs/behavioral_time_forward_comparison.csv`
+- `outputs/behavioral_time_forward_improvements.csv`
 - `outputs/behavioral_analysis_manifest.json`
 - `figures/calibration-rank-probabilities.pdf`
 - `figures/model-comparison-behavioral.pdf`
@@ -126,6 +146,7 @@ bash scripts/validate.sh
 - `tables/behavioral_rank_validation.tex`
 - `tables/behavioral_model_comparison.tex`
 - `tables/behavioral_model_improvements.tex`
+- `tables/behavioral_time_forward.tex`
 
 180MB 내외의 `outputs/behavioral_model_metrics_by_race.csv`는 결정론적 재생성
 산출물이므로 Git에서 제외한다.

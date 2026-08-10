@@ -184,12 +184,34 @@ jobs:
       - name: Run shared-source P3 sharpness diagnostic
         run: python -m analysis.main_analysis_p3_joint_fast
 
-      - name: Validate time-limited P3 diagnostic and restore frozen compact files
+      - name: Validate time-limited P3 diagnostic and frozen table contracts
         shell: bash
         run: |
           cp outputs/main_order_information_joint.csv /tmp/main_order_information_joint.generated.csv
           cp tables/main_order_information_joint.tex /tmp/main_order_information_joint.generated.tex
+
+          # This guards the pipeline connection: the TeX saved by the analysis
+          # command must equal a direct rendering of that command's fresh CSV.
+          python - <<'PY'
+          from pathlib import Path
+          import pandas as pd
+          from analysis.main_analysis_p3_joint_fast import write_table
+
+          generated = pd.read_csv('/tmp/main_order_information_joint.generated.csv')
+          rendered = Path('/tmp/main_order_information_joint.rerendered.tex')
+          write_table(generated, rendered)
+          if rendered.read_bytes() != Path('/tmp/main_order_information_joint.generated.tex').read_bytes():
+              raise SystemExit('FAIL: fresh P3 TeX does not match current renderer applied to fresh CSV')
+          print('PASS: fresh P3 CSV and TeX agree under the current renderer')
+          PY
+
           git checkout -- outputs/main_order_information_joint.csv tables/main_order_information_joint.tex
+
+          # The frozen manuscript-facing CSV and TeX must likewise agree under
+          # the current renderer. This intentionally does not require a solver
+          # time limit to recur in the fresh run.
+          python -m unittest tests.test_p3_frozen_table -v
+
           python - <<'PY'
           import numpy as np
           import pandas as pd
@@ -338,10 +360,16 @@ jobs:
             outputs/behavioral_model_parameters.csv
             outputs/behavioral_model_comparison.csv
             outputs/behavioral_model_improvements.csv
+            outputs/rank_probability_time_forward.csv
+            outputs/rank_probability_time_forward_by_year.csv
+            outputs/behavioral_time_forward_parameters.csv
+            outputs/behavioral_time_forward_comparison.csv
+            outputs/behavioral_time_forward_improvements.csv
             outputs/behavioral_analysis_manifest.json
             tables/behavioral_rank_validation.tex
             tables/behavioral_model_comparison.tex
             tables/behavioral_model_improvements.tex
+            tables/behavioral_time_forward.tex
             figures/calibration-rank-probabilities.pdf
             figures/model-comparison-behavioral.pdf
             figures/model-comparison-unordered.pdf

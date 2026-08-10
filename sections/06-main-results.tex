@@ -181,8 +181,10 @@ Panel A의 출전두수별 계층에서 1.50--1.65, Panel B에서 1.42--1.68이�
 \begin{table}[htbp]
 \centering
 \caption{P3 공유 삼쌍승 가격집합을 강제한 출전두수별 1개 대표경주 sharpness 진단.
-해 상태가 ``certified''인 행은 적어도 한 방향이 시간제한 때문에 sharp하지 않음을 뜻하며,
-현재 16두 대표경주는 하한만 certified outer bound이고 상한은 sharp하다.}
+해 상태가 ``sharp''가 아닌 행(``lower-certified'', ``upper-certified'',
+``both-certified'')은 적어도 한 방향이 시간제한 때문에 최적성을 완전히 인증하지
+못했음을 뜻한다. 현재 16두 대표경주는 ``lower-certified''로, 하한만 certified
+outer bound이고 상한은 sharp하다.}
 \label{tab:main-order-joint}
 \resizebox{\textwidth}{!}{\input{tables/main_order_information_joint}}
 \end{table}

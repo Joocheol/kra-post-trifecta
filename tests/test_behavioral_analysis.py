@@ -12,6 +12,7 @@ from analysis.behavioral_analysis import (
     attach_unordered_event_probabilities,
     cluster_bootstrap_median_interval,
     score_unordered_price_model,
+    training_year_mask,
 )
 from analysis.behavioral_core import (
     MonotoneCalibrator,
@@ -22,6 +23,17 @@ from analysis.behavioral_core import (
 
 
 class BehavioralAnalysisTests(unittest.TestCase):
+    def test_training_year_masks_exclude_validation_and_future_years(self) -> None:
+        years = pd.Series([2016, 2017, 2018, 2019])
+        self.assertEqual(
+            training_year_mask(years, 2018, "leave_one_year_out").tolist(),
+            [True, True, False, True],
+        )
+        self.assertEqual(
+            training_year_mask(years, 2018, "time_forward").tolist(),
+            [True, True, False, False],
+        )
+
     @staticmethod
     def fold(stage2: StageTemperature, stage3: StageTemperature) -> FoldModel:
         identity = MonotoneCalibrator(
