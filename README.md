@@ -113,6 +113,7 @@ win-to-ordered-pool transfer, and the quinella/trio unordered external validatio
 after the sample audit:
 
 ```bash
+python -m pip install -r requirements.txt -c constraints-behavioral.txt
 python -m analysis.behavioral_analysis
 MPLCONFIGDIR=/tmp/matplotlib python -m analysis.behavioral_figures
 python -m analysis.behavioral_report

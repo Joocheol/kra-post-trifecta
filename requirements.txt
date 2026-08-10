@@ -1,8 +1,7 @@
 pyarrow
-numpy==2.3.5
-pandas==2.2.3
-scipy==1.17.0
-matplotlib==3.10.8
+pandas
+scipy
+matplotlib
 lxml
 beautifulsoup4
 html5lib

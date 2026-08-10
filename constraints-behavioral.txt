@@ -1,0 +1,7 @@
+# Frozen numerical stack for the behavioral-analysis output contract only.
+# The main-analysis P3 MILP follows requirements.txt because its solver
+# certificate is version-sensitive and maintained by a separate CI job.
+numpy==2.3.5
+pandas==2.2.3
+scipy==1.17.0
+matplotlib==3.10.8

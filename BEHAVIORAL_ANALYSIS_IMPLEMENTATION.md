@@ -117,6 +117,7 @@ M-R/M-S2/M-S3이 0.3258/0.2143/0.1596이다. 복승은
 ## 재현 명령
 
 ```bash
+python -m pip install -r requirements.txt -c constraints-behavioral.txt
 python -m analysis.behavioral_analysis
 python -m analysis.behavioral_figures
 python -m analysis.behavioral_report
