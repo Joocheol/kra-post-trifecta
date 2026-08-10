@@ -419,7 +419,7 @@ def run_sharpness_diagnostic(
                 "joint_max_mip_gap": max_result.mip_gap,
             }
         )
-        status = "sharp" if min_result.optimal and max_result.optimal else "certified outer"
+        status = _solution_status(min_result.optimal, max_result.optimal)
         print(
             "P3 tight joint result: "
             f"[{joint_lo:.6f}, {joint_hi:.6f}] ({status}) vs conservative "
@@ -429,9 +429,7 @@ def run_sharpness_diagnostic(
     return pd.DataFrame(rows).sort_values(["n_valid_horses", "race_id"]).reset_index(drop=True)
 
 
-def _row_solution_status(row: object) -> str:
-    min_optimal = bool(row.joint_min_optimal)
-    max_optimal = bool(row.joint_max_optimal)
+def _solution_status(min_optimal: bool, max_optimal: bool) -> str:
     if min_optimal and max_optimal:
         return "sharp"
     if not min_optimal and max_optimal:
@@ -439,6 +437,13 @@ def _row_solution_status(row: object) -> str:
     if min_optimal and not max_optimal:
         return "upper-certified"
     return "both-certified"
+
+
+def _row_solution_status(row: object) -> str:
+    return _solution_status(
+        bool(row.joint_min_optimal),
+        bool(row.joint_max_optimal),
+    )
 
 
 def write_table(frame: pd.DataFrame, output: Path) -> None:

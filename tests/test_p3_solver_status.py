@@ -47,6 +47,38 @@ class P3SolverStatusTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "without a finite dual bound"):
                 joint_p3_certified(*self._args())
 
+    def test_limit_with_finite_dual_bound_certifies_both_directions(self) -> None:
+        minimum = SimpleNamespace(
+            success=False,
+            status=1,
+            message="time limit reached",
+            fun=-0.10,
+            mip_dual_bound=-0.25,
+            mip_gap=0.60,
+        )
+        maximum = SimpleNamespace(
+            success=False,
+            status=1,
+            message="time limit reached",
+            fun=-0.50,
+            mip_dual_bound=-0.75,
+            mip_gap=0.40,
+        )
+        with patch(
+            "analysis.main_analysis_p3_joint_fast.milp",
+            side_effect=[minimum, maximum],
+        ):
+            lower, upper, min_result, max_result = joint_p3_certified(*self._args())
+
+        self.assertEqual(lower, -0.25)
+        self.assertEqual(upper, 0.75)
+        self.assertEqual(min_result.certified_value, -0.25)
+        self.assertEqual(min_result.incumbent_value, -0.10)
+        self.assertFalse(min_result.optimal)
+        self.assertEqual(max_result.certified_value, 0.75)
+        self.assertEqual(max_result.incumbent_value, 0.50)
+        self.assertFalse(max_result.optimal)
+
     def test_solution_status_preserves_endpoint_direction(self) -> None:
         self.assertEqual(
             _row_solution_status(SimpleNamespace(joint_min_optimal=True, joint_max_optimal=True)),
