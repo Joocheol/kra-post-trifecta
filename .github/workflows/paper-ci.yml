@@ -358,3 +358,5 @@ jobs:
         with:
           name: paper-pdf
           path: main.pdf
+          if-no-files-found: error
+          retention-days: 7

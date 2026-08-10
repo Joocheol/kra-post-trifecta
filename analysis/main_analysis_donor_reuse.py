@@ -32,9 +32,10 @@ def donor_reuse_diagnostic(
         donors["donor_race_id"] = donors["donor_race_id"].fillna("").astype(str)
         donors = donors[donors["donor_race_id"].str.len() > 0]
         donors = donors.drop_duplicates()
-        per_race = donors.drop_duplicates(subset=["race_id"], keep="first")
-        if len(per_race) != donors["race_id"].nunique():
+        donor_counts = donors.groupby("race_id")["donor_race_id"].nunique()
+        if (donor_counts > 1).any():
             raise ValueError(f"{panel}: one target race maps to multiple donors")
+        per_race = donors.drop_duplicates(subset=["race_id"], keep="first")
 
         for field_size, group in per_race.groupby("n_valid_horses", sort=True):
             counts = group["donor_race_id"].value_counts()

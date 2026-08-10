@@ -352,8 +352,11 @@ def write_latex_tables(
         r"\midrule",
     ]
     for _, row in merged.iterrows():
+        benchmark = fmt(row["benchmark"])
+        if row["benchmark"] == "other_race":
+            benchmark += r"$^{\dagger}$"
         lines.append(
-            f"{fmt(row['panel'])} & {fmt(row['target_market'])} & {fmt(row['benchmark'])} & {fmt(row['n_races'])} & "
+            f"{fmt(row['panel'])} & {fmt(row['target_market'])} & {benchmark} & {fmt(row['n_races'])} & "
             f"{fmt(row['median_improvement_lower'])} & [{fmt(row['ci_low'])}, {fmt(row['ci_high'])}] & {fmt(row['main_better'])} \\\\"
         )
     lines += [r"\bottomrule", r"\end{tabular}"]

@@ -24,6 +24,39 @@ class FastLowerBoundTest(unittest.TestCase):
             tv_lower_exact_fast(left, right), tv_lower_exact(left, right), places=10
         )
 
+    def test_randomized_realistic_dimensions_match_lp(self) -> None:
+        """Differentially validate the intersection shortcut beyond toy dimensions."""
+        rng = np.random.default_rng(20260810)
+        # 560 equals the 16-horse trio outcome count in the frozen sample.
+        for dimension, replicates in ((6, 4), (30, 4), (90, 4), (180, 4), (560, 2)):
+            for replicate in range(replicates):
+                probability = rng.dirichlet(np.ones(dimension))
+                left_scale = rng.uniform(0.7, 1.3)
+                right_scale = rng.uniform(0.7, 1.3)
+                left_center = left_scale * probability
+                if replicate % 2 == 0:
+                    # Both raw boxes contain differently scaled versions of the
+                    # same normalized vector, so the exact distance is zero.
+                    right_center = right_scale * probability
+                else:
+                    right_center = right_scale * rng.dirichlet(np.ones(dimension))
+                left_width = rng.uniform(0.001, 0.08, size=dimension)
+                right_width = rng.uniform(0.001, 0.08, size=dimension)
+                left = PriceSet(
+                    left_center * (1.0 - left_width),
+                    left_center * (1.0 + left_width),
+                )
+                right = PriceSet(
+                    right_center * (1.0 - right_width),
+                    right_center * (1.0 + right_width),
+                )
+                with self.subTest(dimension=dimension, replicate=replicate):
+                    self.assertAlmostEqual(
+                        tv_lower_exact_fast(left, right),
+                        tv_lower_exact(left, right),
+                        places=9,
+                    )
+
 
 if __name__ == "__main__":
     unittest.main()
