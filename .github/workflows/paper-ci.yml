@@ -268,6 +268,7 @@ jobs:
             outputs/main_order_information.csv
             outputs/main_order_information_bounds.csv
             outputs/main_order_information_joint.csv
+            outputs/main_other_race_donor_reuse.csv
             outputs/main_threshold_decisions.csv
             outputs/main_sample_selection.csv
             outputs/main_sample_composition.csv
@@ -357,5 +358,3 @@ jobs:
         with:
           name: paper-pdf
           path: main.pdf
-          if-no-files-found: error
-          retention-days: 7
