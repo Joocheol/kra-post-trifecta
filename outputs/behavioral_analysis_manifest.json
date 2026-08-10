@@ -16,15 +16,24 @@
   },
   "identification_note": "M-U and M-R are observationally equivalent when nonparametrically recovered from the same win-price schedule; the direct contrast is M-R versus M-S2/M-S3.",
   "n_rank_races": 19284,
-  "price_metric_rows": 416358,
+  "price_metric_rows": 932886,
   "price_models": {
     "exacta": [
       "M-U",
       "M-R",
       "M-S2"
     ],
+    "quinella": [
+      "M-R",
+      "M-S2"
+    ],
     "trifecta": [
       "M-U",
+      "M-R",
+      "M-S2",
+      "M-S3"
+    ],
+    "trio": [
       "M-R",
       "M-S2",
       "M-S3"
@@ -35,7 +44,7 @@
     "stage_temperature"
   ],
   "rank_validation_rows": 48,
-  "schema_version": 1,
+  "schema_version": 2,
   "tail_models": [
     "isotonic_clip",
     "prelec",
@@ -43,8 +52,11 @@
   ],
   "uncapped_price_races": {
     "exacta": 18703,
-    "trifecta": 3321
+    "quinella": 19269,
+    "trifecta": 3321,
+    "trio": 15850
   },
+  "unordered_external_validation_note": "Quinella and trio compare one reduced weighting of the unordered event probability with the sum of two or six ordered sequential claim scores; no arbitrary order is assigned to an unordered pool.",
   "validation_years": [
     2016,
     2017,

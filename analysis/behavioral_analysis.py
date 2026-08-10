@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """Run the year-cross-fitted rank-probability and behavioral price analysis.
 
-The default run uses all in-scope races.  Exacta and trifecta comparisons use
-market-specific complete, uncapped price vectors: this retains 18,703 exacta
-races and 3,321 trifecta races in the frozen data.  Capped odds are never treated
-as point observations in this module.
+The default run uses all in-scope races.  Every comparison uses market-specific
+complete, uncapped price vectors.  Exacta and trifecta identify the ordered
+reduced-versus-sequential contrast; quinella and trio are unordered external
+validations obtained by aggregating the corresponding ordered claim scores.
+Capped odds are never treated as point observations in this module.
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import itertools
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -46,8 +48,12 @@ TAIL_MODELS = ("isotonic_clip", "prelec", "power")
 PRICE_MODELS = {
     "exacta": ("M-U", "M-R", "M-S2"),
     "trifecta": ("M-U", "M-R", "M-S2", "M-S3"),
+    "quinella": ("M-R", "M-S2"),
+    "trio": ("M-R", "M-S2", "M-S3"),
 }
 TARGET_MARKETS = tuple(PRICE_MODELS)
+ORDERED_MARKETS = frozenset({"exacta", "trifecta"})
+UNORDERED_MARKETS = frozenset({"quinella", "trio"})
 COMMON_SUPPORT_QUANTILES = (0.01, 0.99)
 BOOTSTRAP_REPS = 999
 
@@ -328,18 +334,9 @@ def uncapped_target(
     if bool(frame["odds"].isna().any()) or bool((frame["odds"] <= 0).any()):
         raise ValueError(f"{market} contains missing or non-positive odds")
     n_by_race = frame.groupby("race_id").size()
-    if market == "exacta":
-        implied_n = ((1 + np.sqrt(1 + 4 * n_by_race)) / 2).round().astype(int)
-        expected_rows = implied_n * (implied_n - 1)
-    elif market == "trifecta":
-        # The maximum KRA field is small, so an explicit inverse is clearer and exact.
-        inverse = {
-            n * (n - 1) * (n - 2): n for n in range(3, 31)
-        }
-        implied_n = n_by_race.map(inverse)
-        expected_rows = implied_n * (implied_n - 1) * (implied_n - 2)
-    else:
-        raise ValueError(f"unsupported behavioral target market: {market}")
+    inverse = {spec.expected_rows(n): n for n in range(3, 31)}
+    implied_n = n_by_race.map(inverse)
+    expected_rows = implied_n.map(spec.expected_rows)
     if bool(expected_rows.isna().any()) or not bool(n_by_race.eq(expected_rows).all()):
         raise ValueError(f"{market} target does not have complete support")
     frame["raw_price"] = 1.0 / frame["odds"].astype(float)
@@ -488,6 +485,139 @@ def price_model_arguments(frame: pd.DataFrame, market: str, model: str) -> list[
     raise ValueError(f"unsupported model-market pair: {model}, {market}")
 
 
+def attach_unordered_event_probabilities(
+    target: pd.DataFrame,
+    validation: pd.DataFrame,
+    probability_model: str,
+    fold: FoldModel,
+    market: str,
+) -> pd.DataFrame:
+    """Attach all ordered decompositions of an unordered event without row expansion."""
+    if market not in UNORDERED_MARKETS:
+        raise ValueError(f"not an unordered behavioral market: {market}")
+    stage2, stage3 = model_temperatures(fold, probability_model)
+    lookups = {
+        1: _horse_lookup(validation, StageTemperature(0.0, 0.0), 1),
+        2: _horse_lookup(validation, stage2, 2),
+        3: _horse_lookup(validation, stage3, 3),
+    }
+    horse_keys = ("horse_a", "horse_b") if market == "quinella" else (
+        "horse_a",
+        "horse_b",
+        "horse_c",
+    )
+    result = target.copy()
+    for key in horse_keys:
+        for stage, lookup in lookups.items():
+            columns = ["race_id", "horse_no", "stage_score", "stage_total"]
+            if stage == 1:
+                columns.append("objective_probability")
+            renamed = {
+                "horse_no": key,
+                "stage_score": f"{key}_s{stage}",
+                "stage_total": f"stage{stage}_total",
+            }
+            if stage == 1:
+                renamed["objective_probability"] = f"{key}_p1"
+            candidate = lookup[columns].rename(columns=renamed)
+            # The total is identical for all horses in a race.  Keep it only on
+            # the first merge for each stage to avoid duplicate suffix columns.
+            total_name = f"stage{stage}_total"
+            if total_name in result.columns:
+                candidate = candidate.drop(columns=[total_name])
+            result = result.merge(
+                candidate,
+                on=["race_id", key],
+                how="left",
+                validate="many_to_one",
+            )
+
+    joint_columns: list[str] = []
+    for term, order in enumerate(itertools.permutations(horse_keys)):
+        first, second = order[:2]
+        result[f"term{term}_p1"] = result[f"{first}_p1"]
+        result[f"term{term}_p2_cond"] = result[f"{second}_s2"] / (
+            result["stage2_total"] - result[f"{first}_s2"]
+        )
+        result[f"term{term}_p_joint"] = (
+            result[f"term{term}_p1"] * result[f"term{term}_p2_cond"]
+        )
+        if market == "trio":
+            third = order[2]
+            result[f"term{term}_p3_cond"] = result[f"{third}_s3"] / (
+                result["stage3_total"]
+                - result[f"{first}_s3"]
+                - result[f"{second}_s3"]
+            )
+            result[f"term{term}_p_joint"] *= result[f"term{term}_p3_cond"]
+        joint_columns.append(f"term{term}_p_joint")
+    result["p_joint"] = result[joint_columns].sum(axis=1)
+    probability_columns = [
+        column
+        for column in result.columns
+        if column.startswith("term") and "_p" in column
+    ] + ["p_joint"]
+    if bool(result[probability_columns].isna().any().any()):
+        raise ValueError("unordered event-probability merge produced missing values")
+    if bool((result[probability_columns] <= 0).any().any()) or bool(
+        (result[probability_columns] > 1 + 1e-10).any().any()
+    ):
+        raise ValueError("unordered event probabilities are outside (0, 1]")
+    race_sums = result.groupby("race_id")["p_joint"].sum()
+    # Extremely small development folds can make the isotonic winner model
+    # nearly degenerate.  Harville denominators then suffer cancellation even
+    # though the same ordered probabilities still partition the event space.
+    # The frozen full sample is many orders of magnitude tighter; this tolerance
+    # keeps the deterministic --max-races smoke path usable without renormalizing
+    # or changing any model score.
+    if not np.allclose(race_sums.to_numpy(), 1.0, rtol=0.0, atol=5e-5):
+        raise ValueError("unordered event probabilities do not sum to one")
+    return result
+
+
+def score_unordered_price_model(
+    frame: pd.DataFrame,
+    market: str,
+    model: str,
+    predictor: Callable[[np.ndarray], np.ndarray],
+) -> tuple[np.ndarray, list[np.ndarray]]:
+    """Score an unordered event either reduced once or as ordered claim sums."""
+    if market not in UNORDERED_MARKETS:
+        raise ValueError(f"not an unordered behavioral market: {market}")
+    if model == "M-R":
+        argument = frame["p_joint"].to_numpy()
+        return predictor(argument), [argument]
+    n_terms = 2 if market == "quinella" else 6
+    score = np.zeros(len(frame), dtype=float)
+    arguments: list[np.ndarray] = []
+    for term in range(n_terms):
+        p1 = frame[f"term{term}_p1"].to_numpy()
+        p2 = frame[f"term{term}_p2_cond"].to_numpy()
+        if model == "M-S2":
+            second_argument = p2
+            if market == "trio":
+                second_argument = second_argument * frame[
+                    f"term{term}_p3_cond"
+                ].to_numpy()
+            term_arguments = [p1, second_argument]
+        elif model == "M-S3" and market == "trio":
+            term_arguments = [
+                p1,
+                p2,
+                frame[f"term{term}_p3_cond"].to_numpy(),
+            ]
+        else:
+            raise ValueError(f"unsupported unordered model-market pair: {model}, {market}")
+        term_score = np.ones(len(frame), dtype=float)
+        for argument in term_arguments:
+            term_score *= predictor(argument)
+        score += term_score
+        arguments.extend(term_arguments)
+    if np.any(~np.isfinite(score)) or np.any(score <= 0):
+        raise ValueError("unordered behavioral price model produced invalid scores")
+    return score, arguments
+
+
 def score_price_model(
     frame: pd.DataFrame,
     market: str,
@@ -514,7 +644,7 @@ def race_metric_rows(
     target_market: str,
     pool_level: float,
 ) -> pd.DataFrame:
-    work = frame[["race_id", "actual_price_share", "raw_price"]].copy()
+    work = frame[["race_id", "race_date", "actual_price_share", "raw_price"]].copy()
     work["score"] = score
     work["predicted_price_share"] = work["score"] / work.groupby("race_id")[
         "score"
@@ -539,6 +669,7 @@ def race_metric_rows(
     work["raw_abs"] = np.abs(work["raw_price"] - work["predicted_raw_price"])
     grouped = work.groupby("race_id", sort=False)
     result = grouped.agg(
+        race_date=("race_date", "first"),
         tv=("abs", lambda values: 0.5 * float(values.sum())),
         mae=("abs", "mean"),
         mean_log_sq=("log_sq", "mean"),
@@ -566,12 +697,26 @@ def behavioral_price_metrics(
 ) -> pd.DataFrame:
     rows: list[pd.DataFrame] = []
     for probability_model in PROBABILITY_MODELS:
-        events = attach_event_probabilities(target, validation, probability_model, fold)
+        if market in ORDERED_MARKETS:
+            events = attach_event_probabilities(
+                target, validation, probability_model, fold
+            )
+        elif market in UNORDERED_MARKETS:
+            events = attach_unordered_event_probabilities(
+                target, validation, probability_model, fold, market
+            )
+        else:
+            raise ValueError(f"unsupported behavioral target market: {market}")
         for tail_model, predictor in tail_predictors(fold).items():
             for price_model in PRICE_MODELS[market]:
-                score, arguments = score_price_model(
-                    events, market, price_model, predictor
-                )
+                if market in ORDERED_MARKETS:
+                    score, arguments = score_price_model(
+                        events, market, price_model, predictor
+                    )
+                else:
+                    score, arguments = score_unordered_price_model(
+                        events, market, price_model, predictor
+                    )
                 rows.append(
                     race_metric_rows(
                         events,
@@ -674,22 +819,47 @@ def _stable_seed(label: str) -> int:
     return int.from_bytes(digest[:8], "big", signed=False)
 
 
-def bootstrap_median_interval(
+def cluster_bootstrap_median_interval(
     values: np.ndarray,
+    clusters: np.ndarray,
     label: str,
     reps: int = BOOTSTRAP_REPS,
 ) -> tuple[float, float]:
     values = np.asarray(values, dtype=float)
+    clusters = np.asarray(clusters)
     if values.ndim != 1 or len(values) == 0 or np.any(~np.isfinite(values)):
         raise ValueError("bootstrap input must be a non-empty finite vector")
+    if clusters.ndim != 1 or len(clusters) != len(values):
+        raise ValueError("bootstrap clusters must align one-for-one with values")
+    cluster_codes, unique_clusters = pd.factorize(clusters, sort=True)
+    if len(unique_clusters) < 2:
+        raise ValueError("cluster bootstrap requires at least two clusters")
+
+    # A cluster draw repeats every race from the sampled date.  The sample
+    # median can be computed exactly from integer row multiplicities without
+    # materializing a differently sized expanded vector in each replicate.
+    order = np.argsort(values, kind="mergesort")
+    sorted_values = values[order]
+    sorted_codes = cluster_codes[order]
     rng = np.random.default_rng(_stable_seed(label))
-    estimates: list[np.ndarray] = []
-    batch_size = 40
+    distribution = np.empty(reps, dtype=float)
+    n_clusters = len(unique_clusters)
+    batch_size = 32
     for start in range(0, reps, batch_size):
         count = min(batch_size, reps - start)
-        indices = rng.integers(0, len(values), size=(count, len(values)))
-        estimates.append(np.median(values[indices], axis=1))
-    distribution = np.concatenate(estimates)
+        sampled = rng.integers(0, n_clusters, size=(count, n_clusters))
+        multiplicity = np.zeros((count, n_clusters), dtype=np.int32)
+        batch_rows = np.repeat(np.arange(count), n_clusters)
+        np.add.at(multiplicity, (batch_rows, sampled.ravel()), 1)
+        cumulative = np.cumsum(multiplicity[:, sorted_codes], axis=1)
+        total = cumulative[:, -1]
+        left_position = (total - 1) // 2
+        right_position = total // 2
+        left_index = np.argmax(cumulative > left_position[:, None], axis=1)
+        right_index = np.argmax(cumulative > right_position[:, None], axis=1)
+        distribution[start : start + count] = 0.5 * (
+            sorted_values[left_index] + sorted_values[right_index]
+        )
     lower, upper = np.quantile(distribution, [0.025, 0.975])
     return float(lower), float(upper)
 
@@ -704,6 +874,12 @@ def paired_model_improvements(frame: pd.DataFrame) -> pd.DataFrame:
             ("M-R", "M-S3"),
             ("M-S2", "M-S3"),
         ),
+        "quinella": (("M-R", "M-S2"),),
+        "trio": (
+            ("M-R", "M-S2"),
+            ("M-R", "M-S3"),
+            ("M-S2", "M-S3"),
+        ),
     }
     rows: list[dict[str, object]] = []
     for (tail_model, target_market), group in primary.groupby(
@@ -712,14 +888,17 @@ def paired_model_improvements(frame: pd.DataFrame) -> pd.DataFrame:
         for baseline, challenger in comparisons[target_market]:
             for metric in ("tv", "log_rmse", "js"):
                 pivot = group.pivot(
-                    index=["validation_year", "race_id"],
+                    index=["validation_year", "race_date", "race_id"],
                     columns="price_model",
                     values=metric,
                 )
                 paired = pivot[[baseline, challenger]].dropna()
                 difference = (paired[baseline] - paired[challenger]).to_numpy()
+                race_dates = paired.index.get_level_values("race_date").to_numpy()
                 label = f"{tail_model}|{target_market}|{baseline}|{challenger}|{metric}"
-                ci_lower, ci_upper = bootstrap_median_interval(difference, label)
+                ci_lower, ci_upper = cluster_bootstrap_median_interval(
+                    difference, race_dates, label
+                )
                 by_year = (
                     pd.Series(difference, index=paired.index)
                     .groupby(level="validation_year")
@@ -734,6 +913,7 @@ def paired_model_improvements(frame: pd.DataFrame) -> pd.DataFrame:
                         "challenger_model": challenger,
                         "loss": metric,
                         "n_races": int(len(paired)),
+                        "n_race_dates": int(pd.Series(race_dates).nunique()),
                         "n_years": int(len(by_year)),
                         "median_loss_reduction": float(np.median(difference)),
                         "mean_loss_reduction": float(np.mean(difference)),
@@ -746,7 +926,13 @@ def paired_model_improvements(frame: pd.DataFrame) -> pd.DataFrame:
                     }
                 )
     result = pd.DataFrame(rows)
-    power_rows = result[result["tail_model"].eq("power")]
+    # Multiplicative power weighting is a negative control only for a single
+    # ordered event.  An unordered event is a union, so w(sum p) need not equal
+    # the sum of the ordered w(p) claim prices.
+    power_rows = result[
+        result["tail_model"].eq("power")
+        & result["target_market"].isin(ORDERED_MARKETS)
+    ]
     numeric = power_rows[
         ["median_loss_reduction", "mean_loss_reduction"]
     ].to_numpy()
@@ -772,7 +958,7 @@ def write_manifest(
     price_rows: pd.DataFrame,
 ) -> None:
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "date_scope": {
             "start": START_DATE,
             "end": END_DATE,
@@ -789,6 +975,11 @@ def write_manifest(
             "M-U and M-R are observationally equivalent when nonparametrically "
             "recovered from the same win-price schedule; the direct contrast is "
             "M-R versus M-S2/M-S3."
+        ),
+        "unordered_external_validation_note": (
+            "Quinella and trio compare one reduced weighting of the unordered "
+            "event probability with the sum of two or six ordered sequential "
+            "claim scores; no arbitrary order is assigned to an unordered pool."
         ),
         "rank_validation_rows": int(len(rank_rows)),
         "price_metric_rows": int(len(price_rows)),

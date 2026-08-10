@@ -1,0 +1,127 @@
+\section{행동모형 결과}
+\label{sec:behavioral-results}
+
+이 절은 단승가격과 실현 착순으로 다른 연도에서 추정한 확률모형과 가중함수를
+검증연도의 전체 가격벡터에 고정하여 적용한 결과다. 순서형 쌍승·삼쌍승은
+M-R과 M-S2/M-S3의 직접 식별에 사용하고, 순서 없는 복승·삼복승은 모형을
+다시 맞추지 않는 외부검증으로 남긴다. 모든 가격비교는 해당 승식의 전체
+배당벡터가 비검열인 경주만 사용한다.
+
+\subsection{조건부 순위확률의 표본 밖 검증}
+
+\begin{table}[htbp]
+\centering
+\caption{연도 밖 조건부 순위확률 검증. ECE는 각 검증연도에서 계산한
+10-bin calibration error의 경주수 가중평균이며 퍼센트포인트로 표시한다.}
+\label{tab:behavioral-rank-validation}
+\resizebox{0.92\textwidth}{!}{\input{tables/behavioral_rank_validation}}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{figures/calibration-rank-probabilities.pdf}
+\caption{조건부 순위확률의 연도 밖 로그손실과 보정오차}
+\label{fig:behavioral-rank-validation}
+\end{figure}
+
+표~\ref{tab:behavioral-rank-validation}에서 1위 확률은 두 모형이 같고, 차이는
+2·3위의 조건부 단계에서 생긴다. 단계조정 모형은 Harville 대비 2위 로그손실을
+1.47\%, 3위 로그손실을 3.66\% 낮춘다. 평균 fold ECE도 2위에서
+1.95에서 0.42 퍼센트포인트로, 3위에서 3.29에서 0.60 퍼센트포인트로
+감소한다. 남은 선택집합이 10마리일 때 단계 온도계수는 여덟 fold에서 2위
+0.729--0.746, 3위 0.565--0.579 범위다. 따라서 이하의 행동모형 비교는
+실현 착순을 설명하지 못하는 임의의 Harville 입력이 아니라, 연도 밖에서
+검증된 단계조정 순위확률을 선호 명세로 사용한다.
+
+\subsection{순서형 가격벡터의 축약과 순차평가}
+
+\begin{table}[htbp]
+\centering
+\caption{선호 명세의 행동가격모형 비교. 단계조정 순위확률과 Prelec
+가중함수를 사용한다. 공통지지는 각 청구권의 모든 가중함수 인수가 훈련 단승확률의
+1--99백분위 안에 드는 비율이다. M-U는 비모수적으로 회수하면 M-R과
+관측적으로 같으므로 생략한다.}
+\label{tab:behavioral-model-comparison}
+\resizebox{0.88\textwidth}{!}{\input{tables/behavioral_model_comparison}}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{figures/model-comparison-behavioral.pdf}
+\caption{순서형 승식의 행동가격모형 TV 비교}
+\label{fig:behavioral-ordered-comparison}
+\end{figure}
+
+쌍승에서 경주별 TV 중앙값은 M-R의 0.2534에서 M-S2의 0.1264로
+낮아진다. 짝지은 개선폭 중앙값은 0.1230이고, 999회 경주일 군집
+bootstrap 95\% 구간은 [0.1220, 0.1243]이다. 삼쌍승에서는 M-R
+0.3178, M-S2 0.2075, M-S3 0.1578 순이다. M-R 대비 M-S3의
+개선폭 중앙값은 0.1554[0.1533, 0.1577]이고, M-S2 대비 세 번째
+단계를 분리했을 때에도 0.0498[0.0485, 0.0511]만큼 낮아진다.
+이 네 비교의 연도별 TV 개선 중앙값은 모두 8개 연도에서 양수다.
+
+이 결과가 하나의 손실함수에만 의존하는 것은 아니다. JS에서도 같은 순위를
+얻고, 끝점 고정 isotonic 명세와 Prelec 명세의 TV 방향도 일치한다. 다만
+삼쌍승 M-S3의 M-S2 대비 로그 RMSE 개선은 Prelec 명세에서 8개 연도 중
+6개, isotonic 명세에서 5개 연도에서만 양수다. 따라서 세 번째 평가단계가
+모든 손실함수와 모든 연도를 지배한다고 표현하지 않고, TV와 JS에서 일관된
+우위라고 제한한다. power 명세에서는 순서형 M-R·M-S2·M-S3의 TV가
+수치오차 $2.3\times 10^{-16}$ 이내에서 일치하여, 곱셈적 가중함수의
+축약 불변성이 예상대로 재현된다.
+
+\subsection{복승·삼복승의 무순서 외부검증}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{figures/model-comparison-unordered.pdf}
+\caption{무순서 승식의 외부검증: 결합사건의 축약평가와 순서형 청구권
+예측가격 합의 비교}
+\label{fig:behavioral-unordered-comparison}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{선호 명세의 짝지은 TV 개선폭. 구간은 경주일을 군집으로 999회
+재표집한 개별 95\% bootstrap 구간이며 다중비교 보정을 적용하지 않았다.}
+\label{tab:behavioral-model-improvements}
+\resizebox{\textwidth}{!}{\input{tables/behavioral_model_improvements}}
+\end{table}
+
+순서 없는 풀에서도 같은 방향이 유지된다. 복승의 TV 중앙값은 결합확률합을
+한 번 평가하는 M-R에서 0.1833이고, 두 쌍승 순서의 M-S2 청구권 가격을
+합하면 0.1300이다. 짝지은 개선폭은 0.0557[0.0544, 0.0569]이며
+8개 연도 모두 양수다. 삼복승은 M-R 0.2775, 여섯 삼쌍승 순서의 M-S2 합
+0.2204, M-S3 합 0.1545 순이다. M-R 대비 M-S3 개선폭은
+0.1213[0.1201, 0.1228], M-S2 대비 M-S3 개선폭은
+0.0663[0.0654, 0.0675]이고 두 비교 모두 8개 연도에서 양수다.
+복승·삼복승에서는 로그 RMSE와 JS도 같은 연도별 방향을 보인다.
+
+이 검정은 무순서 승식에 자의적인 첫 번째 말을 지정한 결과가 아니다. M-R은
+두 순서 또는 여섯 순서의 객관확률을 먼저 합한 뒤 $w$를 한 번 적용한다.
+M-S2와 M-S3은 각 순서형 청구권의 단계별 점수를 계산한 뒤 그 청구권 가격을
+합한다. 따라서 순서형 풀에서 식별한 비축약 표현이 별도 무순서 풀의 전체
+가격벡터로 이동하는지를 묻는 진정한 leave-one-pool-out 외부검증이다.
+
+\subsection{공통지지와 식별의 한계}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/model-comparison-support.pdf}
+\caption{훈련 단승확률 공통지지에 포함되는 가중함수 인수의 비율}
+\label{fig:behavioral-support}
+\end{figure}
+
+M-R의 평균 공통지지는 쌍승 69.5\%, 삼쌍승 38.1\%, 복승 81.4\%,
+삼복승 63.9\%다. M-S2는 각각 98.0\%, 98.0\%, 96.1\%, 74.7\%이고,
+M-S3은 삼쌍승 98.9\%, 삼복승 96.5\%다. 특히 희박한 결합확률을 한 번에
+평가하는 M-R의 절대오차는 단승에서 관찰하지 못한 꼬리 외삽에 더 민감하다.
+그러므로 선호 Prelec 명세의 절대 TV만으로 모형을 선택하지 않고, 공통지지를
+명시한 isotonic 끝점 명세의 같은 방향과 power 음성대조를 함께 판정한다.
+
+종합하면, 결과는 순서형·무순서형 네 승식 모두에서 복합사건의 완전 축약보다
+조건부 순위단계를 분리한 가격표현과 더 잘 양립한다. 삼쌍승과 삼복승에서는
+세 번째 단계를 별도로 평가한 M-S3이 TV 기준으로 추가 설명력을 갖는다.
+그러나 M-U와 M-R은 단승 가격만으로 관측적으로 동등하고, 풀별 참가자 구성과
+유동성도 관찰되지 않는다. 따라서 이 결과를 대표적 가격함수의 안정적인
+비축약 표현에 대한 증거로 해석하되, 모든 개인의 확률오인이나 특정 인지과정을
+직접 식별한 결과로 확대하지 않는다.

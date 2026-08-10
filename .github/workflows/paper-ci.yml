@@ -326,6 +326,9 @@ jobs:
           MPLCONFIGDIR: /tmp/matplotlib
         run: python -m analysis.behavioral_figures
 
+      - name: Generate behavioral manuscript tables
+        run: python -m analysis.behavioral_report
+
       - name: Verify frozen compact behavioral results
         shell: bash
         run: |
@@ -336,8 +339,12 @@ jobs:
             outputs/behavioral_model_comparison.csv
             outputs/behavioral_model_improvements.csv
             outputs/behavioral_analysis_manifest.json
+            tables/behavioral_rank_validation.tex
+            tables/behavioral_model_comparison.tex
+            tables/behavioral_model_improvements.tex
             figures/calibration-rank-probabilities.pdf
             figures/model-comparison-behavioral.pdf
+            figures/model-comparison-unordered.pdf
             figures/model-comparison-support.pdf
           )
           for path in "${paths[@]}"; do
@@ -358,6 +365,7 @@ jobs:
             outputs/rank_probability_validation*.csv
             outputs/behavioral_*.csv
             outputs/behavioral_analysis_manifest.json
+            tables/behavioral_*.tex
             figures/calibration-rank-probabilities.pdf
             figures/model-comparison-*.pdf
           if-no-files-found: error

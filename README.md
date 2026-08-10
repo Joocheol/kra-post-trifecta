@@ -108,12 +108,13 @@ this indirect hash comparison is the freshness check for the untracked CSVs.
 
 ## Behavioral-model analysis
 
-Run the leave-one-year-out rank-probability validation and the win-to-exacta/
-trifecta price transfer after the sample audit:
+Run the leave-one-year-out rank-probability validation, the win-to-ordered-pool
+transfer, and the quinella/trio unordered external validation after the sample audit:
 
 ```bash
 python -m analysis.behavioral_analysis
 MPLCONFIGDIR=/tmp/matplotlib python -m analysis.behavioral_figures
+python -m analysis.behavioral_report
 ```
 
 The implementation contract, identified contrasts and current caveats are recorded

@@ -184,6 +184,74 @@ def behavioral_model_figure(comparison: pd.DataFrame, path: Path) -> None:
     save(fig, path)
 
 
+def unordered_validation_figure(comparison: pd.DataFrame, path: Path) -> None:
+    """Plot the unordered external validation separately from identification pools."""
+    data = comparison[
+        comparison["probability_model"].eq("stage_temperature")
+        & comparison["tail_model"].eq("prelec")
+        & comparison["target_market"].isin(["quinella", "trio"])
+    ].copy()
+    order = {"M-R": 0, "M-S2": 1, "M-S3": 2}
+    colors = {"M-R": GREY, "M-S2": ORANGE, "M-S3": BLUE}
+    hatches = {"M-R": "///", "M-S2": "..", "M-S3": ""}
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), constrained_layout=True)
+    for axis, market, title in zip(
+        axes,
+        ("quinella", "trio"),
+        ("Quinella", "Trio"),
+    ):
+        panel = data[data["target_market"].eq(market)].copy()
+        if panel.empty:
+            raise ValueError(f"missing unordered comparison rows for {market}")
+        n_races = int(panel["n_races"].iloc[0])
+        panel["order"] = panel["price_model"].map(order)
+        panel = panel.sort_values("order")
+        positions = np.arange(len(panel))
+        bars = axis.barh(
+            positions,
+            panel["median_tv"],
+            color=[colors[value] for value in panel["price_model"]],
+            edgecolor=INK,
+            linewidth=0.6,
+        )
+        for bar, hatch, value in zip(
+            bars,
+            [hatches[value] for value in panel["price_model"]],
+            panel["median_tv"],
+        ):
+            bar.set_hatch(hatch)
+            axis.text(
+                value + 0.006,
+                bar.get_y() + bar.get_height() / 2,
+                f"{value:.3f}",
+                va="center",
+                fontsize=8.5,
+            )
+        axis.set_yticks(positions, panel["price_model"])
+        axis.invert_yaxis()
+        axis.set_xlim(0, max(0.36, 1.18 * float(panel["median_tv"].max())))
+        axis.set_xlabel("Median race-level total variation distance")
+        axis.set_title(f"{title} ({n_races:,} races)", loc="left")
+        axis.grid(axis="x", color=GRID, linewidth=0.6)
+        axis.set_axisbelow(True)
+        axis.spines[["top", "right"]].set_visible(False)
+    fig.suptitle(
+        "Unordered-pool external validation: reduced event vs ordered claim sums",
+        x=0.01,
+        ha="left",
+        fontsize=11,
+        fontweight="bold",
+    )
+    fig.text(
+        0.01,
+        -0.02,
+        "Stage-adjusted rank probabilities and Prelec weighting; lower is better.",
+        fontsize=8,
+        color=INK,
+    )
+    save(fig, path)
+
+
 def support_figure(comparison: pd.DataFrame, path: Path) -> None:
     data = comparison[
         comparison["probability_model"].eq("stage_temperature")
@@ -196,7 +264,7 @@ def support_figure(comparison: pd.DataFrame, path: Path) -> None:
     hatches: list[str] = []
     palette = {"M-R": GREY, "M-S2": ORANGE, "M-S3": BLUE}
     hatch_map = {"M-R": "///", "M-S2": "..", "M-S3": ""}
-    for market in ("exacta", "trifecta"):
+    for market in ("exacta", "trifecta", "quinella", "trio"):
         panel = data[data["target_market"].eq(market)]
         for model in ("M-R", "M-S2", "M-S3"):
             row = panel[panel["price_model"].eq(model)]
@@ -206,7 +274,7 @@ def support_figure(comparison: pd.DataFrame, path: Path) -> None:
             values.append(100 * float(row["mean_support_share"].iloc[0]))
             colors.append(palette[model])
             hatches.append(hatch_map[model])
-    fig, axis = plt.subplots(figsize=(6.3, 3.0), constrained_layout=True)
+    fig, axis = plt.subplots(figsize=(6.3, 4.7), constrained_layout=True)
     positions = np.arange(len(values))
     bars = axis.barh(
         positions,
@@ -245,6 +313,9 @@ def main() -> None:
     rank_probability_figure(rank, args.figure_dir / "calibration-rank-probabilities.pdf")
     behavioral_model_figure(
         comparison, args.figure_dir / "model-comparison-behavioral.pdf"
+    )
+    unordered_validation_figure(
+        comparison, args.figure_dir / "model-comparison-unordered.pdf"
     )
     support_figure(comparison, args.figure_dir / "model-comparison-support.pdf")
 
