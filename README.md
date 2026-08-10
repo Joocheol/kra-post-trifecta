@@ -106,6 +106,21 @@ counts and embedded SHA-256 hashes are frozen in `outputs/data_audit_manifest.js
 CI regenerates both CSVs and the manifest, then byte-compares the tracked manifest;
 this indirect hash comparison is the freshness check for the untracked CSVs.
 
+## Behavioral-model analysis
+
+Run the leave-one-year-out rank-probability validation and the win-to-exacta/
+trifecta price transfer after the sample audit:
+
+```bash
+python -m analysis.behavioral_analysis
+MPLCONFIGDIR=/tmp/matplotlib python -m analysis.behavioral_figures
+```
+
+The implementation contract, identified contrasts and current caveats are recorded
+in `BEHAVIORAL_ANALYSIS_IMPLEMENTATION.md`. The race-level behavioral metric file is
+regenerated but not versioned; compact summaries and deterministic PDF figures are
+tracked and checked by Paper CI.
+
 ## Data Browser
 
 The static browser lives in `docs/` and is served via GitHub Pages.
