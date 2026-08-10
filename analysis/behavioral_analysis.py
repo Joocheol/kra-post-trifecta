@@ -912,6 +912,13 @@ def paired_model_improvements(frame: pd.DataFrame) -> pd.DataFrame:
                 )
                 paired = pivot[[baseline, challenger]].dropna()
                 difference = (paired[baseline] - paired[challenger]).to_numpy()
+                # The power specification makes the ordered reduced and
+                # sequential models algebraically identical.  BLAS and
+                # optimizer implementations can nevertheless leave signed
+                # round-off at roughly machine precision.  Normalize those
+                # theoretical ties before sign-based summaries and bootstrap
+                # calculations so that the negative control is reproducible.
+                difference[np.abs(difference) <= 1e-12] = 0.0
                 race_dates = paired.index.get_level_values("race_date").to_numpy()
                 label = f"{tail_model}|{target_market}|{baseline}|{challenger}|{metric}"
                 ci_lower, ci_upper = cluster_bootstrap_median_interval(

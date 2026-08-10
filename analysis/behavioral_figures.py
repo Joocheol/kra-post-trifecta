@@ -310,6 +310,15 @@ def main() -> None:
     style()
     rank = pd.read_csv(args.output_dir / "rank_probability_validation.csv")
     comparison = pd.read_csv(args.output_dir / "behavioral_model_comparison.csv")
+    # Plot coordinates need no more precision than the values printed in the
+    # figures.  Rounding prevents host-specific optimizer noise below the
+    # manuscript display precision from changing otherwise identical PDFs.
+    rank[rank.select_dtypes(include=["number"]).columns] = rank.select_dtypes(
+        include=["number"]
+    ).round(4)
+    comparison[comparison.select_dtypes(include=["number"]).columns] = (
+        comparison.select_dtypes(include=["number"]).round(4)
+    )
     rank_probability_figure(rank, args.figure_dir / "calibration-rank-probabilities.pdf")
     behavioral_model_figure(
         comparison, args.figure_dir / "model-comparison-behavioral.pdf"

@@ -381,9 +381,19 @@ jobs:
               exit 1
             }
           done
-          git diff --exit-code -- "${paths[@]}"
+          python -m analysis.verify_behavioral_outputs
+          git diff --exit-code -- \
+            outputs/behavioral_analysis_manifest.json \
+            tables/behavioral_rank_validation.tex \
+            tables/behavioral_model_comparison.tex \
+            tables/behavioral_model_improvements.tex \
+            tables/behavioral_time_forward.tex \
+            figures/calibration-rank-probabilities.pdf \
+            figures/model-comparison-behavioral.pdf \
+            figures/model-comparison-unordered.pdf \
+            figures/model-comparison-support.pdf
           test -s outputs/behavioral_model_metrics_by_race.csv
-          echo "PASS: behavioral results and figures are tracked and reproducible"
+          echo "PASS: behavioral results and figures satisfy the frozen-output contract"
 
       - name: Upload behavioral analysis outputs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
