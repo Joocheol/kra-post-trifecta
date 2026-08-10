@@ -266,10 +266,11 @@ jobs:
                       if row['joint_milp_upper'] < frow['joint_milp_upper'] - 1e-10:
                           raise SystemExit('FAIL: certified upper bound excludes frozen sharp solution')
                   else:
-                      # This branch is only for the rare case where both fresh and
-                      # frozen runs are time-limited. The 5e-4 envelope is for solver
-                      # stability rather than reporting precision; the current frozen
-                      # fixture has no row that exercises this branch.
+                      # This branch applies whenever both the fresh and frozen rows
+                      # are non-sharp. The n=16 representative race is already
+                      # lower-certified in the frozen fixture, so the branch is
+                      # exercised if its fresh rerun is also non-sharp. The 5e-4
+                      # envelope is for solver stability, not reporting precision.
                       if not np.allclose(
                           frow[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
                           row[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
