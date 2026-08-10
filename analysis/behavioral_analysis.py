@@ -28,6 +28,7 @@ from analysis.behavioral_core import (
     PowerWeight,
     PrelecWeight,
     StageTemperature,
+    conditional_stage_probability,
     expected_calibration_error,
     fit_stage_temperature,
 )
@@ -436,8 +437,10 @@ def attach_event_probabilities(
     )
     result = result.merge(stage2_first, on=["race_id", "first_no"], how="left", validate="many_to_one")
     result = result.merge(stage2_second, on=["race_id", "second_no"], how="left", validate="many_to_one")
-    result["p2_cond"] = result["stage2_second_score"] / (
-        result["stage2_total"] - result["stage2_first_score"]
+    result["p2_cond"] = conditional_stage_probability(
+        result["stage2_second_score"].to_numpy(),
+        result["stage2_total"].to_numpy(),
+        [result["stage2_first_score"].to_numpy()],
     )
     result["p_joint"] = result["p1"] * result["p2_cond"]
 
@@ -458,10 +461,13 @@ def attach_event_probabilities(
         result = result.merge(stage3_first, on=["race_id", "first_no"], how="left", validate="many_to_one")
         result = result.merge(stage3_second, on=["race_id", "second_no"], how="left", validate="many_to_one")
         result = result.merge(stage3_third, on=["race_id", "third_no"], how="left", validate="many_to_one")
-        result["p3_cond"] = result["stage3_third_score"] / (
-            result["stage3_total"]
-            - result["stage3_first_score"]
-            - result["stage3_second_score"]
+        result["p3_cond"] = conditional_stage_probability(
+            result["stage3_third_score"].to_numpy(),
+            result["stage3_total"].to_numpy(),
+            [
+                result["stage3_first_score"].to_numpy(),
+                result["stage3_second_score"].to_numpy(),
+            ],
         )
         result["p_joint"] *= result["p3_cond"]
     probability_columns = ["p1", "p2_cond", "p_joint"]
@@ -554,18 +560,23 @@ def attach_unordered_event_probabilities(
     for term, order in enumerate(itertools.permutations(horse_keys)):
         first, second = order[:2]
         result[f"term{term}_p1"] = result[f"{first}_p1"]
-        result[f"term{term}_p2_cond"] = result[f"{second}_s2"] / (
-            result["stage2_total"] - result[f"{first}_s2"]
+        result[f"term{term}_p2_cond"] = conditional_stage_probability(
+            result[f"{second}_s2"].to_numpy(),
+            result["stage2_total"].to_numpy(),
+            [result[f"{first}_s2"].to_numpy()],
         )
         result[f"term{term}_p_joint"] = (
             result[f"term{term}_p1"] * result[f"term{term}_p2_cond"]
         )
         if market == "trio":
             third = order[2]
-            result[f"term{term}_p3_cond"] = result[f"{third}_s3"] / (
-                result["stage3_total"]
-                - result[f"{first}_s3"]
-                - result[f"{second}_s3"]
+            result[f"term{term}_p3_cond"] = conditional_stage_probability(
+                result[f"{third}_s3"].to_numpy(),
+                result["stage3_total"].to_numpy(),
+                [
+                    result[f"{first}_s3"].to_numpy(),
+                    result[f"{second}_s3"].to_numpy(),
+                ],
             )
             result[f"term{term}_p_joint"] *= result[f"term{term}_p3_cond"]
         joint_columns.append(f"term{term}_p_joint")

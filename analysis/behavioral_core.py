@@ -267,6 +267,9 @@ class PowerWeight:
         exponent = float(coefficients[1])
         if not np.isfinite(exponent) or exponent <= 0:
             raise ValueError("estimated power exponent must be finite and positive")
+        # The fitted intercept is a nuisance level absorbed by the market-level
+        # constant.  Dropping it here preserves the negative-control identity
+        # w(ab) = w(a)w(b) exactly for ordered-event decompositions.
         return cls(exponent)
 
     def predict(self, probability: Iterable[float]) -> np.ndarray:

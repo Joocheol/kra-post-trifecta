@@ -74,7 +74,13 @@ $w(\pi_{r,i}\pi_{r,j\mid i})$를 한 번 적용한다. 확률가중 함수가 �
 비선형 함수이면 두 예측은 다르다.
 
 삼쌍승에서는 세 모형을 비교한다. M-R은 결합확률 $\pi_{r,ijk}$에 $w$를 한 번
-적용한다. M-S2는 1위와 그 조건 아래 2·3위 결합사건을 분리한다. M-S3은
+적용한다. M-S2는 1위와 그 조건 아래 2·3위 결합사건을
+\begin{equation}
+  w(\pi_{r,i})w(\pi_{r,j\mid i}\pi_{r,k\mid ij})
+  D^{\T}_{r,ijk}=1
+  \label{eq:sequential-trifecta-two-stage}
+\end{equation}
+처럼 두 단계로 분리한다. M-S3은
 \begin{equation}
   w(\pi_{r,i})w(\pi_{r,j\mid i})w(\pi_{r,k\mid ij})
   D^{\T}_{r,ijk}=1
