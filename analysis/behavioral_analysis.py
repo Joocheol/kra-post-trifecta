@@ -680,6 +680,8 @@ def race_metric_rows(
     ].transform("sum")
     if not np.isfinite(pool_level) or pool_level <= 0:
         raise ValueError("training-pool level must be finite and positive")
+    # A positive pool-level scalar cancels from every normalized share metric
+    # (TV, MAE, log RMSE, and JS).  It affects only the raw-price diagnostic.
     work["predicted_raw_price"] = work["predicted_price_share"] * pool_level
 
     lower, upper = fold.win_weight.support

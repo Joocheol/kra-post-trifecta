@@ -10,11 +10,9 @@ from analysis.behavioral_core import (
     PowerWeight,
     PrelecWeight,
     conditional_stage_probability,
-    distribution_metrics,
     expected_calibration_error,
     fit_stage_temperature,
     normalized_inverse_odds,
-    summarize_race_metrics,
 )
 from analysis.behavioral_analysis import score_price_model
 
@@ -82,12 +80,6 @@ class BehavioralCoreTests(unittest.TestCase):
         np.testing.assert_allclose(reduced, sequential2, rtol=1e-13, atol=0.0)
         np.testing.assert_allclose(reduced, sequential3, rtol=1e-13, atol=0.0)
 
-    def test_distribution_metrics_vanish_for_identical_vectors(self) -> None:
-        probability = np.array([0.2, 0.3, 0.5])
-        result = distribution_metrics(probability, probability)
-        for value in result.values():
-            self.assertAlmostEqual(value, 0.0)
-
     def test_expected_calibration_error_is_zero_for_exact_bins(self) -> None:
         probability = np.array([0.0, 0.0, 1.0, 1.0])
         outcome = probability.copy()
@@ -95,26 +87,6 @@ class BehavioralCoreTests(unittest.TestCase):
             expected_calibration_error(probability, outcome, bins=2), 0.0
         )
 
-    def test_metric_summary_uses_race_equal_rows(self) -> None:
-        frame = pd.DataFrame(
-            {
-                "validation_year": [2024, 2025],
-                "probability_model": ["harville", "harville"],
-                "tail_model": ["prelec", "prelec"],
-                "price_model": ["M-R", "M-R"],
-                "target_market": ["exacta", "exacta"],
-                "race_id": ["a", "b"],
-                "tv": [0.1, 0.3],
-                "mae": [0.01, 0.03],
-                "log_rmse": [0.2, 0.4],
-                "js": [0.02, 0.06],
-                "support_share": [1.0, 0.5],
-            }
-        )
-        result = summarize_race_metrics(frame).iloc[0]
-        self.assertEqual(int(result["n_races"]), 2)
-        self.assertAlmostEqual(float(result["median_tv"]), 0.2)
-        self.assertAlmostEqual(float(result["mean_support_share"]), 0.75)
 
 
 if __name__ == "__main__":

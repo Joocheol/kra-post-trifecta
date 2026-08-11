@@ -11,6 +11,8 @@ from analysis.behavioral_analysis import (
     attach_event_probabilities,
     attach_unordered_event_probabilities,
     cluster_bootstrap_median_interval,
+    price_summary,
+    race_metric_rows,
     score_unordered_price_model,
     training_year_mask,
 )
@@ -152,6 +154,79 @@ class BehavioralAnalysisTests(unittest.TestCase):
         )
         np.testing.assert_allclose(reduced, sequential2, rtol=1e-13, atol=0.0)
         np.testing.assert_allclose(reduced, sequential3, rtol=1e-13, atol=0.0)
+
+    def test_production_metric_path_and_pool_level_invariance(self) -> None:
+        fold = self.fold(StageTemperature(0.0, 0.0), StageTemperature(0.0, 0.0))
+        frame = pd.DataFrame(
+            {
+                "race_id": ["r1", "r1", "r2", "r2"],
+                "race_date": ["2025-01-01"] * 2 + ["2025-01-02"] * 2,
+                "actual_price_share": [0.6, 0.4, 0.25, 0.75],
+                "raw_price": [0.6, 0.4, 0.25, 0.75],
+            }
+        )
+        score = np.array([0.7, 0.3, 0.5, 0.5])
+        arguments = [np.array([0.2, 0.3, 0.4, 0.5])]
+
+        low_level = race_metric_rows(
+            frame,
+            score,
+            arguments,
+            fold,
+            "stage_temperature",
+            "prelec",
+            "M-R",
+            "exacta",
+            1.0,
+        )
+        high_level = race_metric_rows(
+            frame,
+            score,
+            arguments,
+            fold,
+            "stage_temperature",
+            "prelec",
+            "M-R",
+            "exacta",
+            2.0,
+        )
+
+        normalized_metrics = ["tv", "mae", "log_rmse", "js", "support_share"]
+        np.testing.assert_allclose(
+            low_level[normalized_metrics], high_level[normalized_metrics]
+        )
+        self.assertFalse(
+            np.allclose(low_level["raw_mae"], high_level["raw_mae"])
+        )
+
+        first_race = low_level.set_index("race_id").loc["r1"]
+        actual = np.array([0.6, 0.4])
+        predicted = np.array([0.7, 0.3])
+        midpoint = 0.5 * (actual + predicted)
+        self.assertAlmostEqual(first_race["tv"], 0.1)
+        self.assertAlmostEqual(first_race["mae"], 0.1)
+        self.assertAlmostEqual(
+            first_race["log_rmse"],
+            float(np.sqrt(np.mean(np.square(np.log(predicted) - np.log(actual))))),
+        )
+        self.assertAlmostEqual(
+            first_race["js"],
+            0.5
+            * float(
+                np.sum(actual * np.log(actual / midpoint))
+                + np.sum(predicted * np.log(predicted / midpoint))
+            ),
+        )
+
+        summary = price_summary(low_level).iloc[0]
+        self.assertEqual(int(summary["n_races"]), 2)
+        self.assertAlmostEqual(
+            float(summary["median_tv"]), float(low_level["tv"].median())
+        )
+        self.assertAlmostEqual(
+            float(summary["median_raw_mae"]),
+            float(low_level["raw_mae"].median()),
+        )
 
     def test_cluster_bootstrap_is_deterministic_and_respects_constant_effect(self) -> None:
         values = np.full(12, 0.125)

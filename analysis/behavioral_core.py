@@ -277,28 +277,6 @@ class PowerWeight:
         return np.power(p, self.exponent)
 
 
-def distribution_metrics(actual: np.ndarray, predicted: np.ndarray) -> dict[str, float]:
-    """Return race-level losses for two positive price-share vectors."""
-    actual = normalize_scores(np.asarray(actual, dtype=float))
-    predicted = normalize_scores(np.asarray(predicted, dtype=float))
-    if len(actual) != len(predicted):
-        raise ValueError("actual and predicted vectors differ in length")
-    midpoint = 0.5 * (actual + predicted)
-    log_difference = np.log(np.clip(predicted, EPSILON, None)) - np.log(
-        np.clip(actual, EPSILON, None)
-    )
-    return {
-        "tv": 0.5 * float(np.abs(actual - predicted).sum()),
-        "mae": float(np.abs(actual - predicted).mean()),
-        "log_rmse": float(np.sqrt(np.mean(np.square(log_difference)))),
-        "js": 0.5
-        * float(
-            np.sum(actual * np.log(actual / midpoint))
-            + np.sum(predicted * np.log(predicted / midpoint))
-        ),
-    }
-
-
 def expected_calibration_error(
     probability: np.ndarray,
     outcome: np.ndarray,
@@ -322,49 +300,3 @@ def expected_calibration_error(
             if len(group)
         )
     )
-
-
-def summarize_race_metrics(frame: pd.DataFrame) -> pd.DataFrame:
-    """Race-equal compact summary used by the manuscript-facing runner."""
-    required = {
-        "validation_year",
-        "probability_model",
-        "tail_model",
-        "price_model",
-        "target_market",
-        "race_id",
-        "tv",
-        "mae",
-        "log_rmse",
-        "js",
-        "support_share",
-    }
-    missing = required - set(frame.columns)
-    if missing:
-        raise ValueError(f"metric frame is missing columns: {sorted(missing)}")
-    keys = [
-        "probability_model",
-        "tail_model",
-        "price_model",
-        "target_market",
-    ]
-    rows: list[dict[str, object]] = []
-    for values, group in frame.groupby(keys, sort=True):
-        row = dict(zip(keys, values))
-        row.update(
-            {
-                "n_races": int(group["race_id"].nunique()),
-                "n_years": int(group["validation_year"].nunique()),
-                "median_tv": float(group["tv"].median()),
-                "mean_tv": float(group["tv"].mean()),
-                "median_mae": float(group["mae"].median()),
-                "median_log_rmse": float(group["log_rmse"].median()),
-                "median_js": float(group["js"].median()),
-                "mean_support_share": float(group["support_share"].mean()),
-                "all_arguments_supported_race_share": float(
-                    group["support_share"].ge(1.0 - 1e-12).mean()
-                ),
-            }
-        )
-        rows.append(row)
-    return pd.DataFrame(rows)
