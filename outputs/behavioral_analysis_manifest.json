@@ -1,0 +1,90 @@
+{
+  "common_support_quantiles": [
+    0.01,
+    0.99
+  ],
+  "date_scope": {
+    "end": "2025-12-31",
+    "excluded_dates": [
+      "2018-07-01"
+    ],
+    "excluded_years": [
+      2020,
+      2021
+    ],
+    "start": "2016-06-10"
+  },
+  "identification_note": "M-U and M-R are observationally equivalent when nonparametrically recovered from the same win-price schedule; the direct contrast is M-R versus M-S2/M-S3.",
+  "n_rank_races": 19284,
+  "price_metric_rows": 932886,
+  "price_models": {
+    "exacta": [
+      "M-U",
+      "M-R",
+      "M-S2"
+    ],
+    "quinella": [
+      "M-R",
+      "M-S2"
+    ],
+    "trifecta": [
+      "M-U",
+      "M-R",
+      "M-S2",
+      "M-S3"
+    ],
+    "trio": [
+      "M-R",
+      "M-S2",
+      "M-S3"
+    ]
+  },
+  "probability_models": [
+    "harville",
+    "stage_temperature"
+  ],
+  "rank_validation_rows": 48,
+  "schema_version": 3,
+  "tail_models": [
+    "isotonic_clip",
+    "prelec",
+    "power"
+  ],
+  "time_forward_validation": {
+    "preferred_price_metric_rows": 144484,
+    "rank_validation_rows": 42,
+    "training_rule": "years strictly earlier than the validation year",
+    "uncapped_price_races": {
+      "exacta": 17324,
+      "quinella": 17736,
+      "trifecta": 3130,
+      "trio": 14840
+    },
+    "validation_years": [
+      2017,
+      2018,
+      2019,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "uncapped_price_races": {
+    "exacta": 18703,
+    "quinella": 19269,
+    "trifecta": 3321,
+    "trio": 15850
+  },
+  "unordered_external_validation_note": "Quinella and trio compare one reduced weighting of the unordered event probability with the sum of two or six ordered sequential claim scores; no arbitrary order is assigned to an unordered pool.",
+  "validation_years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2022,
+    2023,
+    2024,
+    2025
+  ]
+}

@@ -3,6 +3,10 @@
 이 파일은 `RESEARCH_PLAN.md`의 주분석을 코드로 옮길 때 고정한 구현 세부를 기록한다.
 결과를 보기 전에 다음을 고정한다.
 
+행동모형의 별도 표본·교차적합·가격모형 구현은
+`BEHAVIORAL_ANALYSIS_IMPLEMENTATION.md`에 기록한다. 두 분석의 표본, 산출물과
+결론을 합치지 않는다.
+
 - 실행 모듈: `python -m analysis.main_analysis`
 - 난수 시드: `20260809`
 - 경주 부트스트랩: 999회, 95% percentile CI
