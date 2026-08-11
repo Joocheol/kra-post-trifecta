@@ -190,8 +190,8 @@ jobs:
           cp outputs/main_order_information_joint.csv /tmp/main_order_information_joint.generated.csv
           cp tables/main_order_information_joint.tex /tmp/main_order_information_joint.generated.tex
 
-          # This guards the pipeline connection: the TeX saved by the analysis
-          # command must equal a direct rendering of that command's fresh CSV.
+          # Contract 1 guards the live pipeline connection: the TeX saved by the
+          # analysis command must equal a direct rendering of that command's fresh CSV.
           python - <<'PY'
           from pathlib import Path
           import pandas as pd
@@ -207,11 +207,14 @@ jobs:
 
           git checkout -- outputs/main_order_information_joint.csv tables/main_order_information_joint.tex
 
-          # The frozen manuscript-facing CSV and TeX must likewise agree under
-          # the current renderer. This intentionally does not require a solver
-          # time limit to recur in the fresh run.
+          # Contract 2 is renderer-only: the frozen manuscript-facing CSV and TeX
+          # must agree under the current renderer. This unit test does not solve the
+          # MILP and makes no claim about whether a solver time limit recurs.
           python -m unittest tests.test_p3_frozen_table -v
 
+          # Contract 3 compares fresh and frozen numerical endpoints. A solver
+          # time limit need not recur; any non-sharp endpoint must remain a valid
+          # certificate compatible with the corresponding sharp/certified run.
           python - <<'PY'
           import numpy as np
           import pandas as pd
@@ -263,6 +266,15 @@ jobs:
                       if row['joint_milp_upper'] < frow['joint_milp_upper'] - 1e-10:
                           raise SystemExit('FAIL: certified upper bound excludes frozen sharp solution')
                   else:
+                      # This branch applies whenever both the fresh and frozen rows
+                      # are non-sharp. The n=16 representative race is already
+                      # lower-certified in the frozen fixture, so the branch is
+                      # exercised if its fresh rerun is also non-sharp. The 5e-4
+                      # value is a conservative CI tolerance for comparing
+                      # certified, non-sharp endpoints; it is not an empirical
+                      # estimate of repeated-solver variability. It is small relative
+                      # to the roughly 0.03-wide n=16 certified interval, although it
+                      # can affect the fourth decimal shown in the rendered table.
                       if not np.allclose(
                           frow[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
                           row[['joint_milp_lower', 'joint_milp_upper']].to_numpy(float),
