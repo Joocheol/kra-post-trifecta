@@ -228,6 +228,30 @@ class BehavioralAnalysisTests(unittest.TestCase):
             float(low_level["raw_mae"].median()),
         )
 
+    def test_production_price_summary_uses_race_equal_rows(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "probability_model": ["stage_temperature"] * 2,
+                "tail_model": ["prelec"] * 2,
+                "price_model": ["M-R"] * 2,
+                "target_market": ["exacta"] * 2,
+                "validation_year": [2024, 2025],
+                "race_id": ["r1", "r2"],
+                "tv": [0.1, 0.3],
+                "mae": [0.01, 0.03],
+                "log_rmse": [0.2, 0.4],
+                "js": [0.02, 0.06],
+                "raw_mae": [0.04, 0.08],
+                "support_share": [1.0, 0.5],
+            }
+        )
+        result = price_summary(frame).iloc[0]
+        self.assertEqual(int(result["n_races"]), 2)
+        self.assertEqual(int(result["n_years"]), 2)
+        self.assertAlmostEqual(float(result["median_tv"]), 0.2)
+        self.assertAlmostEqual(float(result["median_raw_mae"]), 0.06)
+        self.assertAlmostEqual(float(result["mean_support_share"]), 0.75)
+
     def test_cluster_bootstrap_is_deterministic_and_respects_constant_effect(self) -> None:
         values = np.full(12, 0.125)
         clusters = np.repeat(["2025-01-01", "2025-01-02", "2025-01-03"], 4)
