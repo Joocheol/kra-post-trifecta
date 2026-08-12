@@ -9,6 +9,7 @@ import pandas as pd
 
 from analysis.data_audit import MARKET_SPECS, read_parquets
 from analysis.main_analysis_core import (
+    EPSILON,
     PriceSet,
     aggregate_point,
     aggregate_price_set,
@@ -20,6 +21,8 @@ from analysis.main_analysis_core import (
     point_metrics,
     point_price_set,
     source_group_index,
+    target_key,
+    target_keys_from_frame,
     tv_upper_outer,
 )
 from analysis.main_analysis_fast import tv_lower_exact_fast
@@ -84,6 +87,7 @@ def panel_a(
     """Compute Panel A point metrics; donor benchmark may be unavailable by stratum."""
     rows: list[dict[str, object]] = []
     n_map = races.set_index("race_id")["n_valid_horses"].astype(int).to_dict()
+    race_lookup = races.set_index("race_id")
     for race_id in clean_ids:
         source = trifecta.get(race_id)
         actual_frame = target.get(race_id)
@@ -97,6 +101,16 @@ def panel_a(
         permutation = deterministic_permutation(len(source), race_id, target_name, "A")
         q_perm = q_main[permutation]
         n = int(n_map[race_id])
+        arrival = tuple(int(value) for value in race_lookup.at[race_id, "arrival_tuple"][:3])
+        realized_key = target_key(arrival, target_name)
+        target_keys = target_keys_from_frame(actual_frame, target_name)
+        try:
+            realized_index = target_keys.index(realized_key)
+        except ValueError as exc:
+            raise ValueError(
+                f"realized {target_name} outcome is absent for race {race_id}"
+            ) from exc
+        race_date = str(race_lookup.at[race_id, "race_date"])
 
         predictions: dict[str, tuple[np.ndarray, str]] = {
             "main": (aggregate_point(q_main, groups, cdim), ""),
@@ -119,6 +133,7 @@ def panel_a(
             rec: dict[str, object] = {
                 "panel": "A",
                 "race_id": race_id,
+                "race_date": race_date,
                 "target_market": target_name,
                 "model": model,
                 "n_valid_horses": n,
@@ -126,6 +141,9 @@ def panel_a(
                 "donor_race_id": used_donor,
             }
             rec.update(point_metrics(actual, predicted))
+            rec["realized_log_score"] = -float(
+                np.log(max(float(predicted[realized_index]), EPSILON))
+            )
             rows.append(rec)
     return pd.DataFrame(rows)
 

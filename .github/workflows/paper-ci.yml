@@ -313,6 +313,7 @@ jobs:
         run: |
           paths=(
             outputs/main_panel_a_summary.csv
+            outputs/main_external_log_scores.csv
             outputs/main_panel_b_summary.csv
             outputs/main_panel_b_capped_summary.csv
             outputs/main_panel_a_improvements.csv
@@ -329,6 +330,8 @@ jobs:
             outputs/main_heterogeneity_summary.csv
             outputs/main_heterogeneity_comparison.csv
             tables/main_panel_a.tex
+            tables/main_panel_a_auxiliary.tex
+            tables/main_external_log_scores.tex
             tables/main_panel_b.tex
             tables/main_panel_b_capped.tex
             tables/main_benchmark_comparison.tex

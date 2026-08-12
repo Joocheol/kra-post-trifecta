@@ -25,6 +25,7 @@ from analysis.main_analysis_guards import assert_win_uncapped
 from analysis.main_analysis_p3 import order_information_bounds
 from analysis.main_analysis_p3_joint import joint_p3_extrema
 from analysis.main_analysis_runner import common_race_ids
+from analysis.main_analysis_report import external_log_score_summary
 
 
 class PriceSetTest(unittest.TestCase):
@@ -283,6 +284,38 @@ class OrderInformationBoundsTest(unittest.TestCase):
         )
         self.assertAlmostEqual(lower, expected, places=8)
         self.assertAlmostEqual(upper, expected, places=8)
+
+
+class ExternalLogScoreTest(unittest.TestCase):
+    def test_summary_uses_paired_races_and_positive_means_main_is_better(self) -> None:
+        rows = []
+        for race_id, race_date, main, harville in (
+            ("r1", "2025-01-01", 1.0, 1.2),
+            ("r2", "2025-01-01", 1.4, 1.5),
+            ("r3", "2025-01-02", 0.9, 1.1),
+        ):
+            rows.extend(
+                [
+                    {
+                        "race_id": race_id,
+                        "race_date": race_date,
+                        "target_market": "exacta",
+                        "model": "main",
+                        "realized_log_score": main,
+                    },
+                    {
+                        "race_id": race_id,
+                        "race_date": race_date,
+                        "target_market": "exacta",
+                        "model": "harville",
+                        "realized_log_score": harville,
+                    },
+                ]
+            )
+        result = external_log_score_summary(pd.DataFrame(rows)).iloc[0]
+        self.assertEqual(int(result["n_races"]), 3)
+        self.assertAlmostEqual(float(result["mean_main_improvement"]), 1 / 6)
+        self.assertGreater(float(result["date_cluster_ci_low"]), 0.0)
 
 
 if __name__ == "__main__":

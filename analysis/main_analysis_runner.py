@@ -25,6 +25,7 @@ from analysis.main_analysis_report import (
     absolute_threshold_decision,
     benchmark_improvements_a,
     benchmark_improvements_b,
+    external_log_score_summary,
     order_information_test,
     sample_composition,
     sample_selection_summary,
@@ -98,6 +99,12 @@ def race_metadata(data_root: Path, race_ids: set[str]) -> pd.DataFrame:
     races = races[races["race_id"].isin(race_ids)].copy()
     races["year"] = pd.to_datetime(races["race_date"]).dt.year
     races["valid_horse_tuple"] = races["valid_horses"].map(parse_horse_list)
+    races["arrival_tuple"] = races["arrival_order"].map(parse_horse_list)
+    invalid_arrivals = races["arrival_tuple"].map(
+        lambda value: len(value) < 3 or len(set(value[:3])) != 3
+    )
+    if bool(invalid_arrivals.any()):
+        raise ValueError("race metadata contains an invalid top-three arrival order")
     return races
 
 
@@ -212,6 +219,7 @@ def main() -> None:
     metrics_a = pd.concat(panel_a_frames, ignore_index=True)
     bounds_b = None if args.skip_bounds else pd.concat(panel_b_frames, ignore_index=True)
     summary_a = summarize_panel_a(metrics_a)
+    log_scores = external_log_score_summary(metrics_a)
     summary_b = None if bounds_b is None else summarize_panel_b(bounds_b)
     capped_bounds_b = (
         None
@@ -247,6 +255,7 @@ def main() -> None:
     outputs: list[tuple[Path, pd.DataFrame]] = [
         (args.output_dir / "main_metrics.csv", metrics_a),
         (args.output_dir / "main_panel_a_summary.csv", summary_a),
+        (args.output_dir / "main_external_log_scores.csv", log_scores),
         (args.output_dir / "main_panel_a_improvements.csv", improve_a),
         (args.output_dir / "main_order_information.csv", p3),
         (args.output_dir / "main_threshold_decisions.csv", thresholds),
@@ -278,11 +287,23 @@ def main() -> None:
         outputs.append((args.output_dir / "main_order_information_bounds.csv", p3_bounds))
     for path, frame in outputs:
         frame.to_csv(path, index=False, float_format="%.12g")
+        written_rows = sum(1 for _ in path.open(encoding="utf-8")) - 1
+        if written_rows != len(frame):
+            raise IOError(
+                f"incomplete CSV write for {path}: expected {len(frame)} rows, "
+                f"found {written_rows}"
+            )
         generated.append(path)
 
     generated.extend(
         write_latex_tables(
-            args.table_dir, summary_a, summary_b, improve_a, improve_b, p3
+            args.table_dir,
+            summary_a,
+            summary_b,
+            improve_a,
+            improve_b,
+            p3,
+            log_scores,
         )
     )
     if p3_bounds is not None:

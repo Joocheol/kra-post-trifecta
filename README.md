@@ -9,7 +9,7 @@
 
 ## Paper
 
-- 가제: **경마 베팅시장의 정보 집계: 삼쌍승식 상태가격의 교차풀 정합성과 순위모형 진단**
+- 제목: **경마 베팅시장의 교차풀 가격 정합성: 삼쌍승식 상태가격과 순위모형 진단**
 - 원고: `main.tex`, `preamble.tex`, `sections/`
 - 연구 설계: `RESEARCH_PLAN.md`
 - 집필 원칙: `WRITING_GUIDE.md`

@@ -66,6 +66,66 @@ def summarize_panel_a(metrics: pd.DataFrame) -> pd.DataFrame:
                 "median_r2": float(group["r2"].median()),
                 "share_r2_gt_0_8": float((group["r2"] > 0.8).mean()),
                 "median_rmsle": float(group["rmsle"].median()),
+                "median_clr_distance": float(group["clr_distance"].median()),
+                "median_correlation": float(group["correlation"].median()),
+                "median_cosine": float(group["cosine"].median()),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def cluster_bootstrap_mean_ci(
+    values: np.ndarray,
+    clusters: np.ndarray,
+    *,
+    label: str,
+    reps: int = BOOTSTRAP_REPS,
+) -> tuple[float, float]:
+    """Deterministic percentile interval from equal-probability date clusters."""
+    values = np.asarray(values, dtype=float)
+    clusters = np.asarray(clusters)
+    valid = np.isfinite(values)
+    values = values[valid]
+    clusters = clusters[valid]
+    unique = np.unique(clusters)
+    if len(values) == 0 or len(unique) == 0:
+        return float("nan"), float("nan")
+    grouped = {cluster: values[clusters == cluster] for cluster in unique}
+    rng = np.random.default_rng(stable_uint(f"date-bootstrap-mean|{label}"))
+    draws = np.empty(reps, dtype=float)
+    for index in range(reps):
+        sampled = unique[rng.integers(0, len(unique), size=len(unique))]
+        draws[index] = float(np.mean(np.concatenate([grouped[key] for key in sampled])))
+    low, high = np.quantile(draws, [0.025, 0.975])
+    return float(low), float(high)
+
+
+def external_log_score_summary(metrics: pd.DataFrame) -> pd.DataFrame:
+    """Compare realized-outcome scores of trifecta marginals and win-Harville."""
+    required = {"race_id", "race_date", "target_market", "model", "realized_log_score"}
+    missing = required.difference(metrics.columns)
+    if missing:
+        raise ValueError(f"external log-score input lacks columns: {sorted(missing)}")
+    rows: list[dict[str, object]] = []
+    selected = metrics[metrics["model"].isin({"main", "harville"})]
+    for target, group in selected.groupby("target_market", sort=True):
+        pivot = group.pivot(
+            index=["race_date", "race_id"], columns="model", values="realized_log_score"
+        )[["main", "harville"]].dropna()
+        improvement = (pivot["harville"] - pivot["main"]).to_numpy(dtype=float)
+        dates = pivot.index.get_level_values("race_date").to_numpy()
+        low, high = cluster_bootstrap_mean_ci(
+            improvement, dates, label=f"external-log-score|{target}"
+        )
+        rows.append(
+            {
+                "target_market": target,
+                "n_races": int(len(pivot)),
+                "mean_main_log_score": float(pivot["main"].mean()),
+                "mean_harville_log_score": float(pivot["harville"].mean()),
+                "mean_main_improvement": float(np.mean(improvement)),
+                "date_cluster_ci_low": low,
+                "date_cluster_ci_high": high,
             }
         )
     return pd.DataFrame(rows)
@@ -305,9 +365,17 @@ def write_latex_tables(
     improvement_a: pd.DataFrame,
     improvement_b: pd.DataFrame | None,
     p3: pd.DataFrame,
+    log_scores: pd.DataFrame,
 ) -> list[Path]:
     table_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
+    market_labels = {
+        "win": "단승",
+        "exacta": "쌍승",
+        "quinella": "복승",
+        "trio": "삼복승",
+    }
+    model_labels = {"main": "삼쌍승 주변화", "harville": "Harville"}
     lines = [
         r"\begin{tabular}{llrrrr}",
         r"\toprule",
@@ -321,6 +389,57 @@ def write_latex_tables(
         )
     lines += [r"\bottomrule", r"\end{tabular}"]
     path = table_dir / "main_panel_a.tex"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    written.append(path)
+
+    auxiliary = summary_a[summary_a["model"].isin({"main", "harville"})].copy()
+    auxiliary["target_order"] = auxiliary["target_market"].map(
+        {"win": 0, "exacta": 1, "quinella": 2, "trio": 3}
+    )
+    auxiliary["model_order"] = auxiliary["model"].map({"main": 0, "harville": 1})
+    auxiliary = auxiliary.sort_values(["target_order", "model_order"])
+    lines = [
+        r"\begin{tabular}{llrrrrr}",
+        r"\toprule",
+        r"승식 & 모형 & JS & 로그 RMS & CLR 거리 & 상관계수 & cosine \\",
+        r"\midrule",
+    ]
+    previous = None
+    for _, row in auxiliary.iterrows():
+        target = row["target_market"]
+        if previous is not None and target != previous:
+            lines.append(r"\addlinespace")
+        lines.append(
+            f"{market_labels[target]} & {model_labels[row['model']]} & {fmt(row['median_js'])} & "
+            f"{fmt(row['median_rmsle'])} & {fmt(row['median_clr_distance'])} & "
+            f"{fmt(row['median_correlation'])} & {fmt(row['median_cosine'])} \\\\"
+        )
+        previous = target
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    path = table_dir / "main_panel_a_auxiliary.tex"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    written.append(path)
+
+    log_scores = log_scores.copy()
+    log_scores["target_order"] = log_scores["target_market"].map(
+        {"win": 0, "exacta": 1, "quinella": 2, "trio": 3}
+    )
+    log_scores = log_scores.sort_values("target_order")
+    lines = [
+        r"\begin{tabular}{lrrrrr}",
+        r"\toprule",
+        r"승식 & 경주 수 & 삼쌍승 주변화 & 단승--Harville & 개선폭 & 95\% CI \\",
+        r"\midrule",
+    ]
+    for _, row in log_scores.iterrows():
+        interval = f"[{row['date_cluster_ci_low']:.4f}, {row['date_cluster_ci_high']:.4f}]"
+        lines.append(
+            f"{market_labels[row['target_market']]} & {int(row['n_races']):,} & "
+            f"{row['mean_main_log_score']:.4f} & {row['mean_harville_log_score']:.4f} & "
+            f"{row['mean_main_improvement']:.4f} & {interval} \\\\"
+        )
+    lines += [r"\bottomrule", r"\end{tabular}"]
+    path = table_dir / "main_external_log_scores.tex"
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     written.append(path)
 
