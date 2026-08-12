@@ -32,6 +32,7 @@ from analysis.main_analysis_report import (
     summarize_panel_b,
     write_latex_tables,
     write_manifest,
+    write_panel_b_subset_table,
 )
 
 
@@ -212,8 +213,21 @@ def main() -> None:
     bounds_b = None if args.skip_bounds else pd.concat(panel_b_frames, ignore_index=True)
     summary_a = summarize_panel_a(metrics_a)
     summary_b = None if bounds_b is None else summarize_panel_b(bounds_b)
+    capped_bounds_b = (
+        None
+        if bounds_b is None
+        else bounds_b[bounds_b["race_id"].isin(set(full_ids) - set(clean_ids))].copy()
+    )
+    capped_summary_b = (
+        None if capped_bounds_b is None else summarize_panel_b(capped_bounds_b)
+    )
     improve_a = benchmark_improvements_a(metrics_a)
     improve_b = None if bounds_b is None else benchmark_improvements_b(bounds_b)
+    capped_improve_b = (
+        None
+        if capped_bounds_b is None
+        else benchmark_improvements_b(capped_bounds_b)
+    )
     p3 = order_information_test(metrics_a)
     p3_bounds = None if bounds_b is None else order_information_bounds(bounds_b)
     thresholds = absolute_threshold_decision(summary_a, summary_b)
@@ -250,6 +264,16 @@ def main() -> None:
                 (args.output_dir / "main_panel_b_improvements.csv", improve_b),
             ]
         )
+    if capped_summary_b is not None and capped_improve_b is not None:
+        outputs.extend(
+            [
+                (args.output_dir / "main_panel_b_capped_summary.csv", capped_summary_b),
+                (
+                    args.output_dir / "main_panel_b_capped_improvements.csv",
+                    capped_improve_b,
+                ),
+            ]
+        )
     if p3_bounds is not None:
         outputs.append((args.output_dir / "main_order_information_bounds.csv", p3_bounds))
     for path, frame in outputs:
@@ -263,6 +287,8 @@ def main() -> None:
     )
     if p3_bounds is not None:
         generated.append(write_order_information_bounds_table(args.table_dir, p3_bounds))
+    if capped_summary_b is not None:
+        generated.append(write_panel_b_subset_table(args.table_dir, capped_summary_b))
     write_manifest(
         args.output_dir,
         generated,

@@ -7,7 +7,7 @@
 1. 2016--2019년과 2022--2025년을 fold로 둔 leave-one-year-out 조건부
    1--3위 확률 추정·검증
 2. 단승 가격에서만 추정한 확률가중 함수를 쌍승·삼쌍승의 전체 비검열
-   가격벡터로 이동시킨 M-U/M-R/M-S2/M-S3 비교
+   가격벡터로 이동시킨 M-R/M-S2/M-S3 비교와 동일경주 Harville 기준 비교
 3. 복승·삼복승에서 순서 없는 사건을 한 번 평가한 M-R과, 대응하는 두 개 또는
    여섯 개 순서형 청구권의 M-S2/M-S3 예측가격을 합한 외부검증
 4. 각 검증연도보다 엄격히 앞선 연도만 훈련에 사용하는 expanding-window
@@ -46,12 +46,13 @@
 
 가격모형은 다음과 같다.
 
-- `M-U`: 단승에서 비모수적으로 회수한 효용표현. 제한 없는 경우 M-R과
-  관측적으로 동등하므로 수치도 M-R과 같게 보고한다.
 - `M-R`: 결합확률에 가중함수를 한 번 적용한다.
 - `M-S2`: 쌍승은 1위와 조건부 2위, 삼쌍승은 1위와 조건부 2·3위 결합사건을
   분리한다.
 - `M-S3`: 삼쌍승의 1위, 조건부 2위, 조건부 3위를 모두 분리한다.
+
+제한 없는 위험선호 표현은 단승 가격에서 M-R과 관측적으로 동등하고 별도
+수치모형으로 구현되지 않았으므로 M-U 계열을 만들거나 보고하지 않는다.
 
 복승에서는 M-S2의 두 순서형 쌍승 청구권 점수를 합하고, 삼복승에서는 M-S2와
 M-S3의 여섯 순서형 삼쌍승 청구권 점수를 각각 합한다. 경주 안에서 이 합을
@@ -85,6 +86,11 @@ overround를 사용하지 않고 각 fold의 다른 연도 비검열 경주에�
 | 삼쌍승 | 0.3178 | 0.2075 | 0.1578 |
 | 복승 | 0.1833 | 0.1300 | 해당 없음 |
 | 삼복승 | 0.2775 | 0.2204 | 0.1545 |
+
+그러나 행동모형의 판정은 이 내부 비교가 아니라 같은 경주의 비행동 기준까지
+포함한다. 단계조정 Harville의 TV 중앙값은 쌍승 0.1031, 삼쌍승 0.1464,
+복승 0.1024, 삼복승 0.1320으로, 각 시장의 선호 M-S2/M-S3보다 모두 작다.
+따라서 M-S의 M-R 대비 개선은 비축약의 독립적 증거로 채택하지 않는다.
 
 경주별 paired TV 개선폭의 중앙값과 999회 경주일 군집 부트스트랩 95% 구간은 다음과
 같다.
@@ -140,6 +146,8 @@ bash scripts/validate.sh
 - `outputs/behavioral_model_parameters.csv`
 - `outputs/behavioral_model_comparison.csv`
 - `outputs/behavioral_model_improvements.csv`
+- `outputs/behavioral_same_sample_benchmarks.csv`
+- `outputs/behavioral_same_sample_improvements.csv`
 - `outputs/rank_probability_time_forward.csv`
 - `outputs/rank_probability_time_forward_by_year.csv`
 - `outputs/behavioral_time_forward_parameters.csv`
@@ -148,6 +156,7 @@ bash scripts/validate.sh
 - `outputs/behavioral_analysis_manifest.json`
 - `figures/calibration-rank-probabilities.pdf`
 - `figures/model-comparison-behavioral.pdf`
+- `tables/behavioral_same_sample_benchmarks.tex`
 - `figures/model-comparison-unordered.pdf`
 - `figures/model-comparison-support.pdf`
 - `tables/behavioral_rank_validation.tex`

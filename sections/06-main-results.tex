@@ -114,6 +114,21 @@ Harville의 TV 하한보다 낮은 경주의 비율은 쌍승 97.6\%, 복승 86.
 양수다. 순열·타경주·균등 기준에 대해서는 그 차이가 더욱 뚜렷하다. 따라서
 Panel A의 결과는 상한 없는 17.2\% 표본에서만 나타난 현상으로 설명하기 어렵다.
 
+\begin{table}[htbp]
+\centering
+\caption{Panel B의 표시상한 경주 전용 결과. 전체 19,284개 경주 중 공통
+clean 표본 3,321개를 제외한 15,963개 경주만 사용한다.}
+\label{tab:main-panel-b-capped}
+\resizebox{0.86\textwidth}{!}{\input{tables/main_panel_b_capped}}
+\end{table}
+
+표~\ref{tab:main-panel-b-capped}처럼 표시상한 경주만 떼어도 주모형의 TV 하한--
+상한 중앙값은 쌍승 0.0572--0.0727, 복승 0.0643--0.0832, 삼복승
+0.0458--0.0606이다. 같은 표본의 Harville은 각각 0.1213--0.1257,
+0.1175--0.1246, 0.1676--0.1716이다. 따라서 pooled Panel B의 상대적 우위는
+clean 경주가 섞여 생긴 결과가 아니다. 반면 절대 0.05 기준은 capped-only
+결과에서도 인증되지 않아, 표본선택에 대한 방어와 완전 정합성 주장은 분리된다.
+
 그러나 이 결과를 ``완전한 공통 상태가격''의 증거로 읽어서는 안 된다.
 사전에 정한 절대 TV 기준 0.05에서는 어느 목표 승식도 Panel A와 Panel B를
 동시에 통과하지 않는다. clean 표본에서 가장 작은 절대오차를 보이는 삼복승도
@@ -178,23 +193,13 @@ Panel A의 출전두수별 계층에서 1.50--1.65, Panel B에서 1.42--1.68이�
 \resizebox{0.96\textwidth}{!}{\input{tables/main_order_information_bounds}}
 \end{table}
 
-\begin{table}[htbp]
-\centering
-\caption{P3 공유 삼쌍승 가격집합을 강제한 출전두수별 1개 대표경주 sharpness 진단.
-해 상태가 ``sharp''가 아닌 행(``lower-certified'', ``upper-certified'',
-``both-certified'')은 적어도 한 방향이 시간제한 때문에 최적성을 완전히 인증하지
-못했음을 뜻한다. 현재 16두 대표경주는 ``lower-certified''로, 하한만 certified
-outer bound이고 상한은 sharp하다.}
-\label{tab:main-order-joint}
-\resizebox{\textwidth}{!}{\input{tables/main_order_information_joint}}
-\end{table}
-
 Panel A에서는 Harville 대비 개선폭이 쌍승과 복승 사이에서 유의하게 다르다.
-하지만 Panel B의 보수적 차이 구간은 0을 사이에 둔다. 표~\ref{tab:main-order-joint}은
+하지만 Panel B의 보수적 차이 구간은 0을 사이에 둔다. 부록
+표~\ref{tab:main-order-joint}은
 이 보수성이 쌍승과 복승에 서로 독립적인 삼쌍승 가격집합을 허용한 데서 얼마나
 오는지 확인하기 위해, 출전두수 5--16두의 각 계층에서 결정론적으로 고른 대표경주
 정확히 한 개씩에 대해 동일한 삼쌍승 가격변수가 두 하위 승식 주변분포를 동시에
-생성하도록 강제한 joint MILP 결과를 보인다. 따라서 이 표는 경계의 느슨함을
+생성하도록 강제한 joint MILP 결과를 보인다. 따라서 이 부록표는 경계의 느슨함을
 진단하는 계산실험이지, 각 출전두수 계층에서 양·음 부호가 나타나는 경주의 비율이나
 계층 평균효과를 추정한 표가 아니다. 인증구간의 폭은 기존 보수구간의 약
 14--35\%로 크게 줄어든다. 5--7두와 12--14두의 선택된 대표경주 각각에서는
@@ -212,6 +217,5 @@ outer bound로 보고한다. 따라서 공유가격 제약을 정확히 반영�
 종합하면, 삼쌍승식의 완전한 순서 가격벡터는 하위 복합승식의 가격을 단승 기반
 Harville과 비정보적 기준보다 일관되게 더 잘 재구성한다. 동시에 Panel B는
 배당상한과 반올림을 보수적으로 반영한 뒤에도 잔여 가격차가 경제적으로 0이라고
-주장할 수 없음을 보여준다. 이후 행동모형 분석은 이 잔여 차이가 위험선호와
-확률가중, 그리고 복합사건의 축약 방식과 어떤 관계를 갖는지를 별도의 식별
-문제로 다룬다.
+주장할 수 없음을 보여준다. 이후 진단분석은 행동가격모형이 강화된 순위
+기준모형보다 이 잔여 차이를 더 잘 설명하는지 별도로 검정한다.

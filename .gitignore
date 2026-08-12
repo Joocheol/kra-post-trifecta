@@ -33,5 +33,6 @@ outputs/main_metrics_bounds.csv
 outputs/main_heterogeneity.csv
 outputs/main_heterogeneity_b.csv
 outputs/main_calibration_by_race.csv
+outputs/main_analysis_manifest.json
 outputs/behavioral_model_metrics_by_race.csv
 figures/*.png

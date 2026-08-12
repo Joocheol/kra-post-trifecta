@@ -382,6 +382,38 @@ def write_latex_tables(
     return written
 
 
+def write_panel_b_subset_table(table_dir: Path, summary: pd.DataFrame) -> Path:
+    """Write the capped-only Panel B table requested in external review."""
+    labels = {"exacta": "쌍승", "quinella": "복승", "trio": "삼복승", "win": "단승"}
+    models = {"main": "삼쌍승 주변화", "harville": "Harville"}
+    data = summary[summary["model"].isin(models)].copy()
+    data["target_order"] = data["target_market"].map(
+        {"win": 0, "exacta": 1, "quinella": 2, "trio": 3}
+    )
+    data["model_order"] = data["model"].map({"main": 0, "harville": 1})
+    data = data.sort_values(["target_order", "model_order"])
+    lines = [
+        r"\begin{tabular}{llrrr}",
+        r"\toprule",
+        r"승식 & 모형 & 경주 수 & TV 하한 중앙값 & TV 상한 중앙값 \\",
+        r"\midrule",
+    ]
+    previous = None
+    for _, row in data.iterrows():
+        market = row["target_market"]
+        if previous is not None and market != previous:
+            lines.append(r"\addlinespace")
+        lines.append(
+            f"{labels[market]} & {models[row['model']]} & {int(row['n_races']):,} & "
+            f"{row['median_tv_lower']:.4f} & {row['median_tv_upper_outer']:.4f} \\\\"
+        )
+        previous = market
+    lines.extend([r"\bottomrule", r"\end{tabular}"])
+    path = table_dir / "main_panel_b_capped.tex"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
+
+
 def file_sha256(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as handle:

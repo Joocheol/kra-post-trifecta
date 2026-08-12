@@ -64,7 +64,24 @@ jobs:
           done
           test -s "$AUDIT_TMP/outputs/data_quality.csv"
           test -s "$AUDIT_TMP/outputs/analysis_sample.csv"
+          cp "$AUDIT_TMP/outputs/analysis_sample.csv" outputs/analysis_sample.csv
           echo "PASS: analysis sample and audit artifacts are reproducible"
+
+      - name: Reproduce reviewer-requested odds and finite-pool diagnostics
+        run: python -m analysis.reviewer_diagnostics
+
+      - name: Verify frozen reviewer diagnostics
+        run: |
+          paths=(
+            outputs/odds_overround_summary.csv
+            outputs/display_cap_summary.csv
+            outputs/finite_pool_reference.csv
+            tables/finite_pool_reference.tex
+          )
+          for path in "${paths[@]}"; do
+            git ls-files --error-unmatch "$path" >/dev/null
+          done
+          git diff --exit-code -- "${paths[@]}"
 
   robustness-checks:
     runs-on: ubuntu-latest
@@ -297,8 +314,10 @@ jobs:
           paths=(
             outputs/main_panel_a_summary.csv
             outputs/main_panel_b_summary.csv
+            outputs/main_panel_b_capped_summary.csv
             outputs/main_panel_a_improvements.csv
             outputs/main_panel_b_improvements.csv
+            outputs/main_panel_b_capped_improvements.csv
             outputs/main_order_information.csv
             outputs/main_order_information_bounds.csv
             outputs/main_order_information_joint.csv
@@ -311,6 +330,7 @@ jobs:
             outputs/main_heterogeneity_comparison.csv
             tables/main_panel_a.tex
             tables/main_panel_b.tex
+            tables/main_panel_b_capped.tex
             tables/main_benchmark_comparison.tex
             tables/main_order_information.tex
             tables/main_order_information_bounds.tex
@@ -372,6 +392,8 @@ jobs:
             outputs/behavioral_model_parameters.csv
             outputs/behavioral_model_comparison.csv
             outputs/behavioral_model_improvements.csv
+            outputs/behavioral_same_sample_benchmarks.csv
+            outputs/behavioral_same_sample_improvements.csv
             outputs/rank_probability_time_forward.csv
             outputs/rank_probability_time_forward_by_year.csv
             outputs/behavioral_time_forward_parameters.csv
@@ -381,6 +403,7 @@ jobs:
             tables/behavioral_rank_validation.tex
             tables/behavioral_model_comparison.tex
             tables/behavioral_model_improvements.tex
+            tables/behavioral_same_sample_benchmarks.tex
             tables/behavioral_time_forward.tex
             figures/calibration-rank-probabilities.pdf
             figures/model-comparison-behavioral.pdf
@@ -399,6 +422,7 @@ jobs:
             tables/behavioral_rank_validation.tex \
             tables/behavioral_model_comparison.tex \
             tables/behavioral_model_improvements.tex \
+            tables/behavioral_same_sample_benchmarks.tex \
             tables/behavioral_time_forward.tex \
             figures/calibration-rank-probabilities.pdf \
             figures/model-comparison-behavioral.pdf \

@@ -252,6 +252,32 @@ class BehavioralAnalysisTests(unittest.TestCase):
         self.assertAlmostEqual(float(result["median_raw_mae"]), 0.06)
         self.assertAlmostEqual(float(result["mean_support_share"]), 0.75)
 
+    def test_common_support_and_tail_trim_use_model_invariant_state_sets(self) -> None:
+        fold = self.fold(StageTemperature(0.0, 0.0), StageTemperature(0.0, 0.0))
+        frame = pd.DataFrame(
+            {
+                "race_id": ["r1"] * 4,
+                "race_date": ["2025-01-01"] * 4,
+                "actual_price_share": [0.70, 0.20, 0.08, 0.02],
+                "raw_price": [0.70, 0.20, 0.08, 0.02],
+            }
+        )
+        result = race_metric_rows(
+            frame,
+            np.array([0.60, 0.25, 0.10, 0.05]),
+            [np.array([0.2, 0.3, 0.4, 0.5])],
+            fold,
+            "stage_temperature",
+            "prelec",
+            "M-S2",
+            "exacta",
+            1.0,
+            common_supported=np.array([True, True, False, False]),
+        ).iloc[0]
+        self.assertAlmostEqual(float(result["common_support_share"]), 0.5)
+        self.assertAlmostEqual(float(result["common_tv"]), 11 / 153)
+        self.assertTrue(np.isfinite(float(result["trimmed_tv"])))
+
     def test_cluster_bootstrap_is_deterministic_and_respects_constant_effect(self) -> None:
         values = np.full(12, 0.125)
         clusters = np.repeat(["2025-01-01", "2025-01-02", "2025-01-03"], 4)

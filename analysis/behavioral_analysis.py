@@ -47,11 +47,12 @@ from analysis.data_audit import (
 PROBABILITY_MODELS = ("harville", "stage_temperature")
 TAIL_MODELS = ("isotonic_clip", "prelec", "power")
 PRICE_MODELS = {
-    "exacta": ("M-U", "M-R", "M-S2"),
-    "trifecta": ("M-U", "M-R", "M-S2", "M-S3"),
+    "exacta": ("M-R", "M-S2"),
+    "trifecta": ("M-R", "M-S2", "M-S3"),
     "quinella": ("M-R", "M-S2"),
     "trio": ("M-R", "M-S2", "M-S3"),
 }
+BENCHMARK_MODELS = ("raw_harville", "discounted_harville")
 TARGET_MARKETS = tuple(PRICE_MODELS)
 ORDERED_MARKETS = frozenset({"exacta", "trifecta"})
 UNORDERED_MARKETS = frozenset({"quinella", "trio"})
@@ -491,7 +492,7 @@ def tail_predictors(fold: FoldModel) -> dict[str, Callable[[np.ndarray], np.ndar
 
 
 def price_model_arguments(frame: pd.DataFrame, market: str, model: str) -> list[np.ndarray]:
-    if model in ("M-U", "M-R"):
+    if model == "M-R":
         return [frame["p_joint"].to_numpy()]
     if model == "M-S2" and market == "exacta":
         return [frame["p1"].to_numpy(), frame["p2_cond"].to_numpy()]
@@ -672,6 +673,7 @@ def race_metric_rows(
     price_model: str,
     target_market: str,
     pool_level: float,
+    common_supported: np.ndarray | None = None,
 ) -> pd.DataFrame:
     work = frame[["race_id", "race_date", "actual_price_share", "raw_price"]].copy()
     work["score"] = score
@@ -689,6 +691,12 @@ def race_metric_rows(
     for argument in arguments:
         supported &= (argument >= lower) & (argument <= upper)
     work["supported"] = supported.astype(float)
+    if common_supported is None:
+        common_supported = supported
+    common_supported = np.asarray(common_supported, dtype=bool)
+    if common_supported.shape != (len(work),):
+        raise ValueError("common-support mask must align with the target rows")
+    work["common_supported"] = common_supported
     actual = work["actual_price_share"].to_numpy()
     predicted = work["predicted_price_share"].to_numpy()
     midpoint = 0.5 * (actual + predicted)
@@ -707,9 +715,50 @@ def race_metric_rows(
         js=("js_term", "sum"),
         raw_mae=("raw_abs", "mean"),
         support_share=("supported", "mean"),
+        common_support_share=("common_supported", "mean"),
         n_combinations=("score", "size"),
     ).reset_index()
     result["log_rmse"] = np.sqrt(result.pop("mean_log_sq"))
+
+    def conditional_metrics(mask: pd.Series, prefix: str) -> pd.DataFrame:
+        subset = work.loc[mask].copy()
+        if subset.empty:
+            return pd.DataFrame(columns=["race_id", f"{prefix}_tv", f"{prefix}_log_rmse"])
+        subset["actual_mass"] = subset.groupby("race_id")["actual_price_share"].transform("sum")
+        subset["predicted_mass"] = subset.groupby("race_id")["predicted_price_share"].transform("sum")
+        subset = subset[(subset["actual_mass"] > 0) & (subset["predicted_mass"] > 0)].copy()
+        subset["actual_conditional"] = subset["actual_price_share"] / subset["actual_mass"]
+        subset["predicted_conditional"] = subset["predicted_price_share"] / subset["predicted_mass"]
+        subset["conditional_abs"] = np.abs(
+            subset["actual_conditional"] - subset["predicted_conditional"]
+        )
+        subset["conditional_log_sq"] = np.square(
+            np.log(np.clip(subset["predicted_conditional"], EPSILON, None))
+            - np.log(np.clip(subset["actual_conditional"], EPSILON, None))
+        )
+        conditional = subset.groupby("race_id", as_index=False).agg(
+            **{
+                f"{prefix}_tv": (
+                    "conditional_abs",
+                    lambda values: 0.5 * float(values.sum()),
+                ),
+                f"{prefix}_mean_log_sq": ("conditional_log_sq", "mean"),
+            }
+        )
+        conditional[f"{prefix}_log_rmse"] = np.sqrt(
+            conditional.pop(f"{prefix}_mean_log_sq")
+        )
+        return conditional
+
+    common = conditional_metrics(work["common_supported"], "common")
+    # Remove the least popular decile within each race, using the observed target-pool
+    # price only.  The resulting state set is therefore identical for every model.
+    tail_cutoff = work.groupby("race_id")["actual_price_share"].transform(
+        lambda values: values.quantile(0.10)
+    )
+    trimmed = conditional_metrics(work["actual_price_share"] >= tail_cutoff, "trimmed")
+    result = result.merge(common, on="race_id", how="left", validate="one_to_one")
+    result = result.merge(trimmed, on="race_id", how="left", validate="one_to_one")
     result["validation_year"] = fold.validation_year
     result["probability_model"] = probability_model
     result["tail_model"] = tail_model
@@ -727,6 +776,61 @@ def behavioral_price_metrics(
     pool_level: float,
 ) -> pd.DataFrame:
     rows: list[pd.DataFrame] = []
+    raw_validation = validation.copy()
+    raw_validation["objective_probability"] = raw_validation["win_price_share"]
+    if market in ORDERED_MARKETS:
+        raw_events = attach_event_probabilities(target, raw_validation, "harville", fold)
+        discounted_events = attach_event_probabilities(
+            target, validation, "stage_temperature", fold
+        )
+    elif market in UNORDERED_MARKETS:
+        raw_events = attach_unordered_event_probabilities(
+            target, raw_validation, "harville", fold, market
+        )
+        discounted_events = attach_unordered_event_probabilities(
+            target, validation, "stage_temperature", fold, market
+        )
+    else:
+        raise ValueError(f"unsupported behavioral target market: {market}")
+
+    # Use the preferred stage-adjusted Prelec models to define one state set on
+    # which every benchmark is evaluated.  This prevents the reduced model from
+    # being compared on a different tail than the sequential alternatives.
+    preferred_candidates: dict[str, tuple[np.ndarray, list[np.ndarray]]] = {}
+    for price_model in PRICE_MODELS[market]:
+        if market in ORDERED_MARKETS:
+            preferred_candidates[price_model] = score_price_model(
+                discounted_events, market, price_model, fold.prelec.predict
+            )
+        else:
+            preferred_candidates[price_model] = score_unordered_price_model(
+                discounted_events, market, price_model, fold.prelec.predict
+            )
+    lower, upper = fold.win_weight.support
+    preferred_common_supported = np.ones(len(discounted_events), dtype=bool)
+    for _, arguments in preferred_candidates.values():
+        for argument in arguments:
+            preferred_common_supported &= (argument >= lower) & (argument <= upper)
+
+    for model_name, events, probability_model in (
+        ("raw_harville", raw_events, "harville"),
+        ("discounted_harville", discounted_events, "stage_temperature"),
+    ):
+        rows.append(
+            race_metric_rows(
+                events,
+                events["p_joint"].to_numpy(),
+                [],
+                fold,
+                probability_model,
+                "none",
+                model_name,
+                market,
+                pool_level,
+                common_supported=preferred_common_supported,
+            )
+        )
+
     for probability_model in PROBABILITY_MODELS:
         if market in ORDERED_MARKETS:
             events = attach_event_probabilities(
@@ -739,6 +843,7 @@ def behavioral_price_metrics(
         else:
             raise ValueError(f"unsupported behavioral target market: {market}")
         for tail_model, predictor in tail_predictors(fold).items():
+            candidates: dict[str, tuple[np.ndarray, list[np.ndarray]]] = {}
             for price_model in PRICE_MODELS[market]:
                 if market in ORDERED_MARKETS:
                     score, arguments = score_price_model(
@@ -748,6 +853,13 @@ def behavioral_price_metrics(
                     score, arguments = score_unordered_price_model(
                         events, market, price_model, predictor
                     )
+                candidates[price_model] = (score, arguments)
+            lower, upper = fold.win_weight.support
+            common_supported = np.ones(len(events), dtype=bool)
+            for _, arguments in candidates.values():
+                for argument in arguments:
+                    common_supported &= (argument >= lower) & (argument <= upper)
+            for price_model, (score, arguments) in candidates.items():
                 rows.append(
                     race_metric_rows(
                         events,
@@ -759,6 +871,7 @@ def behavioral_price_metrics(
                         price_model,
                         market,
                         pool_level,
+                        common_supported=common_supported,
                     )
                 )
     return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
@@ -823,26 +936,112 @@ def rank_validation_summary(frame: pd.DataFrame) -> pd.DataFrame:
 
 def price_summary(frame: pd.DataFrame) -> pd.DataFrame:
     keys = ["probability_model", "tail_model", "price_model", "target_market"]
+    aggregations: dict[str, tuple[str, object]] = {
+        "n_races": ("race_id", "nunique"),
+        "n_years": ("validation_year", "nunique"),
+        "median_tv": ("tv", "median"),
+        "mean_tv": ("tv", "mean"),
+        "median_mae": ("mae", "median"),
+        "median_log_rmse": ("log_rmse", "median"),
+        "median_js": ("js", "median"),
+        "median_raw_mae": ("raw_mae", "median"),
+        "mean_support_share": ("support_share", "mean"),
+        "all_arguments_supported_race_share": (
+            "support_share",
+            lambda values: float(values.ge(1.0 - 1e-12).mean()),
+        ),
+    }
+    for column in ("common_tv", "common_log_rmse", "trimmed_tv", "trimmed_log_rmse"):
+        if column in frame.columns:
+            aggregations[f"median_{column}"] = (column, "median")
+    if "common_support_share" in frame.columns:
+        aggregations["mean_common_support_share"] = ("common_support_share", "mean")
     return (
         frame.groupby(keys, as_index=False)
-        .agg(
-            n_races=("race_id", "nunique"),
-            n_years=("validation_year", "nunique"),
-            median_tv=("tv", "median"),
-            mean_tv=("tv", "mean"),
-            median_mae=("mae", "median"),
-            median_log_rmse=("log_rmse", "median"),
-            median_js=("js", "median"),
-            median_raw_mae=("raw_mae", "median"),
-            mean_support_share=("support_share", "mean"),
-            all_arguments_supported_race_share=(
-                "support_share",
-                lambda values: float(values.ge(1.0 - 1e-12).mean()),
-            ),
-        )
+        .agg(**aggregations)
         .sort_values(keys)
         .reset_index(drop=True)
     )
+
+
+def same_sample_benchmark_summary(frame: pd.DataFrame) -> pd.DataFrame:
+    """Directly compare simple and behavioral models on identical target races."""
+    baseline = frame[
+        frame["tail_model"].eq("none")
+        & frame["price_model"].isin(BENCHMARK_MODELS)
+    ]
+    behavioral = frame[
+        frame["probability_model"].eq("stage_temperature")
+        & frame["tail_model"].eq("prelec")
+        & frame["price_model"].isin({"M-R", "M-S2", "M-S3"})
+    ]
+    selected = pd.concat([baseline, behavioral], ignore_index=True)
+    return (
+        selected.groupby(["target_market", "price_model"], as_index=False)
+        .agg(
+            n_races=("race_id", "nunique"),
+            median_tv=("tv", "median"),
+            median_common_tv=("common_tv", "median"),
+            median_trimmed_tv=("trimmed_tv", "median"),
+            mean_common_support_share=("common_support_share", "mean"),
+        )
+        .sort_values(["target_market", "price_model"])
+        .reset_index(drop=True)
+    )
+
+
+def same_sample_benchmark_improvements(frame: pd.DataFrame) -> pd.DataFrame:
+    """Paired reductions against raw and discounted Harville on the same races."""
+    preferred = {
+        "exacta": "M-S2",
+        "trifecta": "M-S3",
+        "quinella": "M-S2",
+        "trio": "M-S3",
+    }
+    rows: list[dict[str, object]] = []
+    for market, challenger in preferred.items():
+        market_frame = frame[frame["target_market"].eq(market)].copy()
+        keep = market_frame["tail_model"].eq("none") | (
+            market_frame["probability_model"].eq("stage_temperature")
+            & market_frame["tail_model"].eq("prelec")
+        )
+        market_frame = market_frame.loc[keep]
+        for baseline in ("raw_harville", "discounted_harville", "M-R"):
+            for metric in ("tv", "common_tv", "trimmed_tv"):
+                pivot = market_frame.pivot(
+                    index=["validation_year", "race_date", "race_id"],
+                    columns="price_model",
+                    values=metric,
+                )
+                paired = pivot[[baseline, challenger]].dropna()
+                difference = (paired[baseline] - paired[challenger]).to_numpy()
+                race_dates = paired.index.get_level_values("race_date").to_numpy()
+                label = f"benchmark|{market}|{baseline}|{challenger}|{metric}"
+                ci_lower, ci_upper = cluster_bootstrap_median_interval(
+                    difference, race_dates, label
+                )
+                by_year = (
+                    pd.Series(difference, index=paired.index)
+                    .groupby(level="validation_year")
+                    .median()
+                )
+                rows.append(
+                    {
+                        "target_market": market,
+                        "baseline_model": baseline,
+                        "challenger_model": challenger,
+                        "loss": metric,
+                        "n_races": int(len(paired)),
+                        "median_loss_reduction": float(np.median(difference)),
+                        "bootstrap_median_ci_lower": ci_lower,
+                        "bootstrap_median_ci_upper": ci_upper,
+                        "years_with_positive_median": int((by_year > 0).sum()),
+                        "n_years": int(len(by_year)),
+                    }
+                )
+    return pd.DataFrame(rows).sort_values(
+        ["target_market", "baseline_model", "loss"]
+    ).reset_index(drop=True)
 
 
 def _stable_seed(label: str) -> int:
@@ -897,7 +1096,10 @@ def cluster_bootstrap_median_interval(
 
 def paired_model_improvements(frame: pd.DataFrame) -> pd.DataFrame:
     """Paired race-level loss reductions for the directly identified contrasts."""
-    primary = frame[frame["probability_model"].eq("stage_temperature")].copy()
+    primary = frame[
+        frame["probability_model"].eq("stage_temperature")
+        & frame["tail_model"].isin(TAIL_MODELS)
+    ].copy()
     comparisons = {
         "exacta": (("M-R", "M-S2"),),
         "trifecta": (
@@ -1065,7 +1267,7 @@ def write_manifest(
     time_forward_price_rows: pd.DataFrame,
 ) -> None:
     manifest = {
-        "schema_version": 3,
+        "schema_version": 4,
         "date_scope": {
             "start": START_DATE,
             "end": END_DATE,
@@ -1079,9 +1281,10 @@ def write_manifest(
         "tail_models": list(TAIL_MODELS),
         "price_models": {key: list(value) for key, value in PRICE_MODELS.items()},
         "identification_note": (
-            "M-U and M-R are observationally equivalent when nonparametrically "
-            "recovered from the same win-price schedule; the direct contrast is "
-            "M-R versus M-S2/M-S3."
+            "A separate M-U series is not reported: unrestricted risk utility and "
+            "M-R are observationally equivalent on the win-price schedule. The "
+            "directly implemented contrast is M-R versus M-S2/M-S3, with raw and "
+            "discounted Harville as same-race nonbehavioral benchmarks."
         ),
         "unordered_external_validation_note": (
             "Quinella and trio compare one reduced weighting of the unordered "
@@ -1208,6 +1411,12 @@ def main() -> None:
         )
         paired_model_improvements(price_frame).to_csv(
             args.output_dir / "behavioral_model_improvements.csv", index=False
+        )
+        same_sample_benchmark_summary(price_frame).to_csv(
+            args.output_dir / "behavioral_same_sample_benchmarks.csv", index=False
+        )
+        same_sample_benchmark_improvements(price_frame).to_csv(
+            args.output_dir / "behavioral_same_sample_improvements.csv", index=False
         )
     else:
         price_frame = pd.DataFrame()

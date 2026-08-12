@@ -17,6 +17,13 @@ MARKET_LABELS = {
 }
 MARKET_ORDER = {name: index for index, name in enumerate(MARKET_LABELS)}
 MODEL_ORDER = {"M-R": 0, "M-S2": 1, "M-S3": 2}
+BENCHMARK_ORDER = {
+    "raw_harville": 0,
+    "discounted_harville": 1,
+    "M-R": 2,
+    "M-S2": 3,
+    "M-S3": 4,
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -130,17 +137,71 @@ def improvement_table(improvements: pd.DataFrame) -> list[str]:
     return lines
 
 
+def same_sample_table(comparison: pd.DataFrame) -> list[str]:
+    required = {
+        "target_market",
+        "price_model",
+        "n_races",
+        "median_tv",
+        "median_common_tv",
+        "median_trimmed_tv",
+        "mean_common_support_share",
+    }
+    if not required.issubset(comparison.columns):
+        raise ValueError(
+            f"same-sample table lacks columns: {sorted(required - set(comparison.columns))}"
+        )
+    labels = {
+        "raw_harville": "원시 Harville",
+        "discounted_harville": "단계조정 Harville",
+        "M-R": "M-R",
+        "M-S2": "M-S2",
+        "M-S3": "M-S3",
+    }
+    data = comparison.copy()
+    data["market_order"] = data["target_market"].map(MARKET_ORDER)
+    data["model_order"] = data["price_model"].map(BENCHMARK_ORDER)
+    data = data.sort_values(["market_order", "model_order"])
+    lines = [
+        "\\begin{tabular}{llrrrrr}",
+        "\\toprule",
+        "시장 & 모형 & 경주수 & 전체 TV & 공통지지 TV & 꼬리제거 TV & 공통지지 \\\\",
+        "\\midrule",
+    ]
+    previous = None
+    for _, row in data.iterrows():
+        market = row["target_market"]
+        if previous is not None and market != previous:
+            lines.append("\\addlinespace")
+        lines.append(
+            f"{MARKET_LABELS[market]} & {labels[row['price_model']]} & "
+            f"{int(row['n_races']):,} & {row['median_tv']:.4f} & "
+            f"{row['median_common_tv']:.4f} & {row['median_trimmed_tv']:.4f} & "
+            f"{100 * row['mean_common_support_share']:.1f}\\% \\\\"
+        )
+        previous = market
+    lines.extend(["\\bottomrule", "\\end{tabular}"])
+    return lines
+
+
 def main() -> None:
     args = parse_args()
     rank = pd.read_csv(args.output_dir / "rank_probability_validation.csv")
     comparison = pd.read_csv(args.output_dir / "behavioral_model_comparison.csv")
     improvements = pd.read_csv(args.output_dir / "behavioral_model_improvements.csv")
+    same_sample = pd.read_csv(
+        args.output_dir / "behavioral_same_sample_benchmarks.csv"
+    )
     time_forward = pd.read_csv(
         args.output_dir / "behavioral_time_forward_improvements.csv"
     )
     _write(args.table_dir / "behavioral_rank_validation.tex", rank_table(rank))
     _write(args.table_dir / "behavioral_model_comparison.tex", comparison_table(comparison))
     _write(args.table_dir / "behavioral_model_improvements.tex", improvement_table(improvements))
+    _write(
+        args.table_dir / "behavioral_same_sample_benchmarks.tex",
+        same_sample_table(same_sample),
+    )
     _write(args.table_dir / "behavioral_time_forward.tex", improvement_table(time_forward))
 
 
