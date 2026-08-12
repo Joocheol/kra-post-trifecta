@@ -3,7 +3,7 @@
 \input{preamble}
 
 \title{\textbf{경마 베팅시장의 정보 집계}\\
-  \large 삼쌍승식 상태가격의 교차풀 정합성과 3단계 행동모형}
+  \large 삼쌍승식 상태가격의 교차풀 정합성과 순위모형 진단}
 \author{김주철\\\small 연세대학교}
 \date{}
 
@@ -15,9 +15,8 @@
 하나의 경주에서는 같은 결과를 서로 다르게 분할한 단승식, 복승식, 쌍승식,
 삼복승식과 삼쌍승식 청구권이 별도 패리뮤추얼 풀에서 거래된다. 이 논문은
 2016년 6월부터 2025년 12월까지 한국마사회 19,284개 경주를 이용하여, 이
-복수 가격이 하나의 상위 3위 상태공간과 얼마나 정합적인지, 남은 가격차가
-복합복권의 축약과 순차평가 중 어느 표현과 더 잘 양립하는지 두 층으로
-검정한다.
+복수 가격이 하나의 상위 3위 상태공간과 얼마나 정합적인지 검정하고, 남은
+가격차에 대한 순위확률·행동모형의 설명력을 진단한다.
 
 첫째, 삼쌍승식 순위별 역배당률로 완전한 1--3위 정규화 가격분포를 구성하고
 이를 주변화하여 다른 승식의 가격을 재구성한다. 배당상한이 없는 3,321개
@@ -28,24 +27,39 @@ Harville뿐 아니라 순열·타경주·균등 기준보다 일관되게 실제
 절대 TV 기준을 두 패널이 동시에 통과하지 못하므로, 결과는 완전한 공통
 상태가격이 아니라 높지만 불완전한 교차풀 가격 정합성을 뜻한다.
 
-둘째, 연도 밖 착순으로 조건부 순위확률을 추정하고 단승 가격에서 고정한
-가중함수를 다른 승식의 전체 가격벡터에 적용한다. 결합사건에 가중함수를 한 번
-적용하는 축약모형보다 조건부 순위를 단계별로 평가하는 모형의 가격오차가
-쌍승·삼쌍승에서 작고, 다시 맞추지 않은 복승·삼복승 외부검증에서도 같은
-순위가 유지된다. 3단계 모형의 삼복승 TV 중앙값은 0.1545다. 이 결과는
-복합복권 비축약과 양립하지만, 위험선호와 확률오인을 개별적으로 식별하거나
-개인의 인지과정을 직접 관찰한 것으로 해석하지 않는다.
+둘째, 같은 비검열 경주에서 원시 Harville, 연도 밖 착순으로 추정한 단계조정
+Harville, 그리고 단승 가격에서 고정한 축약·순차 행동모형을 직접 비교한다.
+순차모형은 축약모형보다 정확하지만 단계조정 Harville을 네 승식 어디에서도
+넘지 못한다. 이 순위는 모든 모형의 가중함수 인수가 동시에 단승 훈련지지에
+드는 조합과 최저가격 10\%를 제외한 조합에서도 유지된다. 따라서 행동결과는
+비축약의 독립적 증거가 아니라, 향상된 순위확률 기준모형의 중요성과 행동적
+해석의 한계를 보여주는 진단으로 해석한다.
 
 \medskip
 \noindent\textbf{핵심어:} 경마시장, 교차풀 정합성, 상태가격, 삼쌍승식,
-확률가중, 복합복권
+조건부 순위확률, 부분식별
 \end{abstract}
 
-\begin{center}
-\small
-\textbf{Information Aggregation Across Parimutuel Wagering Markets:}
-Cross-Pool Coherence and Three-Stage Behavioral Models from Trifecta Prices
-\end{center}
+\begin{center}\small\textbf{Abstract}\end{center}
+\noindent\small
+This paper studies whether final prices in separate parimutuel pools can be represented
+on a common top-three outcome space. Using 19,284 Korean horse races from June 2016
+through December 2025, we normalize the complete trifecta price vector, marginalize it
+to win, exacta, quinella, and trio claims, and compare the reconstructed distributions
+with each pool's posted prices. Point estimates from 3,321 races without displayed caps
+and partial-identification bounds for the full sample jointly show that trifecta
+marginals are substantially closer than Harville and non-informative benchmarks, but
+fail a preregistered strong absolute-TV criterion. In a same-race diagnostic, sequential
+probability-weighting models outperform their reduced-form counterparts but do not beat
+a cross-fitted, stage-adjusted Harville benchmark in any market. The latter ranking is
+unchanged on common support and after removing the least popular decile of combinations.
+The evidence therefore supports high but incomplete cross-pool price coherence, while
+not supporting a structural behavioral interpretation of the remaining discrepancies.
+
+\medskip
+\noindent\textbf{Keywords:} parimutuel markets, trifecta, cross-pool coherence,
+state prices, conditional rank probabilities, partial identification
+\normalsize
 
 \input{sections/01-introduction}
 \input{sections/02-institutions-literature}
@@ -57,6 +71,9 @@ Cross-Pool Coherence and Three-Stage Behavioral Models from Trifecta Prices
 \input{sections/06-reporting}
 \input{sections/06-behavioral-results}
 \input{sections/07-conclusion}
+
+\appendix
+\input{sections/appendix-reviewer-diagnostics}
 
 \bibliographystyle{apalike}
 \bibliography{references}

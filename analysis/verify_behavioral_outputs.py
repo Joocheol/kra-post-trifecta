@@ -17,6 +17,8 @@ CSV_PATHS = (
     "outputs/behavioral_model_parameters.csv",
     "outputs/behavioral_model_comparison.csv",
     "outputs/behavioral_model_improvements.csv",
+    "outputs/behavioral_same_sample_benchmarks.csv",
+    "outputs/behavioral_same_sample_improvements.csv",
     "outputs/rank_probability_time_forward.csv",
     "outputs/rank_probability_time_forward_by_year.csv",
     "outputs/behavioral_time_forward_parameters.csv",

@@ -187,7 +187,9 @@ jobs:
           prompt: |
             You are the independent academic reviewer for PR #${{ github.event.pull_request.number }}.
             Read CLAUDE.md, WRITING_GUIDE.md, RESEARCH_PLAN.md, CLAUDE_REVIEW_REQUEST.md,
-            and .ai-review-input/pr.diff.
+            and .ai-review-input/pr.diff. Treat the base-to-head diff as the canonical review
+            scope. Compare it with CLAUDE_REVIEW_REQUEST.md and report any material mismatch
+            between the stated and actual scope as an evidence-integrity finding.
             Inspect the changed sources and all necessary surrounding repository context. Read
             .ai-review-input/korean-text-check.txt, .ai-review-input/page-count.txt,
             .ai-review-input/render-check.txt, and .ai-review-input/page-index.txt. Then use Read on

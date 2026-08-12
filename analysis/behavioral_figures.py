@@ -124,7 +124,6 @@ def behavioral_model_figure(comparison: pd.DataFrame, path: Path) -> None:
     data = comparison[
         comparison["probability_model"].eq("stage_temperature")
         & comparison["tail_model"].eq("prelec")
-        & comparison["price_model"].ne("M-U")
     ].copy()
     order = {"M-R": 0, "M-S2": 1, "M-S3": 2}
     colors = {"M-R": GREY, "M-S2": ORANGE, "M-S3": BLUE}
@@ -177,7 +176,7 @@ def behavioral_model_figure(comparison: pd.DataFrame, path: Path) -> None:
     fig.text(
         0.01,
         -0.02,
-        "M-U is omitted because it is observationally equivalent to reduced M-R; lower is better.",
+        "M-R evaluates the joint event once; M-S2/M-S3 evaluate conditional stages; lower is better.",
         fontsize=8,
         color=INK,
     )

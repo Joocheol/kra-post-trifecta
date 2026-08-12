@@ -3,13 +3,13 @@
 이 저장소는 삼쌍승식 도입 이후 한국 경마 베팅시장 데이터와 이를 이용한
 한글 LaTeX 논문을 함께 관리합니다. 데이터·브라우저의 기존 기능은 유지하며,
 논문은 삼쌍승식의 순위 상태가격을 주변화하여 단승·쌍승·복승·삼복승 가격을
-얼마나 재구성할 수 있는지를 주분석으로 삼습니다. 별도의 행동모형 확장에서는
-단승식에서 추정한 위험선호·확률가중 함수와 복합복권의 축약·3단계 순차평가를
-다른 승식의 전체 가격벡터에서 비교합니다.
+얼마나 재구성할 수 있는지를 주분석으로 삼습니다. 별도의 진단분석에서는
+연도 밖 착순으로 추정한 원시·단계조정 Harville과 단승식에서 고정한 확률가중
+모형을 같은 경주의 전체 가격벡터에서 비교합니다.
 
 ## Paper
 
-- 가제: **경마 베팅시장의 정보 집계: 삼쌍승식 상태가격의 교차풀 정합성과 3단계 행동모형**
+- 가제: **경마 베팅시장의 정보 집계: 삼쌍승식 상태가격의 교차풀 정합성과 순위모형 진단**
 - 원고: `main.tex`, `preamble.tex`, `sections/`
 - 연구 설계: `RESEARCH_PLAN.md`
 - 집필 원칙: `WRITING_GUIDE.md`
@@ -117,6 +117,13 @@ python -m pip install -r requirements.txt -c constraints-behavioral.txt
 python -m analysis.behavioral_analysis
 MPLCONFIGDIR=/tmp/matplotlib python -m analysis.behavioral_figures
 python -m analysis.behavioral_report
+```
+
+심사자 요청에 따른 배당수준·표시상한·유한 풀 민감도 진단은 다음 명령으로
+재현합니다.
+
+```bash
+python -m analysis.reviewer_diagnostics
 ```
 
 The implementation contract, identified contrasts and current caveats are recorded

@@ -14,12 +14,11 @@
     ],
     "start": "2016-06-10"
   },
-  "identification_note": "M-U and M-R are observationally equivalent when nonparametrically recovered from the same win-price schedule; the direct contrast is M-R versus M-S2/M-S3.",
+  "identification_note": "A separate M-U series is not reported: unrestricted risk utility and M-R are observationally equivalent on the win-price schedule. The directly implemented contrast is M-R versus M-S2/M-S3, with raw and discounted Harville as same-race nonbehavioral benchmarks.",
   "n_rank_races": 19284,
-  "price_metric_rows": 932886,
+  "price_metric_rows": 915028,
   "price_models": {
     "exacta": [
-      "M-U",
       "M-R",
       "M-S2"
     ],
@@ -28,7 +27,6 @@
       "M-S2"
     ],
     "trifecta": [
-      "M-U",
       "M-R",
       "M-S2",
       "M-S3"
@@ -44,14 +42,14 @@
     "stage_temperature"
   ],
   "rank_validation_rows": 48,
-  "schema_version": 3,
+  "schema_version": 4,
   "tail_models": [
     "isotonic_clip",
     "prelec",
     "power"
   ],
   "time_forward_validation": {
-    "preferred_price_metric_rows": 144484,
+    "preferred_price_metric_rows": 124030,
     "rank_validation_rows": 42,
     "training_rule": "years strictly earlier than the validation year",
     "uncapped_price_races": {
