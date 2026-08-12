@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from analysis.behavioral_core import MonotoneCalibrator
 from analysis.data_audit import TARGET_MARKETS
 from analysis.main_analysis_core import (
     BOOTSTRAP_REPS,
@@ -100,14 +101,83 @@ def cluster_bootstrap_mean_ci(
     return float(low), float(high)
 
 
-def external_log_score_summary(metrics: pd.DataFrame) -> pd.DataFrame:
-    """Compare realized-outcome scores of trifecta marginals and win-Harville."""
-    required = {"race_id", "race_date", "target_market", "model", "realized_log_score"}
+def crossfitted_calibrated_log_scores(
+    state_records: list[dict[str, object]],
+) -> pd.DataFrame:
+    """Apply symmetric leave-one-year-out monotone calibration to both price measures."""
+    rows: list[dict[str, object]] = []
+    frame = pd.DataFrame(state_records)
+    required = {
+        "race_id",
+        "race_date",
+        "year",
+        "target_market",
+        "model",
+        "predicted",
+        "realized_index",
+    }
+    missing = required.difference(frame.columns)
+    if missing:
+        raise ValueError(f"calibration records lack columns: {sorted(missing)}")
+    for (target, model), group in frame.groupby(["target_market", "model"], sort=True):
+        years = sorted(group["year"].astype(int).unique())
+        if len(years) < 2:
+            raise ValueError(f"{target}/{model}: cross-fitting requires at least two years")
+        for validation_year in years:
+            train = group[group["year"].ne(validation_year)]
+            validation = group[group["year"].eq(validation_year)]
+            x_parts: list[np.ndarray] = []
+            y_parts: list[np.ndarray] = []
+            weight_parts: list[np.ndarray] = []
+            for _, record in train.iterrows():
+                predicted = np.asarray(record["predicted"], dtype=float)
+                outcome = np.zeros(len(predicted), dtype=float)
+                outcome[int(record["realized_index"])] = 1.0
+                x_parts.append(predicted)
+                y_parts.append(outcome)
+                weight_parts.append(np.full(len(predicted), 1.0 / len(predicted)))
+            fit = MonotoneCalibrator.fit(
+                np.concatenate(x_parts),
+                np.concatenate(y_parts),
+                sample_weight=np.concatenate(weight_parts),
+            )
+            for _, record in validation.iterrows():
+                calibrated = fit.predict(np.asarray(record["predicted"], dtype=float))
+                calibrated = calibrated / calibrated.sum()
+                realized_probability = float(calibrated[int(record["realized_index"])])
+                rows.append(
+                    {
+                        "race_id": record["race_id"],
+                        "race_date": record["race_date"],
+                        "target_market": target,
+                        "model": model,
+                        "calibrated_log_score": -float(
+                            np.log(max(realized_probability, EPSILON))
+                        ),
+                        "calibrated_epsilon_bound": realized_probability <= EPSILON,
+                    }
+                )
+    return pd.DataFrame(rows)
+
+
+def external_log_score_summary(
+    metrics: pd.DataFrame, state_records: list[dict[str, object]]
+) -> pd.DataFrame:
+    """Compare raw and symmetrically calibrated realized-outcome log scores."""
+    required = {
+        "race_id",
+        "race_date",
+        "target_market",
+        "model",
+        "realized_log_score",
+        "realized_epsilon_bound",
+    }
     missing = required.difference(metrics.columns)
     if missing:
         raise ValueError(f"external log-score input lacks columns: {sorted(missing)}")
     rows: list[dict[str, object]] = []
     selected = metrics[metrics["model"].isin({"main", "harville"})]
+    calibrated = crossfitted_calibrated_log_scores(state_records)
     for target, group in selected.groupby("target_market", sort=True):
         pivot = group.pivot(
             index=["race_date", "race_id"], columns="model", values="realized_log_score"
@@ -117,15 +187,57 @@ def external_log_score_summary(metrics: pd.DataFrame) -> pd.DataFrame:
         low, high = cluster_bootstrap_mean_ci(
             improvement, dates, label=f"external-log-score|{target}"
         )
+        median, race_low, race_high = bootstrap_ci(
+            improvement, label=f"external-log-score-median|{target}"
+        )
+        epsilon_counts = (
+            group.groupby("model")["realized_epsilon_bound"].sum().astype(int).to_dict()
+        )
+        calibrated_target = calibrated[calibrated["target_market"].eq(target)]
+        calibrated_pivot = calibrated_target.pivot(
+            index=["race_date", "race_id"], columns="model", values="calibrated_log_score"
+        )[["main", "harville"]].dropna()
+        if not calibrated_pivot.index.equals(pivot.index):
+            raise ValueError(f"{target}: raw and calibrated log-score races differ")
+        calibrated_improvement = (
+            calibrated_pivot["harville"] - calibrated_pivot["main"]
+        ).to_numpy(dtype=float)
+        calibrated_low, calibrated_high = cluster_bootstrap_mean_ci(
+            calibrated_improvement,
+            calibrated_pivot.index.get_level_values("race_date").to_numpy(),
+            label=f"external-log-score-calibrated|{target}",
+        )
+        calibrated_epsilon_counts = (
+            calibrated_target.groupby("model")["calibrated_epsilon_bound"]
+            .sum()
+            .astype(int)
+            .to_dict()
+        )
         rows.append(
             {
                 "target_market": target,
                 "n_races": int(len(pivot)),
-                "mean_main_log_score": float(pivot["main"].mean()),
-                "mean_harville_log_score": float(pivot["harville"].mean()),
-                "mean_main_improvement": float(np.mean(improvement)),
-                "date_cluster_ci_low": low,
-                "date_cluster_ci_high": high,
+                "raw_mean_main_log_score": float(pivot["main"].mean()),
+                "raw_mean_harville_log_score": float(pivot["harville"].mean()),
+                "raw_mean_improvement": float(np.mean(improvement)),
+                "raw_date_cluster_ci_low": low,
+                "raw_date_cluster_ci_high": high,
+                "raw_median_improvement": median,
+                "raw_race_bootstrap_ci_low": race_low,
+                "raw_race_bootstrap_ci_high": race_high,
+                "calibrated_mean_improvement": float(np.mean(calibrated_improvement)),
+                "calibrated_date_cluster_ci_low": calibrated_low,
+                "calibrated_date_cluster_ci_high": calibrated_high,
+                "raw_main_epsilon_bound_count": int(epsilon_counts.get("main", 0)),
+                "raw_harville_epsilon_bound_count": int(
+                    epsilon_counts.get("harville", 0)
+                ),
+                "calibrated_main_epsilon_bound_count": int(
+                    calibrated_epsilon_counts.get("main", 0)
+                ),
+                "calibrated_harville_epsilon_bound_count": int(
+                    calibrated_epsilon_counts.get("harville", 0)
+                ),
             }
         )
     return pd.DataFrame(rows)
@@ -399,9 +511,9 @@ def write_latex_tables(
     auxiliary["model_order"] = auxiliary["model"].map({"main": 0, "harville": 1})
     auxiliary = auxiliary.sort_values(["target_order", "model_order"])
     lines = [
-        r"\begin{tabular}{llrrrrr}",
+        r"\begin{tabular}{llrrrrrrr}",
         r"\toprule",
-        r"승식 & 모형 & JS & 로그 RMS & CLR 거리 & 상관계수 & cosine \\",
+        r"승식 & 모형 & 경주 수 & JS & JS 95\% CI & 로그 RMS & CLR 거리 & 상관계수 & cosine \\",
         r"\midrule",
     ]
     previous = None
@@ -410,7 +522,9 @@ def write_latex_tables(
         if previous is not None and target != previous:
             lines.append(r"\addlinespace")
         lines.append(
-            f"{market_labels[target]} & {model_labels[row['model']]} & {fmt(row['median_js'])} & "
+            f"{market_labels[target]} & {model_labels[row['model']]} & {int(row['n_races']):,} & "
+            f"{fmt(row['median_js'])} & "
+            f"[{row['median_js_ci_low']:.4f}, {row['median_js_ci_high']:.4f}] & "
             f"{fmt(row['median_rmsle'])} & {fmt(row['median_clr_distance'])} & "
             f"{fmt(row['median_correlation'])} & {fmt(row['median_cosine'])} \\\\"
         )
@@ -428,15 +542,31 @@ def write_latex_tables(
     lines = [
         r"\begin{tabular}{lrrrrr}",
         r"\toprule",
-        r"승식 & 경주 수 & 삼쌍승 주변화 & 단승--Harville & 개선폭 & 95\% CI \\",
+        r"승식 & 경주 수 & 미보정 평균 개선[날짜 CI] & 미보정 중앙 개선[경주 CI] & 보정 평균 개선[날짜 CI] & EPS 구속(미;보정) \\",
         r"\midrule",
     ]
     for _, row in log_scores.iterrows():
-        interval = f"[{row['date_cluster_ci_low']:.4f}, {row['date_cluster_ci_high']:.4f}]"
+        raw_mean = (
+            f"{row['raw_mean_improvement']:.4f}"
+            f"[{row['raw_date_cluster_ci_low']:.4f}, {row['raw_date_cluster_ci_high']:.4f}]"
+        )
+        raw_median = (
+            f"{row['raw_median_improvement']:.4f}"
+            f"[{row['raw_race_bootstrap_ci_low']:.4f}, "
+            f"{row['raw_race_bootstrap_ci_high']:.4f}]"
+        )
+        calibrated_mean = (
+            f"{row['calibrated_mean_improvement']:.4f}"
+            f"[{row['calibrated_date_cluster_ci_low']:.4f}, "
+            f"{row['calibrated_date_cluster_ci_high']:.4f}]"
+        )
         lines.append(
             f"{market_labels[row['target_market']]} & {int(row['n_races']):,} & "
-            f"{row['mean_main_log_score']:.4f} & {row['mean_harville_log_score']:.4f} & "
-            f"{row['mean_main_improvement']:.4f} & {interval} \\\\"
+            f"{raw_mean} & {raw_median} & {calibrated_mean} & "
+            f"{int(row['raw_main_epsilon_bound_count'])}/"
+            f"{int(row['raw_harville_epsilon_bound_count'])};"
+            f"{int(row['calibrated_main_epsilon_bound_count'])}/"
+            f"{int(row['calibrated_harville_epsilon_bound_count'])} \\\\"
         )
     lines += [r"\bottomrule", r"\end{tabular}"]
     path = table_dir / "main_external_log_scores.tex"

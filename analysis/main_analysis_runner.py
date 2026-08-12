@@ -100,11 +100,6 @@ def race_metadata(data_root: Path, race_ids: set[str]) -> pd.DataFrame:
     races["year"] = pd.to_datetime(races["race_date"]).dt.year
     races["valid_horse_tuple"] = races["valid_horses"].map(parse_horse_list)
     races["arrival_tuple"] = races["arrival_order"].map(parse_horse_list)
-    invalid_arrivals = races["arrival_tuple"].map(
-        lambda value: len(value) < 3 or len(set(value[:3])) != 3
-    )
-    if bool(invalid_arrivals.any()):
-        raise ValueError("race metadata contains an invalid top-three arrival order")
     return races
 
 
@@ -190,6 +185,7 @@ def main() -> None:
 
     panel_a_frames: list[pd.DataFrame] = []
     panel_b_frames: list[pd.DataFrame] = []
+    log_score_state_records: list[dict[str, object]] = []
     for target_name in TARGET_MARKETS:
         target = load_market(args.data_root, target_name, source_ids)
         panel_a_frames.append(
@@ -201,6 +197,7 @@ def main() -> None:
                 target,
                 clean_ids,
                 clean_peers,
+                log_score_state_records,
             )
         )
         if not args.skip_bounds:
@@ -219,7 +216,7 @@ def main() -> None:
     metrics_a = pd.concat(panel_a_frames, ignore_index=True)
     bounds_b = None if args.skip_bounds else pd.concat(panel_b_frames, ignore_index=True)
     summary_a = summarize_panel_a(metrics_a)
-    log_scores = external_log_score_summary(metrics_a)
+    log_scores = external_log_score_summary(metrics_a, log_score_state_records)
     summary_b = None if bounds_b is None else summarize_panel_b(bounds_b)
     capped_bounds_b = (
         None
@@ -329,3 +326,7 @@ def main() -> None:
         print(p3_bounds.to_string(index=False))
     print(donor_reuse.to_string(index=False))
     print("PASS: main cross-pool analysis completed")
+
+
+if __name__ == "__main__":
+    main()

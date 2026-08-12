@@ -31,7 +31,8 @@ Panel A와 Panel B가 동시에 통과하지 못하므로, 여러 풀이 하나�
 순서정보 효과나 복합복권 비축약의 구조적 증거로 확대하지 않는다.
 
 행동모형 진단은 이 주분석과 별개의 질문을 다룬다. 연도 밖 착순자료로 추정한
-단계조정 확률은 원시 Harville보다 2·3위 로그손실과 보정오차가 작다. 이 확률과
+보정·단계조정 확률은 같은 단조보정을 쓴 $\alpha=1$ Harville보다 2·3위
+로그손실과 보정오차가 작다. 이 확률과
 단승에서만 추정한 가중함수를 고정하면 M-S는 M-R보다 낮은 TV를 보이지만,
 동일표본의 단계조정 Harville은 쌍승·삼쌍승·복승·삼복승 모두에서 M-S보다
 정확하다. 이 순위는 공통지지 조합과 최저가격 10\%를 제외한 조합에서도
@@ -65,6 +66,10 @@ Panel A와 Panel B가 동시에 통과하지 못하므로, 여러 풀이 하나�
 분석 코드, 재현 스크립트, 논문 원고와 분석에 사용한 파싱자료는
 \href{https://github.com/Joocheol/kra-post-trifecta}{공개 GitHub 저장소}에서
 제공한다. 원자료는 한국마사회 공개 경주자료에서 수집했으며, 원시 JSON 묶음은
-저작권과 재배포 범위를 고려하여 저장소에 포함하지 않는다. 저장소의 감사
-스크립트는 파싱자료의 키·지지집합·표시상한·배당격자를 검사하고 논문의 요약
-CSV, 표와 그림을 재생성한다.
+저작권과 재배포 범위를 고려하여 저장소에 포함하지 않는다. 파싱자료의
+키·지지집합은 \texttt{python -m analysis.data\_audit --strict}, 배당격자는
+\texttt{python -m analysis.display\_precision\_audit}로 검사한다. 주분석은
+\texttt{python -m analysis.main\_analysis\_runner}, 행동분석·표·그림은
+\texttt{analysis.behavioral\_analysis}, \texttt{analysis.behavioral\_report},
+\texttt{analysis.behavioral\_figures} 모듈로 각각 재생성한다. 출판본이 인용할
+정확한 코드 버전은 같은 커밋의 Git 태그와 공개 릴리스로 고정한다.

@@ -1,8 +1,8 @@
 # 연구 설계: 삼쌍승 가격의 교차풀 정합성과 순위모형 진단
 
 > **심사 후 판정 보완(2026-08-12).** 아래 문서는 최초 가설과 분석 순서를
-> 보존한다. 최종 판정에서는 동일 경주의 원시 Harville과 연도 밖 착순으로
-> 추정한 단계조정 Harville을 행동모형의 필수 기준으로 추가했다. M-S는 M-R보다
+> 보존한다. 최종 판정에서는 동일 경주의 게시가격 Harville(비보정)과 연도 밖
+> 착순으로 추정한 보정·단계조정 Harville을 행동모형의 필수 기준으로 추가했다. M-S는 M-R보다
 > 정확했지만 단계조정 Harville을 네 승식 모두에서 넘지 못했으므로 B1--B3을
 > 구조적 행동 증거로 채택하지 않는다. 또한 단승 가격만으로 별도 식별되지 않는
 > M-U는 독립 결과계열로 보고하지 않는다.
@@ -116,6 +116,11 @@ Panel B는 Panel A의 강건성 분석이 아니라 동일한 지위를 가진 �
 훈련 표본과 가격예측을 평가하는 표본을 연도 단위로 분리한다. 같은 경주의
 실현결과가 그 경주의 예측확률 추정에 들어가지 않도록 연도 단위 교차적합을
 기본으로 한다.
+
+실현착순 외부검증도 clean 표본의 고유한 상위 3착과 승식별 단일
+`is_hit` 조합을 요구한다. 가격 전용 공동 주패널의 포함규칙은 바꾸지 않으며,
+외부검증에서 동착·복수 적중 또는 파싱 불일치가 발견되면 그 경주 수를 별도로
+공개하고 점로그점수에서 제외한다.
 
 ## 5. 주분석: 가격 구성과 교차풀 제약
 
@@ -327,26 +332,38 @@ M-U와 M-R을 모두 비모수적으로 단승 가격에 맞추면 단순복권�
 8. 복승·삼복승 및 leave-one-pool-out 외부 검증
 9. 내부 정합성과 분리한 실현 착순 예측 결과
 
+9번의 로그점수는 proper scoring rule의 기대손실에 맞춰 경주균등 평균을
+주집계치로 쓰고 날짜 공통충격을 허용한 경주일 군집 bootstrap을 적용한다.
+주패널의 사전 중앙값 규칙과 직접 비교하도록 개선폭 중앙값과 경주 bootstrap도
+동시에 보고한다. 두 미보정 가격측도의 비교와, 양쪽에 같은 연도제외 단조보정을
+대칭적으로 적용한 비교를 분리한다.
+
 행동모형이 주분석보다 앞에 제시되거나, 구조모형의 약한 결과가 비모수적
 정합성 결과를 대체하지 않도록 한다.
 
 ## 10. 재현 산출물
 
-분석 코드는 최종적으로 아래 파일을 생성한다.
+분석 코드는 최종적으로 아래 묶음을 생성한다. 정확한 동결 계약은
+`.github/workflows/paper-ci.yml`의 경로 배열과 일치시킨다.
 
-- `outputs/sample_flow.csv`
-- `outputs/data_quality.csv`
-- `outputs/sample_composition.csv`
-- `outputs/main_metrics.csv`
-- `outputs/main_metrics_bounds.csv`
-- `outputs/benchmark_comparison.csv`
-- `outputs/heterogeneity.csv`
-- `outputs/rank_probability_validation.csv`
-- `outputs/behavioral_model_comparison.csv`
-- `outputs/pool_transfer_validation.csv`
-- `figures/calibration-*.pdf` (행동모형 추정 단계에서 생성)
-- `figures/model-comparison-*.pdf` (행동모형 추정 단계에서 생성)
-- `tables/*.tex`
+- 표본감사: `outputs/sample_flow.csv`, `outputs/data_audit_summary.md`,
+  `outputs/data_audit_manifest.json`, `tables/data_quality_summary.tex`
+- 주패널: `outputs/main_panel_a_summary.csv`, `outputs/main_panel_b_summary.csv`,
+  `outputs/main_panel_b_capped_summary.csv`, `outputs/main_panel_a_improvements.csv`,
+  `outputs/main_panel_b_improvements.csv`, `outputs/main_panel_b_capped_improvements.csv`
+- 보조·외부검증: `outputs/main_external_log_scores.csv`,
+  `tables/main_panel_a_auxiliary.tex`, `tables/main_external_log_scores.tex`
+- 순서·표본·이질성: `outputs/main_order_information*.csv`,
+  `outputs/main_other_race_donor_reuse.csv`, `outputs/main_threshold_decisions.csv`,
+  `outputs/main_sample_selection.csv`, `outputs/main_sample_composition.csv`,
+  `outputs/main_sample_tail.csv`, `outputs/main_heterogeneity_summary.csv`,
+  `outputs/main_heterogeneity_comparison.csv`와 대응 `tables/main_*.tex`
+- 행동진단: `outputs/rank_probability_validation*.csv`,
+  `outputs/behavioral_model_*.csv`, `outputs/behavioral_same_sample_*.csv`,
+  `outputs/rank_probability_time_forward*.csv`,
+  `outputs/behavioral_time_forward_*.csv`, `outputs/behavioral_analysis_manifest.json`,
+  대응 `tables/behavioral_*.tex`와 `figures/calibration-rank-probabilities.pdf`,
+  `figures/model-comparison-*.pdf`
 
 현재 주분석 PR은 동결된 `.tex` 표를 사용하며 별도 그림 산출물을 요구하지 않는다.
 PDF 그림 두 묶음은 B1--B3 행동모형 추정 PR의 재현 산출물이다. 논문은 생성된

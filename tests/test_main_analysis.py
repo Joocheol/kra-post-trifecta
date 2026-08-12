@@ -302,6 +302,7 @@ class ExternalLogScoreTest(unittest.TestCase):
                         "target_market": "exacta",
                         "model": "main",
                         "realized_log_score": main,
+                        "realized_epsilon_bound": False,
                     },
                     {
                         "race_id": race_id,
@@ -309,13 +310,32 @@ class ExternalLogScoreTest(unittest.TestCase):
                         "target_market": "exacta",
                         "model": "harville",
                         "realized_log_score": harville,
+                        "realized_epsilon_bound": False,
                     },
                 ]
             )
-        result = external_log_score_summary(pd.DataFrame(rows)).iloc[0]
+        state_records = []
+        for row in rows:
+            realized_probability = float(np.exp(-float(row["realized_log_score"])))
+            state_records.append(
+                {
+                    "race_id": row["race_id"],
+                    "race_date": row["race_date"],
+                    "year": 2024 if row["race_id"] == "r1" else 2025,
+                    "target_market": row["target_market"],
+                    "model": row["model"],
+                    "predicted": np.array(
+                        [realized_probability, 1.0 - realized_probability]
+                    ),
+                    "realized_index": 0,
+                }
+            )
+        result = external_log_score_summary(pd.DataFrame(rows), state_records).iloc[0]
         self.assertEqual(int(result["n_races"]), 3)
-        self.assertAlmostEqual(float(result["mean_main_improvement"]), 1 / 6)
-        self.assertGreater(float(result["date_cluster_ci_low"]), 0.0)
+        self.assertAlmostEqual(float(result["raw_mean_improvement"]), 1 / 6)
+        self.assertGreater(float(result["raw_date_cluster_ci_low"]), 0.0)
+        self.assertEqual(int(result["raw_main_epsilon_bound_count"]), 0)
+        self.assertEqual(int(result["raw_harville_epsilon_bound_count"]), 0)
 
 
 if __name__ == "__main__":

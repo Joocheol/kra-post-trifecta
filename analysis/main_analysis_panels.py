@@ -44,7 +44,7 @@ def market_sort_columns(market: str) -> list[str]:
 
 def load_market(data_root, market: str, race_ids: set[str]) -> RaceSlices:
     spec = MARKET_SPECS[market]
-    columns = ["race_id", *spec.keys, "odds", "is_capped_odds"]
+    columns = ["race_id", *spec.keys, "odds", "is_hit", "is_capped_odds"]
     frame = read_parquets(data_root, market, columns=columns)
     frame = frame[frame["race_id"].isin(race_ids)].copy()
     frame = frame.sort_values(market_sort_columns(market)).reset_index(drop=True)
@@ -83,6 +83,7 @@ def panel_a(
     target: RaceSlices,
     clean_ids: list[str],
     clean_peers: dict[int, list[str]],
+    state_records: list[dict[str, object]] | None = None,
 ) -> pd.DataFrame:
     """Compute Panel A point metrics; donor benchmark may be unavailable by stratum."""
     rows: list[dict[str, object]] = []
@@ -101,7 +102,10 @@ def panel_a(
         permutation = deterministic_permutation(len(source), race_id, target_name, "A")
         q_perm = q_main[permutation]
         n = int(n_map[race_id])
-        arrival = tuple(int(value) for value in race_lookup.at[race_id, "arrival_tuple"][:3])
+        arrival_values = race_lookup.at[race_id, "arrival_tuple"]
+        if len(arrival_values) < 3 or len(set(arrival_values[:3])) != 3:
+            raise ValueError(f"{race_id}: external log score requires a unique top-three order")
+        arrival = tuple(int(value) for value in arrival_values[:3])
         realized_key = target_key(arrival, target_name)
         target_keys = target_keys_from_frame(actual_frame, target_name)
         try:
@@ -110,7 +114,18 @@ def panel_a(
             raise ValueError(
                 f"realized {target_name} outcome is absent for race {race_id}"
             ) from exc
+        hit_index = np.flatnonzero(actual_frame["is_hit"].fillna(False).to_numpy(dtype=bool))
+        if len(hit_index) != 1:
+            raise ValueError(
+                f"{race_id}: {target_name} has {len(hit_index)} winning combinations; "
+                "dead heats are not point-scored"
+            )
+        if int(hit_index[0]) != realized_index:
+            raise ValueError(
+                f"{race_id}: {target_name} hit flag disagrees with parsed arrival order"
+            )
         race_date = str(race_lookup.at[race_id, "race_date"])
+        year = int(race_lookup.at[race_id, "year"])
 
         predictions: dict[str, tuple[np.ndarray, str]] = {
             "main": (aggregate_point(q_main, groups, cdim), ""),
@@ -129,6 +144,21 @@ def panel_a(
                 donor_id,
             )
 
+        if state_records is not None:
+            for model in ("main", "harville"):
+                predicted = predictions[model][0]
+                state_records.append(
+                    {
+                        "race_id": race_id,
+                        "race_date": race_date,
+                        "year": year,
+                        "target_market": target_name,
+                        "model": model,
+                        "predicted": predicted.copy(),
+                        "realized_index": realized_index,
+                    }
+                )
+
         for model, (predicted, used_donor) in predictions.items():
             rec: dict[str, object] = {
                 "panel": "A",
@@ -141,9 +171,9 @@ def panel_a(
                 "donor_race_id": used_donor,
             }
             rec.update(point_metrics(actual, predicted))
-            rec["realized_log_score"] = -float(
-                np.log(max(float(predicted[realized_index]), EPSILON))
-            )
+            realized_probability = float(predicted[realized_index])
+            rec["realized_log_score"] = -float(np.log(max(realized_probability, EPSILON)))
+            rec["realized_epsilon_bound"] = realized_probability <= EPSILON
             rows.append(rec)
     return pd.DataFrame(rows)
 
