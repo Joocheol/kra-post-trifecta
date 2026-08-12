@@ -284,11 +284,12 @@ def main() -> None:
         outputs.append((args.output_dir / "main_order_information_bounds.csv", p3_bounds))
     for path, frame in outputs:
         frame.to_csv(path, index=False, float_format="%.12g")
-        written_rows = sum(1 for _ in path.open(encoding="utf-8")) - 1
-        if written_rows != len(frame):
+        roundtrip = pd.read_csv(path)
+        if list(roundtrip.columns) != list(frame.columns) or len(roundtrip) != len(frame):
             raise IOError(
-                f"incomplete CSV write for {path}: expected {len(frame)} rows, "
-                f"found {written_rows}"
+                f"incomplete CSV write for {path}: expected schema {list(frame.columns)} "
+                f"and {len(frame)} rows, found schema {list(roundtrip.columns)} "
+                f"and {len(roundtrip)} rows"
             )
         generated.append(path)
 

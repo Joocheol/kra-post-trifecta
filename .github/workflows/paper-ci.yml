@@ -94,7 +94,7 @@ jobs:
           persist-credentials: false
 
       - name: Install analysis dependencies
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt -c constraints-behavioral.txt
 
       - name: Recreate frozen race membership
         run: python -m analysis.data_audit --strict
@@ -260,10 +260,22 @@ jobs:
               fsharp = bool(frow['joint_min_optimal'] and frow['joint_max_optimal'])
 
               if gsharp and fsharp:
-                  if not np.allclose(
+                  # HiGHS may return numerically equivalent sharp optima that
+                  # differ below the manuscript's reporting precision. Require
+                  # rendered agreement and cap any hidden raw drift.
+                  formats = {
+                      'joint_milp_lower': '.4f',
+                      'joint_milp_upper': '.4f',
+                      'joint_milp_width': '.4f',
+                      'width_ratio_joint_to_conservative': '.3f',
+                  }
+                  rendered_frozen = [format(float(frow[col]), formats[col]) for col in value_cols]
+                  rendered_generated = [format(float(row[col]), formats[col]) for col in value_cols]
+                  raw_close = np.allclose(
                       frow[value_cols].to_numpy(float), row[value_cols].to_numpy(float),
-                      rtol=1e-9, atol=1e-10, equal_nan=True,
-                  ):
+                      rtol=0.0, atol=2e-5, equal_nan=True,
+                  )
+                  if rendered_frozen != rendered_generated or not raw_close:
                       raise SystemExit(f"FAIL: sharp P3 row changed: {row['race_id']}")
                   continue
 

@@ -190,7 +190,8 @@ def external_log_score_summary(
         "unparseable_arrival",
         "nonunique_required_finish",
         "realized_outcome_absent",
-        "nonunique_hit",
+        "no_hit",
+        "multiple_hit",
         "hit_arrival_disagreement",
     )
     for target, group in selected.groupby("target_market", sort=True):

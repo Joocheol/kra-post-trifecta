@@ -314,7 +314,12 @@ class ExternalLogScoreTest(unittest.TestCase):
         actual["is_hit"] = [True, True]
         index, reason = validated_realized_index((1, 2, 3), actual, "exacta")
         self.assertIsNone(index)
-        self.assertEqual(reason, "nonunique_hit")
+        self.assertEqual(reason, "multiple_hit")
+
+        actual["is_hit"] = [False, False]
+        index, reason = validated_realized_index((1, 2, 3), actual, "exacta")
+        self.assertIsNone(index)
+        self.assertEqual(reason, "no_hit")
 
     @staticmethod
     def _calibration_records() -> list[dict[str, object]]:

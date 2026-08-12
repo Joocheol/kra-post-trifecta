@@ -80,7 +80,12 @@ def validated_realized_index(
     actual_frame: pd.DataFrame,
     target_name: str,
 ) -> tuple[int | None, str]:
-    """Return a unique, internally consistent realized outcome or an exclusion reason."""
+    """Return a parser-internally consistent outcome or an exclusion reason.
+
+    ``is_hit`` and ``arrival_values`` originate from the same parsed arrival-order
+    field, so this is a defensive self-consistency check rather than independent
+    validation of the published result or tie status.
+    """
     try:
         arrivals = tuple(int(value) for value in arrival_values)  # type: ignore[arg-type]
     except (TypeError, ValueError):
@@ -98,8 +103,10 @@ def validated_realized_index(
     hit_index = np.flatnonzero(
         actual_frame["is_hit"].fillna(False).to_numpy(dtype=bool)
     )
-    if len(hit_index) != 1:
-        return None, "nonunique_hit"
+    if len(hit_index) == 0:
+        return None, "no_hit"
+    if len(hit_index) > 1:
+        return None, "multiple_hit"
     if int(hit_index[0]) != realized_index:
         return None, "hit_arrival_disagreement"
     return realized_index, ""
