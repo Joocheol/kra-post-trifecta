@@ -85,9 +85,12 @@ def validated_realized_index(
         arrivals = tuple(int(value) for value in arrival_values)  # type: ignore[arg-type]
     except (TypeError, ValueError):
         return None, "unparseable_arrival"
-    if len(arrivals) < 3 or len(set(arrivals[:3])) != 3:
-        return None, "nonunique_top_three"
-    realized_key = target_key(arrivals[:3], target_name)
+    required_depth = {"win": 1, "exacta": 2, "quinella": 2, "trio": 3}[target_name]
+    required_arrivals = arrivals[:required_depth]
+    if len(required_arrivals) < required_depth or len(set(required_arrivals)) != required_depth:
+        return None, "nonunique_required_finish"
+    padded_arrivals = required_arrivals + (0,) * (3 - required_depth)
+    realized_key = target_key(padded_arrivals, target_name)
     target_keys = target_keys_from_frame(actual_frame, target_name)
     if realized_key not in target_keys:
         return None, "realized_outcome_absent"

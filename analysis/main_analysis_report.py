@@ -143,7 +143,12 @@ def crossfitted_calibrated_log_scores(
             )
             for _, record in validation.iterrows():
                 calibrated = fit.predict(np.asarray(record["predicted"], dtype=float))
-                calibrated = calibrated / calibrated.sum()
+                pre_normalization_sum = float(calibrated.sum())
+                if not np.isfinite(pre_normalization_sum) or pre_normalization_sum <= 0:
+                    raise ValueError(
+                        f"{target}/{model}: calibration has invalid normalization sum"
+                    )
+                calibrated = calibrated / pre_normalization_sum
                 realized_probability = float(calibrated[int(record["realized_index"])])
                 rows.append(
                     {
@@ -156,6 +161,7 @@ def crossfitted_calibrated_log_scores(
                         ),
                         "calibrated_epsilon_bound": realized_probability <= EPSILON,
                         "calibrated_realized_probability": realized_probability,
+                        "calibrated_pre_normalization_sum": pre_normalization_sum,
                         "calibrated_probability_sum": float(calibrated.sum()),
                     }
                 )
@@ -180,8 +186,25 @@ def external_log_score_summary(
     rows: list[dict[str, object]] = []
     selected = metrics[metrics["model"].isin({"main", "harville"})]
     calibrated = crossfitted_calibrated_log_scores(state_records)
+    exclusion_reasons = (
+        "unparseable_arrival",
+        "nonunique_required_finish",
+        "realized_outcome_absent",
+        "nonunique_hit",
+        "hit_arrival_disagreement",
+    )
     for target, group in selected.groupby("target_market", sort=True):
         candidate_races = int(group["race_id"].nunique())
+        reason_counts: dict[str, int] = {}
+        if "outcome_exclusion_reason" in group:
+            race_reasons = group[["race_id", "outcome_exclusion_reason"]].drop_duplicates()
+            reason_counts = {
+                str(reason): int(count)
+                for reason, count in race_reasons["outcome_exclusion_reason"]
+                .value_counts()
+                .items()
+                if str(reason)
+            }
         pivot = group.pivot(
             index=["race_date", "race_id"], columns="model", values="realized_log_score"
         )[["main", "harville"]].dropna()
@@ -237,6 +260,10 @@ def external_log_score_summary(
                 "n_candidate_races": candidate_races,
                 "n_races": int(len(pivot)),
                 "n_excluded_races": candidate_races - int(len(pivot)),
+                **{
+                    f"n_excluded_{reason}": int(reason_counts.get(reason, 0))
+                    for reason in exclusion_reasons
+                },
                 "raw_mean_main_log_score": float(pivot["main"].mean()),
                 "raw_mean_harville_log_score": float(pivot["harville"].mean()),
                 "raw_mean_improvement": float(np.mean(improvement)),
@@ -572,9 +599,9 @@ def write_latex_tables(
     )
     log_scores = log_scores.sort_values("target_order")
     lines = [
-        r"\begin{tabular}{lrrrrrr}",
+        r"\begin{tabular}{@{}lrrrr@{}}",
         r"\toprule",
-        r"승식 & 유효 경주(제외) & 미보정 평균 개선[날짜 CI] & 미보정 중앙 개선[경주 CI] & 보정 평균 개선[날짜 CI] & 보정 무구속 평균[날짜 CI]; $N$ & EPS 구속(미;보정) \\",
+        r"승식 & 유효(제외) & 미보정 평균[날짜 CI] & 미보정 중앙[경주 CI] & EPS(main/H) \\",
         r"\midrule",
     ]
     for _, row in log_scores.iterrows():
@@ -587,6 +614,23 @@ def write_latex_tables(
             f"[{row['raw_race_bootstrap_ci_low']:.4f}, "
             f"{row['raw_race_bootstrap_ci_high']:.4f}]"
         )
+        lines.append(
+            f"{market_labels[row['target_market']]} & {int(row['n_races']):,}"
+            f"({int(row['n_excluded_races']):,}) & "
+            f"{raw_mean} & {raw_median} & "
+            f"{int(row['raw_main_epsilon_bound_count'])}/"
+            f"{int(row['raw_harville_epsilon_bound_count'])} \\\\"
+        )
+    lines += [
+        r"\bottomrule",
+        r"\end{tabular}",
+        r"\par\smallskip",
+        r"\begin{tabular}{@{}lrrrr@{}}",
+        r"\toprule",
+        r"승식 & 보정 평균[날짜 CI] & 무구속 평균[날짜 CI] & 무구속 $N$ & EPS(main/H) \\",
+        r"\midrule",
+    ]
+    for _, row in log_scores.iterrows():
         calibrated_mean = (
             f"{row['calibrated_mean_improvement']:.4f}"
             f"[{row['calibrated_date_cluster_ci_low']:.4f}, "
@@ -595,15 +639,12 @@ def write_latex_tables(
         calibrated_no_epsilon = (
             f"{row['calibrated_no_epsilon_mean_improvement']:.4f}"
             f"[{row['calibrated_no_epsilon_date_cluster_ci_low']:.4f}, "
-            f"{row['calibrated_no_epsilon_date_cluster_ci_high']:.4f}]; "
-            f"{int(row['calibrated_no_epsilon_n_races']):,}"
+            f"{row['calibrated_no_epsilon_date_cluster_ci_high']:.4f}]"
         )
         lines.append(
-            f"{market_labels[row['target_market']]} & {int(row['n_races']):,}"
-            f"({int(row['n_excluded_races']):,}) & "
-            f"{raw_mean} & {raw_median} & {calibrated_mean} & {calibrated_no_epsilon} & "
-            f"{int(row['raw_main_epsilon_bound_count'])}/"
-            f"{int(row['raw_harville_epsilon_bound_count'])};"
+            f"{market_labels[row['target_market']]} & {calibrated_mean} & "
+            f"{calibrated_no_epsilon} & "
+            f"{int(row['calibrated_no_epsilon_n_races']):,} & "
             f"{int(row['calibrated_main_epsilon_bound_count'])}/"
             f"{int(row['calibrated_harville_epsilon_bound_count'])} \\\\"
         )

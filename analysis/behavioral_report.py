@@ -50,7 +50,7 @@ def rank_table(rank: pd.DataFrame) -> list[str]:
         raise ValueError(f"rank table lacks columns: {sorted(required - set(rank.columns))}")
     labels = {
         "harville": "보정 Harville($\\alpha=1$)",
-        "stage_temperature": "보정+단계조정",
+        "stage_temperature": "보정·단계조정",
     }
     lines = [
         "\\begin{tabular}{llrrr}",

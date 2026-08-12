@@ -1,6 +1,6 @@
-# Frozen numerical stack for the behavioral-analysis output contract only.
-# The main-analysis P3 MILP follows requirements.txt because its solver
-# certificate is version-sensitive and maintained by a separate CI job.
+# Frozen numerical stack for the behavioral outputs and the main-analysis
+# cross-fitted external log-score contract.  The P3 MILP certificate remains
+# version-sensitive and is validated by its separate CI step.
 numpy==2.3.5
 pandas==2.2.3
 scipy==1.17.0

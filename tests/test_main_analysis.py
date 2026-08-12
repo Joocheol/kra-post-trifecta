@@ -305,7 +305,11 @@ class ExternalLogScoreTest(unittest.TestCase):
 
         index, reason = validated_realized_index((1, 1, 3), actual, "exacta")
         self.assertIsNone(index)
-        self.assertEqual(reason, "nonunique_top_three")
+        self.assertEqual(reason, "nonunique_required_finish")
+
+        index, reason = validated_realized_index((1, 2, 2), actual, "exacta")
+        self.assertEqual(index, 0)
+        self.assertEqual(reason, "")
 
         actual["is_hit"] = [True, True]
         index, reason = validated_realized_index((1, 2, 3), actual, "exacta")
@@ -340,6 +344,10 @@ class ExternalLogScoreTest(unittest.TestCase):
         self.assertTrue(
             np.allclose(original["calibrated_probability_sum"].to_numpy(), 1.0)
         )
+        self.assertTrue(
+            np.isfinite(original["calibrated_pre_normalization_sum"]).all()
+        )
+        self.assertTrue((original["calibrated_pre_normalization_sum"] > 0).all())
 
         changed = [dict(record) for record in records]
         for record in changed:
