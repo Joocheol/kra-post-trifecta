@@ -9,6 +9,7 @@ import pandas as pd
 
 from analysis.data_audit import MARKET_SPECS, read_parquets
 from analysis.main_analysis_core import (
+    EPSILON,
     PriceSet,
     aggregate_point,
     aggregate_price_set,
@@ -20,6 +21,8 @@ from analysis.main_analysis_core import (
     point_metrics,
     point_price_set,
     source_group_index,
+    target_key,
+    target_keys_from_frame,
     tv_upper_outer,
 )
 from analysis.main_analysis_fast import tv_lower_exact_fast
@@ -41,7 +44,7 @@ def market_sort_columns(market: str) -> list[str]:
 
 def load_market(data_root, market: str, race_ids: set[str]) -> RaceSlices:
     spec = MARKET_SPECS[market]
-    columns = ["race_id", *spec.keys, "odds", "is_capped_odds"]
+    columns = ["race_id", *spec.keys, "odds", "is_hit", "is_capped_odds"]
     frame = read_parquets(data_root, market, columns=columns)
     frame = frame[frame["race_id"].isin(race_ids)].copy()
     frame = frame.sort_values(market_sort_columns(market)).reset_index(drop=True)
@@ -72,6 +75,43 @@ def interval_for_frame(frame: pd.DataFrame) -> PriceSet:
     )
 
 
+def validated_realized_index(
+    arrival_values: object,
+    actual_frame: pd.DataFrame,
+    target_name: str,
+) -> tuple[int | None, str]:
+    """Return a parser-internally consistent outcome or an exclusion reason.
+
+    ``is_hit`` and ``arrival_values`` originate from the same parsed arrival-order
+    field, so this is a defensive self-consistency check rather than independent
+    validation of the published result or tie status.
+    """
+    try:
+        arrivals = tuple(int(value) for value in arrival_values)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None, "unparseable_arrival"
+    required_depth = {"win": 1, "exacta": 2, "quinella": 2, "trio": 3}[target_name]
+    required_arrivals = arrivals[:required_depth]
+    if len(required_arrivals) < required_depth or len(set(required_arrivals)) != required_depth:
+        return None, "nonunique_required_finish"
+    padded_arrivals = required_arrivals + (0,) * (3 - required_depth)
+    realized_key = target_key(padded_arrivals, target_name)
+    target_keys = target_keys_from_frame(actual_frame, target_name)
+    if realized_key not in target_keys:
+        return None, "realized_outcome_absent"
+    realized_index = target_keys.index(realized_key)
+    hit_index = np.flatnonzero(
+        actual_frame["is_hit"].fillna(False).to_numpy(dtype=bool)
+    )
+    if len(hit_index) == 0:
+        return None, "no_hit"
+    if len(hit_index) > 1:
+        return None, "multiple_hit"
+    if int(hit_index[0]) != realized_index:
+        return None, "hit_arrival_disagreement"
+    return realized_index, ""
+
+
 def panel_a(
     races: pd.DataFrame,
     trifecta: RaceSlices,
@@ -80,10 +120,12 @@ def panel_a(
     target: RaceSlices,
     clean_ids: list[str],
     clean_peers: dict[int, list[str]],
+    state_records: list[dict[str, object]] | None = None,
 ) -> pd.DataFrame:
     """Compute Panel A point metrics; donor benchmark may be unavailable by stratum."""
     rows: list[dict[str, object]] = []
     n_map = races.set_index("race_id")["n_valid_horses"].astype(int).to_dict()
+    race_lookup = races.set_index("race_id")
     for race_id in clean_ids:
         source = trifecta.get(race_id)
         actual_frame = target.get(race_id)
@@ -97,6 +139,11 @@ def panel_a(
         permutation = deterministic_permutation(len(source), race_id, target_name, "A")
         q_perm = q_main[permutation]
         n = int(n_map[race_id])
+        realized_index, outcome_exclusion_reason = validated_realized_index(
+            race_lookup.at[race_id, "arrival_tuple"], actual_frame, target_name
+        )
+        race_date = str(race_lookup.at[race_id, "race_date"])
+        year = int(race_lookup.at[race_id, "year"])
 
         predictions: dict[str, tuple[np.ndarray, str]] = {
             "main": (aggregate_point(q_main, groups, cdim), ""),
@@ -115,17 +162,44 @@ def panel_a(
                 donor_id,
             )
 
+        if state_records is not None and realized_index is not None:
+            for model in ("main", "harville"):
+                predicted = predictions[model][0]
+                state_records.append(
+                    {
+                        "race_id": race_id,
+                        "race_date": race_date,
+                        "year": year,
+                        "target_market": target_name,
+                        "model": model,
+                        "predicted": predicted.copy(),
+                        "realized_index": realized_index,
+                    }
+                )
+
         for model, (predicted, used_donor) in predictions.items():
             rec: dict[str, object] = {
                 "panel": "A",
                 "race_id": race_id,
+                "race_date": race_date,
                 "target_market": target_name,
                 "model": model,
                 "n_valid_horses": n,
                 "n_outcomes": cdim,
                 "donor_race_id": used_donor,
+                "outcome_valid": realized_index is not None,
+                "outcome_exclusion_reason": outcome_exclusion_reason,
             }
             rec.update(point_metrics(actual, predicted))
+            if realized_index is None:
+                rec["realized_log_score"] = float("nan")
+                rec["realized_epsilon_bound"] = False
+            else:
+                realized_probability = float(predicted[realized_index])
+                rec["realized_log_score"] = -float(
+                    np.log(max(realized_probability, EPSILON))
+                )
+                rec["realized_epsilon_bound"] = realized_probability <= EPSILON
             rows.append(rec)
     return pd.DataFrame(rows)
 

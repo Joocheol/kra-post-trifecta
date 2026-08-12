@@ -61,7 +61,10 @@ def save(fig: plt.Figure, path: Path) -> None:
 
 
 def rank_probability_figure(rank: pd.DataFrame, path: Path) -> None:
-    labels = {"harville": "Harville", "stage_temperature": "Stage-adjusted"}
+    labels = {
+        "harville": "Calibrated Harville (alpha=1)",
+        "stage_temperature": "Calibrated + stage-adjusted",
+    }
     colors = {"harville": GREY, "stage_temperature": BLUE}
     hatches = {"harville": "///", "stage_temperature": ""}
     stages = [1, 2, 3]

@@ -4,12 +4,13 @@
 한글 LaTeX 논문을 함께 관리합니다. 데이터·브라우저의 기존 기능은 유지하며,
 논문은 삼쌍승식의 순위 상태가격을 주변화하여 단승·쌍승·복승·삼복승 가격을
 얼마나 재구성할 수 있는지를 주분석으로 삼습니다. 별도의 진단분석에서는
-연도 밖 착순으로 추정한 원시·단계조정 Harville과 단승식에서 고정한 확률가중
+게시가격 Harville(비보정), 연도 밖 착순으로 추정한 보정·단계조정 Harville과
+단승식에서 고정한 확률가중
 모형을 같은 경주의 전체 가격벡터에서 비교합니다.
 
 ## Paper
 
-- 가제: **경마 베팅시장의 정보 집계: 삼쌍승식 상태가격의 교차풀 정합성과 순위모형 진단**
+- 제목: **경마 베팅시장의 교차풀 가격 정합성: 삼쌍승식 상태가격과 순위모형 진단**
 - 원고: `main.tex`, `preamble.tex`, `sections/`
 - 연구 설계: `RESEARCH_PLAN.md`
 - 집필 원칙: `WRITING_GUIDE.md`
@@ -105,6 +106,24 @@ The two race-level CSVs are deterministic but intentionally not versioned. Their
 counts and embedded SHA-256 hashes are frozen in `outputs/data_audit_manifest.json`.
 CI regenerates both CSVs and the manifest, then byte-compares the tracked manifest;
 this indirect hash comparison is the freshness check for the untracked CSVs.
+
+## Main analysis
+
+표본감사 뒤 주분석과 심사 대응 강건성 산출물을 다음 순서로 재생성합니다.
+
+```bash
+python -m analysis.display_precision_audit
+python -m analysis.main_analysis
+python -m analysis.main_analysis_robustness
+python -m analysis.main_analysis_selection
+python -m analysis.main_analysis_heterogeneity_b
+python -m analysis.main_analysis_p3_joint_fast
+```
+
+`analysis.main_analysis`는 clean Panel A와 전체표본 Panel B, 동결 CSV와 LaTeX
+표를 모두 재생성하는 정식 진입점입니다. 개발 중의 제한 실행은
+`python -m analysis.main_analysis_runner --max-races N --skip-bounds`를 사용할
+수 있지만 동결 산출물 검증을 대체하지 않습니다.
 
 ## Behavioral-model analysis
 

@@ -48,7 +48,10 @@ def rank_table(rank: pd.DataFrame) -> list[str]:
     }
     if not required.issubset(rank.columns):
         raise ValueError(f"rank table lacks columns: {sorted(required - set(rank.columns))}")
-    labels = {"harville": "Harville", "stage_temperature": "단계조정"}
+    labels = {
+        "harville": "보정 Harville($\\alpha=1$)",
+        "stage_temperature": "보정·단계조정",
+    }
     lines = [
         "\\begin{tabular}{llrrr}",
         "\\toprule",
@@ -152,8 +155,8 @@ def same_sample_table(comparison: pd.DataFrame) -> list[str]:
             f"same-sample table lacks columns: {sorted(required - set(comparison.columns))}"
         )
     labels = {
-        "raw_harville": "원시 Harville",
-        "discounted_harville": "단계조정 Harville",
+        "raw_harville": "게시가격 Harville(비보정)",
+        "discounted_harville": "보정·단계조정 Harville",
         "M-R": "M-R",
         "M-S2": "M-S2",
         "M-S3": "M-S3",

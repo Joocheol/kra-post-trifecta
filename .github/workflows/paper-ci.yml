@@ -32,7 +32,7 @@ jobs:
           persist-credentials: false
 
       - name: Install analysis dependencies
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt -c constraints-behavioral.txt
 
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
@@ -94,7 +94,7 @@ jobs:
           persist-credentials: false
 
       - name: Install analysis dependencies
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt -c constraints-behavioral.txt
 
       - name: Recreate frozen race membership
         run: python -m analysis.data_audit --strict
@@ -184,7 +184,7 @@ jobs:
           persist-credentials: false
 
       - name: Install analysis dependencies
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt -c constraints-behavioral.txt
 
       - name: Recreate frozen race membership
         run: python -m analysis.data_audit --strict
@@ -260,10 +260,31 @@ jobs:
               fsharp = bool(frow['joint_min_optimal'] and frow['joint_max_optimal'])
 
               if gsharp and fsharp:
-                  if not np.allclose(
-                      frow[value_cols].to_numpy(float), row[value_cols].to_numpy(float),
-                      rtol=1e-9, atol=1e-10, equal_nan=True,
-                  ):
+                  # HiGHS may return numerically equivalent sharp optima that
+                  # differ below the manuscript's reporting precision. Require
+                  # rendered agreement and cap any hidden raw drift.
+                  formats = {
+                      'joint_milp_lower': '.4f',
+                      'joint_milp_upper': '.4f',
+                      'joint_milp_width': '.4f',
+                      'width_ratio_joint_to_conservative': '.3f',
+                  }
+                  half_reporting_units = {
+                      'joint_milp_lower': 5e-5,
+                      'joint_milp_upper': 5e-5,
+                      'joint_milp_width': 5e-5,
+                      'width_ratio_joint_to_conservative': 5e-4,
+                  }
+                  rendered_frozen = [format(float(frow[col]), formats[col]) for col in value_cols]
+                  rendered_generated = [format(float(row[col]), formats[col]) for col in value_cols]
+                  raw_close = all(
+                      np.isclose(
+                          float(frow[col]), float(row[col]), rtol=0.0,
+                          atol=half_reporting_units[col], equal_nan=True,
+                      )
+                      for col in value_cols
+                  )
+                  if rendered_frozen != rendered_generated or not raw_close:
                       raise SystemExit(f"FAIL: sharp P3 row changed: {row['race_id']}")
                   continue
 
@@ -311,6 +332,53 @@ jobs:
       - name: Verify frozen compact main-analysis results
         shell: bash
         run: |
+          git show HEAD:outputs/main_external_log_scores.csv > /tmp/frozen-main-external-log-scores.csv
+          git show HEAD:tables/main_external_log_scores.tex > /tmp/frozen-main-external-log-scores.tex
+          python - <<'PY'
+          import numpy as np
+          import pandas as pd
+          import re
+          from pathlib import Path
+
+          frozen = pd.read_csv('/tmp/frozen-main-external-log-scores.csv')
+          generated = pd.read_csv('outputs/main_external_log_scores.csv')
+          if list(frozen.columns) != list(generated.columns):
+              raise SystemExit('FAIL: external log-score schema drifted')
+          label_columns = ['target_market']
+          count_columns = [
+              column for column in frozen.columns
+              if column.startswith('n_')
+              or column.endswith('_n_races')
+              or column.endswith('_count')
+          ]
+          for column in label_columns + count_columns:
+              if not frozen[column].equals(generated[column]):
+                  raise SystemExit(f'FAIL: external log-score labels/counts drifted: {column}')
+          float_columns = [
+              column for column in frozen.columns
+              if column not in label_columns + count_columns
+          ]
+          if not np.allclose(
+              frozen[float_columns].to_numpy(dtype=float),
+              generated[float_columns].to_numpy(dtype=float),
+              rtol=1e-8,
+              atol=1e-10,
+              equal_nan=True,
+          ):
+              raise SystemExit('FAIL: external log-score values drifted materially')
+          # The CSV carries the numeric contract.  The generated TeX must preserve
+          # labels and layout, but inherits the CSV's cross-platform float tolerance.
+          def normalized_table(path):
+              text = Path(path).read_text(encoding='utf-8')
+              return re.sub(r'(?<![A-Za-z])[-+]?\d[\d,]*(?:\.\d+)?', '<NUM>', text)
+
+          if normalized_table('/tmp/frozen-main-external-log-scores.tex') != normalized_table(
+              'tables/main_external_log_scores.tex'
+          ):
+              raise SystemExit('FAIL: external log-score table structure or labels drifted')
+          print('PASS: external log scores and table match the frozen semantic contract')
+          PY
+
           paths=(
             outputs/main_panel_a_summary.csv
             outputs/main_panel_b_summary.csv
@@ -329,6 +397,7 @@ jobs:
             outputs/main_heterogeneity_summary.csv
             outputs/main_heterogeneity_comparison.csv
             tables/main_panel_a.tex
+            tables/main_panel_a_auxiliary.tex
             tables/main_panel_b.tex
             tables/main_panel_b_capped.tex
             tables/main_benchmark_comparison.tex
