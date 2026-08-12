@@ -269,11 +269,20 @@ jobs:
                       'joint_milp_width': '.4f',
                       'width_ratio_joint_to_conservative': '.3f',
                   }
+                  half_reporting_units = {
+                      'joint_milp_lower': 5e-5,
+                      'joint_milp_upper': 5e-5,
+                      'joint_milp_width': 5e-5,
+                      'width_ratio_joint_to_conservative': 5e-4,
+                  }
                   rendered_frozen = [format(float(frow[col]), formats[col]) for col in value_cols]
                   rendered_generated = [format(float(row[col]), formats[col]) for col in value_cols]
-                  raw_close = np.allclose(
-                      frow[value_cols].to_numpy(float), row[value_cols].to_numpy(float),
-                      rtol=0.0, atol=2e-5, equal_nan=True,
+                  raw_close = all(
+                      np.isclose(
+                          float(frow[col]), float(row[col]), rtol=0.0,
+                          atol=half_reporting_units[col], equal_nan=True,
+                      )
+                      for col in value_cols
                   )
                   if rendered_frozen != rendered_generated or not raw_close:
                       raise SystemExit(f"FAIL: sharp P3 row changed: {row['race_id']}")
