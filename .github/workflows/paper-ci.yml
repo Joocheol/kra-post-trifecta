@@ -311,9 +311,42 @@ jobs:
       - name: Verify frozen compact main-analysis results
         shell: bash
         run: |
+          git show HEAD:outputs/main_external_log_scores.csv > /tmp/frozen-main-external-log-scores.csv
+          python - <<'PY'
+          import numpy as np
+          import pandas as pd
+
+          frozen = pd.read_csv('/tmp/frozen-main-external-log-scores.csv')
+          generated = pd.read_csv('outputs/main_external_log_scores.csv')
+          if list(frozen.columns) != list(generated.columns):
+              raise SystemExit('FAIL: external log-score schema drifted')
+          label_columns = ['target_market']
+          count_columns = [
+              column for column in frozen.columns
+              if column.startswith('n_')
+              or column.endswith('_n_races')
+              or column.endswith('_count')
+          ]
+          for column in label_columns + count_columns:
+              if not frozen[column].equals(generated[column]):
+                  raise SystemExit(f'FAIL: external log-score labels/counts drifted: {column}')
+          float_columns = [
+              column for column in frozen.columns
+              if column not in label_columns + count_columns
+          ]
+          if not np.allclose(
+              frozen[float_columns].to_numpy(dtype=float),
+              generated[float_columns].to_numpy(dtype=float),
+              rtol=1e-8,
+              atol=1e-10,
+              equal_nan=True,
+          ):
+              raise SystemExit('FAIL: external log-score values drifted materially')
+          print('PASS: external log scores match the frozen numeric contract')
+          PY
+
           paths=(
             outputs/main_panel_a_summary.csv
-            outputs/main_external_log_scores.csv
             outputs/main_panel_b_summary.csv
             outputs/main_panel_b_capped_summary.csv
             outputs/main_panel_a_improvements.csv

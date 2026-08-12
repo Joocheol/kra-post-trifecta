@@ -24,8 +24,12 @@ from analysis.main_analysis_core import aggregate_point, choose_other_race
 from analysis.main_analysis_guards import assert_win_uncapped
 from analysis.main_analysis_p3 import order_information_bounds
 from analysis.main_analysis_p3_joint import joint_p3_extrema
+from analysis.main_analysis_panels import validated_realized_index
 from analysis.main_analysis_runner import common_race_ids
-from analysis.main_analysis_report import external_log_score_summary
+from analysis.main_analysis_report import (
+    crossfitted_calibrated_log_scores,
+    external_log_score_summary,
+)
 
 
 class PriceSetTest(unittest.TestCase):
@@ -287,6 +291,77 @@ class OrderInformationBoundsTest(unittest.TestCase):
 
 
 class ExternalLogScoreTest(unittest.TestCase):
+    def test_realized_outcome_validation_returns_exclusions_without_raising(self) -> None:
+        actual = pd.DataFrame(
+            {
+                "first_no": [1, 2],
+                "second_no": [2, 1],
+                "is_hit": [True, False],
+            }
+        )
+        index, reason = validated_realized_index((1, 2, 3), actual, "exacta")
+        self.assertEqual(index, 0)
+        self.assertEqual(reason, "")
+
+        index, reason = validated_realized_index((1, 1, 3), actual, "exacta")
+        self.assertIsNone(index)
+        self.assertEqual(reason, "nonunique_top_three")
+
+        actual["is_hit"] = [True, True]
+        index, reason = validated_realized_index((1, 2, 3), actual, "exacta")
+        self.assertIsNone(index)
+        self.assertEqual(reason, "nonunique_hit")
+
+    @staticmethod
+    def _calibration_records() -> list[dict[str, object]]:
+        base = [
+            ("r1", "2024-01-01", 2024, np.array([0.8, 0.2]), 0),
+            ("r2", "2024-01-02", 2024, np.array([0.3, 0.7]), 1),
+            ("r3", "2025-01-01", 2025, np.array([0.6, 0.4]), 0),
+            ("r4", "2025-01-02", 2025, np.array([0.4, 0.6]), 1),
+        ]
+        return [
+            {
+                "race_id": race_id,
+                "race_date": race_date,
+                "year": year,
+                "target_market": "exacta",
+                "model": model,
+                "predicted": predicted.copy(),
+                "realized_index": realized_index,
+            }
+            for race_id, race_date, year, predicted, realized_index in base
+            for model in ("main", "harville")
+        ]
+
+    def test_crossfit_has_no_validation_year_leakage_and_normalizes(self) -> None:
+        records = self._calibration_records()
+        original = crossfitted_calibrated_log_scores(records)
+        self.assertTrue(
+            np.allclose(original["calibrated_probability_sum"].to_numpy(), 1.0)
+        )
+
+        changed = [dict(record) for record in records]
+        for record in changed:
+            if record["race_id"] == "r3":
+                record["realized_index"] = 1
+        revised = crossfitted_calibrated_log_scores(changed)
+        for model in ("main", "harville"):
+            before = original[
+                original["race_id"].eq("r4") & original["model"].eq(model)
+            ]["calibrated_realized_probability"].iloc[0]
+            after = revised[
+                revised["race_id"].eq("r4") & revised["model"].eq(model)
+            ]["calibrated_realized_probability"].iloc[0]
+            self.assertAlmostEqual(float(before), float(after))
+
+    def test_identical_model_inputs_receive_identical_calibration(self) -> None:
+        result = crossfitted_calibrated_log_scores(self._calibration_records())
+        pivot = result.pivot(
+            index="race_id", columns="model", values="calibrated_realized_probability"
+        )
+        self.assertTrue(np.allclose(pivot["main"], pivot["harville"]))
+
     def test_summary_uses_paired_races_and_positive_means_main_is_better(self) -> None:
         rows = []
         for race_id, race_date, main, harville in (
@@ -331,7 +406,9 @@ class ExternalLogScoreTest(unittest.TestCase):
                 }
             )
         result = external_log_score_summary(pd.DataFrame(rows), state_records).iloc[0]
+        self.assertEqual(int(result["n_candidate_races"]), 3)
         self.assertEqual(int(result["n_races"]), 3)
+        self.assertEqual(int(result["n_excluded_races"]), 0)
         self.assertAlmostEqual(float(result["raw_mean_improvement"]), 1 / 6)
         self.assertGreater(float(result["raw_date_cluster_ci_low"]), 0.0)
         self.assertEqual(int(result["raw_main_epsilon_bound_count"]), 0)

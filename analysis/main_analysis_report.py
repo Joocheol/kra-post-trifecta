@@ -155,6 +155,8 @@ def crossfitted_calibrated_log_scores(
                             np.log(max(realized_probability, EPSILON))
                         ),
                         "calibrated_epsilon_bound": realized_probability <= EPSILON,
+                        "calibrated_realized_probability": realized_probability,
+                        "calibrated_probability_sum": float(calibrated.sum()),
                     }
                 )
     return pd.DataFrame(rows)
@@ -179,6 +181,7 @@ def external_log_score_summary(
     selected = metrics[metrics["model"].isin({"main", "harville"})]
     calibrated = crossfitted_calibrated_log_scores(state_records)
     for target, group in selected.groupby("target_market", sort=True):
+        candidate_races = int(group["race_id"].nunique())
         pivot = group.pivot(
             index=["race_date", "race_id"], columns="model", values="realized_log_score"
         )[["main", "harville"]].dropna()
@@ -213,10 +216,27 @@ def external_log_score_summary(
             .astype(int)
             .to_dict()
         )
+        calibrated_bound_pivot = calibrated_target.pivot(
+            index=["race_date", "race_id"],
+            columns="model",
+            values="calibrated_epsilon_bound",
+        )[["main", "harville"]].reindex(calibrated_pivot.index)
+        no_epsilon = ~calibrated_bound_pivot.any(axis=1)
+        calibrated_no_epsilon = calibrated_improvement[no_epsilon.to_numpy()]
+        no_epsilon_dates = calibrated_pivot.index.get_level_values(
+            "race_date"
+        ).to_numpy()[no_epsilon.to_numpy()]
+        no_epsilon_low, no_epsilon_high = cluster_bootstrap_mean_ci(
+            calibrated_no_epsilon,
+            no_epsilon_dates,
+            label=f"external-log-score-calibrated-no-epsilon|{target}",
+        )
         rows.append(
             {
                 "target_market": target,
+                "n_candidate_races": candidate_races,
                 "n_races": int(len(pivot)),
+                "n_excluded_races": candidate_races - int(len(pivot)),
                 "raw_mean_main_log_score": float(pivot["main"].mean()),
                 "raw_mean_harville_log_score": float(pivot["harville"].mean()),
                 "raw_mean_improvement": float(np.mean(improvement)),
@@ -228,6 +248,12 @@ def external_log_score_summary(
                 "calibrated_mean_improvement": float(np.mean(calibrated_improvement)),
                 "calibrated_date_cluster_ci_low": calibrated_low,
                 "calibrated_date_cluster_ci_high": calibrated_high,
+                "calibrated_no_epsilon_n_races": int(no_epsilon.sum()),
+                "calibrated_no_epsilon_mean_improvement": float(
+                    np.mean(calibrated_no_epsilon)
+                ),
+                "calibrated_no_epsilon_date_cluster_ci_low": no_epsilon_low,
+                "calibrated_no_epsilon_date_cluster_ci_high": no_epsilon_high,
                 "raw_main_epsilon_bound_count": int(epsilon_counts.get("main", 0)),
                 "raw_harville_epsilon_bound_count": int(
                     epsilon_counts.get("harville", 0)
@@ -487,7 +513,13 @@ def write_latex_tables(
         "quinella": "복승",
         "trio": "삼복승",
     }
-    model_labels = {"main": "삼쌍승 주변화", "harville": "Harville"}
+    model_labels = {
+        "main": "삼쌍승 주변화",
+        "harville": "단승--Harville",
+        "other_race": "타경주",
+        "permutation": "동일경주 순열",
+        "uniform": "균등",
+    }
     lines = [
         r"\begin{tabular}{llrrrr}",
         r"\toprule",
@@ -496,7 +528,7 @@ def write_latex_tables(
     ]
     for _, row in summary_a.iterrows():
         lines.append(
-            f"{fmt(row['target_market'])} & {fmt(row['model'])} & {fmt(row['n_races'])} & "
+            f"{market_labels[row['target_market']]} & {model_labels[row['model']]} & {fmt(row['n_races'])} & "
             f"{fmt(row['median_tv'])} & {fmt(row['median_tv_ci_low'])} & {fmt(row['median_tv_ci_high'])} \\\\"
         )
     lines += [r"\bottomrule", r"\end{tabular}"]
@@ -540,9 +572,9 @@ def write_latex_tables(
     )
     log_scores = log_scores.sort_values("target_order")
     lines = [
-        r"\begin{tabular}{lrrrrr}",
+        r"\begin{tabular}{lrrrrrr}",
         r"\toprule",
-        r"승식 & 경주 수 & 미보정 평균 개선[날짜 CI] & 미보정 중앙 개선[경주 CI] & 보정 평균 개선[날짜 CI] & EPS 구속(미;보정) \\",
+        r"승식 & 유효 경주(제외) & 미보정 평균 개선[날짜 CI] & 미보정 중앙 개선[경주 CI] & 보정 평균 개선[날짜 CI] & 보정 무구속 평균[날짜 CI]; $N$ & EPS 구속(미;보정) \\",
         r"\midrule",
     ]
     for _, row in log_scores.iterrows():
@@ -560,9 +592,16 @@ def write_latex_tables(
             f"[{row['calibrated_date_cluster_ci_low']:.4f}, "
             f"{row['calibrated_date_cluster_ci_high']:.4f}]"
         )
+        calibrated_no_epsilon = (
+            f"{row['calibrated_no_epsilon_mean_improvement']:.4f}"
+            f"[{row['calibrated_no_epsilon_date_cluster_ci_low']:.4f}, "
+            f"{row['calibrated_no_epsilon_date_cluster_ci_high']:.4f}]; "
+            f"{int(row['calibrated_no_epsilon_n_races']):,}"
+        )
         lines.append(
-            f"{market_labels[row['target_market']]} & {int(row['n_races']):,} & "
-            f"{raw_mean} & {raw_median} & {calibrated_mean} & "
+            f"{market_labels[row['target_market']]} & {int(row['n_races']):,}"
+            f"({int(row['n_excluded_races']):,}) & "
+            f"{raw_mean} & {raw_median} & {calibrated_mean} & {calibrated_no_epsilon} & "
             f"{int(row['raw_main_epsilon_bound_count'])}/"
             f"{int(row['raw_harville_epsilon_bound_count'])};"
             f"{int(row['calibrated_main_epsilon_bound_count'])}/"
@@ -582,7 +621,7 @@ def write_latex_tables(
         ]
         for _, row in summary_b.iterrows():
             lines.append(
-                f"{fmt(row['target_market'])} & {fmt(row['model'])} & {fmt(row['n_races'])} & "
+                f"{market_labels[row['target_market']]} & {model_labels[row['model']]} & {fmt(row['n_races'])} & "
                 f"{fmt(row['median_tv_lower'])} & [{fmt(row['median_tv_lower_ci_low'])}, {fmt(row['median_tv_lower_ci_high'])}] & "
                 f"{fmt(row['median_tv_upper_outer'])} & [{fmt(row['median_tv_upper_outer_ci_low'])}, {fmt(row['median_tv_upper_outer_ci_high'])}] \\\\"
             )
@@ -601,11 +640,11 @@ def write_latex_tables(
         r"\midrule",
     ]
     for _, row in merged.iterrows():
-        benchmark = fmt(row["benchmark"])
+        benchmark = model_labels[row["benchmark"]]
         if row["benchmark"] == "other_race":
             benchmark += r"$^{\dagger}$"
         lines.append(
-            f"{fmt(row['panel'])} & {fmt(row['target_market'])} & {benchmark} & {fmt(row['n_races'])} & "
+            f"{fmt(row['panel'])} & {market_labels[row['target_market']]} & {benchmark} & {fmt(row['n_races'])} & "
             f"{fmt(row['median_improvement_lower'])} & [{fmt(row['ci_low'])}, {fmt(row['ci_high'])}] & {fmt(row['main_better'])} \\\\"
         )
     lines += [r"\bottomrule", r"\end{tabular}"]
@@ -634,7 +673,7 @@ def write_latex_tables(
 def write_panel_b_subset_table(table_dir: Path, summary: pd.DataFrame) -> Path:
     """Write the capped-only Panel B table requested in external review."""
     labels = {"exacta": "쌍승", "quinella": "복승", "trio": "삼복승", "win": "단승"}
-    models = {"main": "삼쌍승 주변화", "harville": "Harville"}
+    models = {"main": "삼쌍승 주변화", "harville": "단승--Harville"}
     data = summary[summary["model"].isin(models)].copy()
     data["target_order"] = data["target_market"].map(
         {"win": 0, "exacta": 1, "quinella": 2, "trio": 3}

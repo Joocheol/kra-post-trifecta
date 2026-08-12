@@ -75,6 +75,33 @@ def interval_for_frame(frame: pd.DataFrame) -> PriceSet:
     )
 
 
+def validated_realized_index(
+    arrival_values: object,
+    actual_frame: pd.DataFrame,
+    target_name: str,
+) -> tuple[int | None, str]:
+    """Return a unique, internally consistent realized outcome or an exclusion reason."""
+    try:
+        arrivals = tuple(int(value) for value in arrival_values)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None, "unparseable_arrival"
+    if len(arrivals) < 3 or len(set(arrivals[:3])) != 3:
+        return None, "nonunique_top_three"
+    realized_key = target_key(arrivals[:3], target_name)
+    target_keys = target_keys_from_frame(actual_frame, target_name)
+    if realized_key not in target_keys:
+        return None, "realized_outcome_absent"
+    realized_index = target_keys.index(realized_key)
+    hit_index = np.flatnonzero(
+        actual_frame["is_hit"].fillna(False).to_numpy(dtype=bool)
+    )
+    if len(hit_index) != 1:
+        return None, "nonunique_hit"
+    if int(hit_index[0]) != realized_index:
+        return None, "hit_arrival_disagreement"
+    return realized_index, ""
+
+
 def panel_a(
     races: pd.DataFrame,
     trifecta: RaceSlices,
@@ -102,28 +129,9 @@ def panel_a(
         permutation = deterministic_permutation(len(source), race_id, target_name, "A")
         q_perm = q_main[permutation]
         n = int(n_map[race_id])
-        arrival_values = race_lookup.at[race_id, "arrival_tuple"]
-        if len(arrival_values) < 3 or len(set(arrival_values[:3])) != 3:
-            raise ValueError(f"{race_id}: external log score requires a unique top-three order")
-        arrival = tuple(int(value) for value in arrival_values[:3])
-        realized_key = target_key(arrival, target_name)
-        target_keys = target_keys_from_frame(actual_frame, target_name)
-        try:
-            realized_index = target_keys.index(realized_key)
-        except ValueError as exc:
-            raise ValueError(
-                f"realized {target_name} outcome is absent for race {race_id}"
-            ) from exc
-        hit_index = np.flatnonzero(actual_frame["is_hit"].fillna(False).to_numpy(dtype=bool))
-        if len(hit_index) != 1:
-            raise ValueError(
-                f"{race_id}: {target_name} has {len(hit_index)} winning combinations; "
-                "dead heats are not point-scored"
-            )
-        if int(hit_index[0]) != realized_index:
-            raise ValueError(
-                f"{race_id}: {target_name} hit flag disagrees with parsed arrival order"
-            )
+        realized_index, outcome_exclusion_reason = validated_realized_index(
+            race_lookup.at[race_id, "arrival_tuple"], actual_frame, target_name
+        )
         race_date = str(race_lookup.at[race_id, "race_date"])
         year = int(race_lookup.at[race_id, "year"])
 
@@ -144,7 +152,7 @@ def panel_a(
                 donor_id,
             )
 
-        if state_records is not None:
+        if state_records is not None and realized_index is not None:
             for model in ("main", "harville"):
                 predicted = predictions[model][0]
                 state_records.append(
@@ -169,11 +177,19 @@ def panel_a(
                 "n_valid_horses": n,
                 "n_outcomes": cdim,
                 "donor_race_id": used_donor,
+                "outcome_valid": realized_index is not None,
+                "outcome_exclusion_reason": outcome_exclusion_reason,
             }
             rec.update(point_metrics(actual, predicted))
-            realized_probability = float(predicted[realized_index])
-            rec["realized_log_score"] = -float(np.log(max(realized_probability, EPSILON)))
-            rec["realized_epsilon_bound"] = realized_probability <= EPSILON
+            if realized_index is None:
+                rec["realized_log_score"] = float("nan")
+                rec["realized_epsilon_bound"] = False
+            else:
+                realized_probability = float(predicted[realized_index])
+                rec["realized_log_score"] = -float(
+                    np.log(max(realized_probability, EPSILON))
+                )
+                rec["realized_epsilon_bound"] = realized_probability <= EPSILON
             rows.append(rec)
     return pd.DataFrame(rows)
 
