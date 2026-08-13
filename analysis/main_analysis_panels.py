@@ -92,7 +92,9 @@ def validated_realized_index(
         return None, "unparseable_arrival"
     required_depth = {"win": 1, "exacta": 2, "quinella": 2, "trio": 3}[target_name]
     required_arrivals = arrivals[:required_depth]
-    if len(required_arrivals) < required_depth or len(set(required_arrivals)) != required_depth:
+    if len(required_arrivals) < required_depth:
+        return None, "unparseable_arrival"
+    if len(set(required_arrivals)) != required_depth:
         return None, "nonunique_required_finish"
     padded_arrivals = required_arrivals + (0,) * (3 - required_depth)
     realized_key = target_key(padded_arrivals, target_name)

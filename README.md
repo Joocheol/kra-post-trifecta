@@ -123,7 +123,8 @@ python -m analysis.main_analysis_p3_joint_fast
 `analysis.main_analysis`는 clean Panel A와 전체표본 Panel B, 동결 CSV와 LaTeX
 표를 모두 재생성하는 정식 진입점입니다. 개발 중의 제한 실행은
 `python -m analysis.main_analysis_runner --max-races N --skip-bounds`를 사용할
-수 있지만 동결 산출물 검증을 대체하지 않습니다.
+수 있지만 동결 산출물 검증을 대체하지 않습니다. 제한 표본이 한 연도만
+포함하면 연도제외 교차보정 통계는 `--`로 생략하고 미보정 진단만 생성합니다.
 
 ## Behavioral-model analysis
 
