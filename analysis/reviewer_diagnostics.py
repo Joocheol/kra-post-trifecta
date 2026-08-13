@@ -254,7 +254,12 @@ def turnover_matched_finite_pool(
     all_clean = set().union(*(clean_ids(sample_csv, m) for m in TARGET_MARKETS))
     trifecta = read_parquets(data_root, "trifecta", columns=trifecta_columns)
     trifecta = trifecta[trifecta["race_id"].astype(str).isin(all_clean)].copy()
-    turnover = _turnover_frame(data_root, all_clean)
+    try:
+        turnover = _turnover_frame(data_root, all_clean)
+    except Exception as exc:
+        if "turnover_won" in str(exc):
+            return pd.DataFrame()
+        raise
 
     for market in TARGET_MARKETS:
         market_ids = clean_ids(sample_csv, market)
