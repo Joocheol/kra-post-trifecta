@@ -1,0 +1,40 @@
+name: One-time citation wording fix
+
+on:
+  push:
+    branches:
+      - agent/cultural-industry-revision
+    paths:
+      - citation_wording_fix.txt
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/cultural-industry-revision
+      - name: Fix citation placement
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('submission/cultural-industry/manuscript.json')
+          s = p.read_text(encoding='utf-8')
+          old = '사행산업통합감독위원회의 제4차 건전발전 종합계획(2024–2028)은(사행산업통합감독위원회 2023) 디지털'
+          new = '사행산업통합감독위원회의 제4차 건전발전 종합계획(2024–2028)(사행산업통합감독위원회 2023)은 디지털'
+          if old not in s:
+              raise SystemExit('target wording not found')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+          python -m json.tool submission/cultural-industry/manuscript.json >/dev/null
+      - name: Commit and remove one-time trigger
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add submission/cultural-industry/manuscript.json
+          git rm .github/workflows/fix-ngcc-citation-once.yml citation_wording_fix.txt
+          git commit -m "Fix policy citation placement"
+          git push origin HEAD:agent/cultural-industry-revision
