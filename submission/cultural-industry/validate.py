@@ -21,6 +21,7 @@ checks = {
     "sample": "19,284",
     "clean": "3,321",
     "superiority": "97.6%",
+    "capped_only": "[0.0572, 0.0727]",
     "external_exacta": "0.0275[0.0062, 0.0486]",
     "external_quinella": "0.0235[0.0026, 0.0436]",
     "external_trio": "0.0423[0.0196, 0.0665]",
@@ -40,6 +41,7 @@ for term in ["김주철", "Joocheol", "연세대학교", "yonsei"]:
 
 info = subprocess.check_output(["pdfinfo", str(required[2])]).decode("utf-8", errors="ignore")
 assert "Page size:       612 x 792 pts (letter)" in info, "review PDF is not letter size"
+assert "Pages:           10" in info, "review PDF is not 10 pages"
 
 report = json.loads((HERE / "hwp-build-report.json").read_text(encoding="utf-8"))
 for output in report["outputs"]:

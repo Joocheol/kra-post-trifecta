@@ -72,6 +72,8 @@ def table_flow(t):
     rows = [[P(x, "table_head") for x in t["headers"]]] + [[P(x, "table_cell") for x in row] for row in t["rows"]]
     if len(t["headers"]) == 3:
         widths = [COL_W*0.18, COL_W*0.34, COL_W*0.48]
+    elif len(t["headers"]) == 4:
+        widths = [COL_W*0.16, COL_W*0.18, COL_W*0.33, COL_W*0.33]
     else:
         widths = [COL_W*0.14, COL_W*0.17, COL_W*0.20, COL_W*0.245, COL_W*0.245]
     tab = Table(rows, colWidths=widths, repeatRows=1, hAlign="LEFT")
@@ -108,7 +110,7 @@ def make_pdf(path, anonymous=False):
             if "table" in sub:
                 story.extend(table_flow(sub["table"]))
             story.extend(P(x) for x in sub.get("afterTable", []))
-    story += [P("데이터와 코드 가용성", "minor"), P(DATA["availability"]), P("참고문헌", "major")]
+    story += [P("데이터와 코드 가용성", "minor"), P(DATA["availability"]), PageBreak(), P("참고문헌", "major")]
     story.extend(P(x, "ref") for x in DATA["references"])
     doc = SubmissionDoc(str(path), title=DATA["title"], author="" if anonymous else DATA["author"])
     doc.build(story)

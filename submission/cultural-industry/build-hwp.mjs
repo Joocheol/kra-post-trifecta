@@ -119,7 +119,7 @@ function appendTable(doc, state, table) {
   if (idx >= doc.getParagraphCount(0)) ok(doc.insertParagraph(0, idx - 1), `insert table paragraph ${idx}`);
   const cols = table.headers.length;
   const usable = 23600;
-  const weights = cols === 3 ? [0.18,0.34,0.48] : [0.14,0.17,0.20,0.245,0.245];
+  const weights = cols === 3 ? [0.18,0.34,0.48] : (cols === 4 ? [0.16,0.18,0.33,0.33] : [0.14,0.17,0.20,0.245,0.245]);
   const widths = weights.map(x => Math.floor(usable*x));
   widths[widths.length - 1] += usable - widths.reduce((a,b) => a+b,0);
   const made = ok(doc.createTableEx(JSON.stringify({ sectionIdx: 0, paraIdx: idx, charOffset: 0, rowCount: table.rows.length + 1, colCount: cols, treatAsChar: true, colWidths: widths })), `create table ${idx}`);
