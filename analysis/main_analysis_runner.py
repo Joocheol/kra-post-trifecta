@@ -216,7 +216,11 @@ def main() -> None:
     metrics_a = pd.concat(panel_a_frames, ignore_index=True)
     bounds_b = None if args.skip_bounds else pd.concat(panel_b_frames, ignore_index=True)
     summary_a = summarize_panel_a(metrics_a)
-    log_scores = external_log_score_summary(metrics_a, log_score_state_records)
+    log_scores = external_log_score_summary(
+        metrics_a,
+        log_score_state_records,
+        allow_uncalibrated_only=args.max_races > 0,
+    )
     summary_b = None if bounds_b is None else summarize_panel_b(bounds_b)
     capped_bounds_b = (
         None

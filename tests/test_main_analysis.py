@@ -307,6 +307,10 @@ class ExternalLogScoreTest(unittest.TestCase):
         self.assertIsNone(index)
         self.assertEqual(reason, "nonunique_required_finish")
 
+        index, reason = validated_realized_index((1,), actual, "exacta")
+        self.assertIsNone(index)
+        self.assertEqual(reason, "unparseable_arrival")
+
         index, reason = validated_realized_index((1, 2, 2), actual, "exacta")
         self.assertEqual(index, 0)
         self.assertEqual(reason, "")
@@ -426,6 +430,50 @@ class ExternalLogScoreTest(unittest.TestCase):
         self.assertGreater(float(result["raw_date_cluster_ci_low"]), 0.0)
         self.assertEqual(int(result["raw_main_epsilon_bound_count"]), 0)
         self.assertEqual(int(result["raw_harville_epsilon_bound_count"]), 0)
+
+    def test_single_year_development_summary_omits_only_calibration(self) -> None:
+        metrics = pd.DataFrame(
+            [
+                {
+                    "race_id": "r1",
+                    "race_date": "2025-01-01",
+                    "target_market": "exacta",
+                    "model": "main",
+                    "realized_log_score": 1.0,
+                    "realized_epsilon_bound": False,
+                },
+                {
+                    "race_id": "r1",
+                    "race_date": "2025-01-01",
+                    "target_market": "exacta",
+                    "model": "harville",
+                    "realized_log_score": 1.2,
+                    "realized_epsilon_bound": False,
+                },
+            ]
+        )
+        state_records = [
+            {
+                "race_id": "r1",
+                "race_date": "2025-01-01",
+                "year": 2025,
+                "target_market": "exacta",
+                "model": model,
+                "predicted": np.array([probability, 1.0 - probability]),
+                "realized_index": 0,
+            }
+            for model, probability in (("main", np.exp(-1.0)), ("harville", np.exp(-1.2)))
+        ]
+
+        with self.assertRaisesRegex(ValueError, "at least two years"):
+            external_log_score_summary(metrics, state_records)
+
+        result = external_log_score_summary(
+            metrics, state_records, allow_uncalibrated_only=True
+        ).iloc[0]
+        self.assertAlmostEqual(float(result["raw_mean_improvement"]), 0.2)
+        self.assertTrue(np.isnan(float(result["calibrated_mean_improvement"])))
+        self.assertEqual(int(result["calibrated_no_epsilon_n_races"]), 0)
 
 
 if __name__ == "__main__":

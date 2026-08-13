@@ -169,9 +169,18 @@ def crossfitted_calibrated_log_scores(
 
 
 def external_log_score_summary(
-    metrics: pd.DataFrame, state_records: list[dict[str, object]]
+    metrics: pd.DataFrame,
+    state_records: list[dict[str, object]],
+    *,
+    allow_uncalibrated_only: bool = False,
 ) -> pd.DataFrame:
-    """Compare raw and symmetrically calibrated realized-outcome log scores."""
+    """Compare raw and symmetrically calibrated realized-outcome log scores.
+
+    A deterministic development subset can contain only one year.  When
+    ``allow_uncalibrated_only`` is true, retain its raw diagnostic and leave the
+    cross-fitted fields unavailable instead of failing the smoke run.  The
+    production path remains strict and still requires at least two years.
+    """
     required = {
         "race_id",
         "race_date",
@@ -185,7 +194,28 @@ def external_log_score_summary(
         raise ValueError(f"external log-score input lacks columns: {sorted(missing)}")
     rows: list[dict[str, object]] = []
     selected = metrics[metrics["model"].isin({"main", "harville"})]
-    calibrated = crossfitted_calibrated_log_scores(state_records)
+    calibrated: pd.DataFrame | None
+    if allow_uncalibrated_only:
+        state_frame = pd.DataFrame(state_records)
+        has_crossfit_support = {
+            "target_market",
+            "model",
+            "year",
+        }.issubset(state_frame.columns)
+        if has_crossfit_support:
+            year_counts = state_frame.groupby(["target_market", "model"])[
+                "year"
+            ].nunique()
+            has_crossfit_support = bool(len(year_counts)) and bool(
+                (year_counts >= 2).all()
+            )
+        calibrated = (
+            crossfitted_calibrated_log_scores(state_records)
+            if has_crossfit_support
+            else None
+        )
+    else:
+        calibrated = crossfitted_calibrated_log_scores(state_records)
     exclusion_reasons = (
         "unparseable_arrival",
         "nonunique_required_finish",
@@ -220,41 +250,55 @@ def external_log_score_summary(
         epsilon_counts = (
             group.groupby("model")["realized_epsilon_bound"].sum().astype(int).to_dict()
         )
-        calibrated_target = calibrated[calibrated["target_market"].eq(target)]
-        calibrated_pivot = calibrated_target.pivot(
-            index=["race_date", "race_id"], columns="model", values="calibrated_log_score"
-        )[["main", "harville"]].dropna()
-        if not calibrated_pivot.index.equals(pivot.index):
-            raise ValueError(f"{target}: raw and calibrated log-score races differ")
-        calibrated_improvement = (
-            calibrated_pivot["harville"] - calibrated_pivot["main"]
-        ).to_numpy(dtype=float)
-        calibrated_low, calibrated_high = cluster_bootstrap_mean_ci(
-            calibrated_improvement,
-            calibrated_pivot.index.get_level_values("race_date").to_numpy(),
-            label=f"external-log-score-calibrated|{target}",
-        )
-        calibrated_epsilon_counts = (
-            calibrated_target.groupby("model")["calibrated_epsilon_bound"]
-            .sum()
-            .astype(int)
-            .to_dict()
-        )
-        calibrated_bound_pivot = calibrated_target.pivot(
-            index=["race_date", "race_id"],
-            columns="model",
-            values="calibrated_epsilon_bound",
-        )[["main", "harville"]].reindex(calibrated_pivot.index)
-        no_epsilon = ~calibrated_bound_pivot.any(axis=1)
-        calibrated_no_epsilon = calibrated_improvement[no_epsilon.to_numpy()]
-        no_epsilon_dates = calibrated_pivot.index.get_level_values(
-            "race_date"
-        ).to_numpy()[no_epsilon.to_numpy()]
-        no_epsilon_low, no_epsilon_high = cluster_bootstrap_mean_ci(
-            calibrated_no_epsilon,
-            no_epsilon_dates,
-            label=f"external-log-score-calibrated-no-epsilon|{target}",
-        )
+        calibrated_mean = float("nan")
+        calibrated_low = float("nan")
+        calibrated_high = float("nan")
+        calibrated_no_epsilon_n = 0
+        calibrated_no_epsilon_mean = float("nan")
+        no_epsilon_low = float("nan")
+        no_epsilon_high = float("nan")
+        calibrated_epsilon_counts: dict[str, int] = {}
+        if calibrated is not None:
+            calibrated_target = calibrated[calibrated["target_market"].eq(target)]
+            calibrated_pivot = calibrated_target.pivot(
+                index=["race_date", "race_id"],
+                columns="model",
+                values="calibrated_log_score",
+            )[["main", "harville"]].dropna()
+            if not calibrated_pivot.index.equals(pivot.index):
+                raise ValueError(f"{target}: raw and calibrated log-score races differ")
+            calibrated_improvement = (
+                calibrated_pivot["harville"] - calibrated_pivot["main"]
+            ).to_numpy(dtype=float)
+            calibrated_mean = float(np.mean(calibrated_improvement))
+            calibrated_low, calibrated_high = cluster_bootstrap_mean_ci(
+                calibrated_improvement,
+                calibrated_pivot.index.get_level_values("race_date").to_numpy(),
+                label=f"external-log-score-calibrated|{target}",
+            )
+            calibrated_epsilon_counts = (
+                calibrated_target.groupby("model")["calibrated_epsilon_bound"]
+                .sum()
+                .astype(int)
+                .to_dict()
+            )
+            calibrated_bound_pivot = calibrated_target.pivot(
+                index=["race_date", "race_id"],
+                columns="model",
+                values="calibrated_epsilon_bound",
+            )[["main", "harville"]].reindex(calibrated_pivot.index)
+            no_epsilon = ~calibrated_bound_pivot.any(axis=1)
+            calibrated_no_epsilon = calibrated_improvement[no_epsilon.to_numpy()]
+            no_epsilon_dates = calibrated_pivot.index.get_level_values(
+                "race_date"
+            ).to_numpy()[no_epsilon.to_numpy()]
+            calibrated_no_epsilon_n = int(no_epsilon.sum())
+            calibrated_no_epsilon_mean = float(np.mean(calibrated_no_epsilon))
+            no_epsilon_low, no_epsilon_high = cluster_bootstrap_mean_ci(
+                calibrated_no_epsilon,
+                no_epsilon_dates,
+                label=f"external-log-score-calibrated-no-epsilon|{target}",
+            )
         rows.append(
             {
                 "target_market": target,
@@ -273,13 +317,11 @@ def external_log_score_summary(
                 "raw_median_improvement": median,
                 "raw_race_bootstrap_ci_low": race_low,
                 "raw_race_bootstrap_ci_high": race_high,
-                "calibrated_mean_improvement": float(np.mean(calibrated_improvement)),
+                "calibrated_mean_improvement": calibrated_mean,
                 "calibrated_date_cluster_ci_low": calibrated_low,
                 "calibrated_date_cluster_ci_high": calibrated_high,
-                "calibrated_no_epsilon_n_races": int(no_epsilon.sum()),
-                "calibrated_no_epsilon_mean_improvement": float(
-                    np.mean(calibrated_no_epsilon)
-                ),
+                "calibrated_no_epsilon_n_races": calibrated_no_epsilon_n,
+                "calibrated_no_epsilon_mean_improvement": calibrated_no_epsilon_mean,
                 "calibrated_no_epsilon_date_cluster_ci_low": no_epsilon_low,
                 "calibrated_no_epsilon_date_cluster_ci_high": no_epsilon_high,
                 "raw_main_epsilon_bound_count": int(epsilon_counts.get("main", 0)),
