@@ -1,0 +1,1 @@
+Fix the NGCC citation placement once, then remove this trigger.
