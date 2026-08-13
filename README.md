@@ -77,7 +77,8 @@ Parsed files are parquet datasets intended to be read with `pyarrow`.
 ## Scripts
 
 - `scripts/kra_reparse_raw.py` — rebuilds `KRA/parsed/` from the raw JSON
-  gzip archive. Documents the raw-to-parsed transformation.
+  gzip archive, including race-market turnover in `market_status`. Documents
+  the raw-to-parsed transformation.
 - `analysis/data_audit.py` — audits race/market support, keys, odds validity and
   capped odds; freezes the complete, clean and interval-analysis samples.
 - `scripts/build_site_data.py` — regenerates site metadata

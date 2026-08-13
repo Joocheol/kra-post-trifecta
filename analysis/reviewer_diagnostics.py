@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Reviewer-requested diagnostics for odds levels and finite-pool precision.
 
-The repository snapshot contains posted odds but not race-market turnover.  The
-finite-pool calculation is therefore an explicitly labelled effective-ticket
-sensitivity analysis, not an estimate of the actual sampling-noise floor.
+Archived KRA pages contain race-market turnover, and the revised raw-data parser
+preserves it. Total turnover alone does not identify the number of independent
+betting decisions or the effective ticket count. The finite-pool calculation is
+therefore an explicitly labelled effective-ticket sensitivity analysis, not an
+estimate of the actual sampling-noise floor.
 """
 
 from __future__ import annotations
