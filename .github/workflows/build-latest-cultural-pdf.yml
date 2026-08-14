@@ -45,6 +45,12 @@ jobs:
               assert data.startswith(b'%PDF-') and b'%%EOF' in data[-4096:], p
               print(p, len(data))
           PY
+      - name: Upload latest author PDF
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: cultural-industry-latest-pdf
+          path: submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf
+          retention-days: 7
       - name: Commit PDFs
         shell: bash
         run: |
