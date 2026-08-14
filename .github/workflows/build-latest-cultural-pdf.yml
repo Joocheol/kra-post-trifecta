@@ -33,10 +33,18 @@ jobs:
       - name: Verify PDFs
         shell: bash
         run: |
-          pdfinfo submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf
-          pdfinfo submission/cultural-industry/kra-cultural-industry-submission-blind-review.pdf
           test -s submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf
           test -s submission/cultural-industry/kra-cultural-industry-submission-blind-review.pdf
+          python - <<'PY'
+          from pathlib import Path
+          for p in [
+              Path('submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf'),
+              Path('submission/cultural-industry/kra-cultural-industry-submission-blind-review.pdf'),
+          ]:
+              data=p.read_bytes()
+              assert data.startswith(b'%PDF-') and b'%%EOF' in data[-4096:], p
+              print(p, len(data))
+          PY
       - name: Commit PDFs
         shell: bash
         run: |
