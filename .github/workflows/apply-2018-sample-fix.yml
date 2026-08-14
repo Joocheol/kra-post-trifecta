@@ -1,0 +1,74 @@
+name: Restore 2018-07-01 sample
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/cultural-industry-revision
+    paths:
+      - '.github/workflows/apply-2018-sample-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: agent/cultural-industry-revision
+      - run: python -m pip install -r requirements.txt -c constraints-behavioral.txt
+      - name: Correct cap semantics and restore date
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          p=Path('analysis/data_audit.py')
+          s=p.read_text()
+          s=s.replace('EXCLUDED_DATES = frozenset({"2018-07-01"})','EXCLUDED_DATES = frozenset()')
+          s=s.replace('    cap_flag = frame["is_capped_odds"].fillna(False).to_numpy(dtype=bool)\n    cap_flag_mismatch = (~missing_cap_flag) & (cap_flag != (odds >= 9999.9))',
+          '    stored_cap_flag = frame["is_capped_odds"].fillna(False).to_numpy(dtype=bool)\n    # 9999.9 is the censoring placeholder. Historical KRA pages can contain\n    # genuine displayed odds above 9999.9, which must remain point observations.\n    cap_flag = np.isclose(odds, 9999.9, rtol=0.0, atol=1e-9)\n    cap_flag_mismatch = (~missing_cap_flag) & (stored_cap_flag != cap_flag) & ~(odds > 9999.9)')
+          p.write_text(s)
+
+          p=Path('scripts/kra_reparse_raw.py')
+          s=p.read_text().replace('    return odds is not None and odds >= 9999.9','    return odds is not None and abs(odds - 9999.9) <= 1e-9')
+          p.write_text(s)
+
+          p=Path('README.md')
+          s=p.read_text().replace('- Excluded years: `2020`, `2021` (COVID-19 period)','- Data unavailable: `2020`, `2021`').replace('- Excluded date: `2018-07-01` — 9999 초과 데이터 존재\n','')
+          p.write_text(s)
+
+          p=Path('submission/cultural-industry/manuscript.json')
+          data=json.loads(p.read_text())
+          raw=json.dumps(data, ensure_ascii=False)
+          raw=raw.replace('19,284','19,301').replace('3,321','3,338').replace('17.2%','17.3%')
+          raw=raw.replace('2016년 6월부터 2025년 12월까지(2020–2021년 제외)', '2016년 6월부터 2019년 12월까지와 2022년 1월부터 2025년 12월까지')
+          raw=raw.replace('2016년 6월부터 2025년 12월까지이며, 시장 운영이 평시와 크게 달랐던 2020–2021년은 제외했다. 분석용 수집 후보는 19,301개 경주였다. 이 가운데 원자료에 게시 표시상한 9,999.9를 넘는 값이 존재한 2018년 7월 1일 17개 경주를 사전 규칙으로 제외해 최종 19,301개 경주를 사용했다. 표본 안에서는 승식 미발매나 파싱 실패 때문에 추가로 제외된 경주는 없었다.',
+          '자료가 확보된 기간은 2016년 6월부터 2019년 12월까지와 2022년 1월부터 2025년 12월까지다. 2020–2021년 자료는 확보되어 있지 않다. 이용 가능한 19,301개 경주를 모두 분석에 사용했으며, 승식 미발매나 파싱 실패 때문에 추가로 제외된 경주는 없었다.')
+          raw=raw.replace('from June 2016 through December 2025, excluding 2020–2021', 'from June 2016 through December 2019 and from January 2022 through December 2025')
+          p.write_text(json.dumps(json.loads(raw), ensure_ascii=False, indent=2)+'\n')
+          PY
+      - name: Regenerate audit and main analysis
+        shell: bash
+        run: |
+          python -m analysis.data_audit --strict
+          python -m analysis.reviewer_diagnostics
+          python -m analysis.main_analysis
+          python -m analysis.main_analysis_selection
+          python -m analysis.main_analysis_heterogeneity_b
+          python -m analysis.main_analysis_robustness
+      - name: Show changed manuscript-facing results
+        run: git status --short && git diff --stat
+      - name: Commit restored sample and regenerated tracked outputs
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis/data_audit.py scripts/kra_reparse_raw.py README.md submission/cultural-industry/manuscript.json
+          git add -u outputs tables
+          git commit -m 'Restore valid 2018-07-01 races' || exit 0
+          git push origin HEAD:agent/cultural-industry-revision
