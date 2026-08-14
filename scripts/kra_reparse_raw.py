@@ -95,7 +95,7 @@ def to_odds(value: Any) -> float | None:
 
 
 def is_capped(odds: float | None) -> bool:
-    return odds is not None and odds >= 9999.9
+    return odds is not None and abs(odds - 9999.9) <= 1e-9
 
 
 def html_tables(page: str) -> list[pd.DataFrame]:

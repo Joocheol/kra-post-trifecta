@@ -32,8 +32,7 @@ PR에서는 `paper-ci.yml`이 같은 검증을 수행하고 `paper-pdf` artifact
 ## Data Scope
 
 - Race-date range: `2016-06-10` through `2025-12-31`
-- Excluded years: `2020`, `2021` (COVID-19 period)
-- Excluded date: `2018-07-01` — 9999 초과 데이터 존재
+- Data unavailable: `2020`, `2021`
 - Cutover rationale: `trifecta` betting begins `2016-06-10`, so this dataset
   starts at the post-trifecta market era.
 - Parsed parquet dataset: `KRA/parsed/`

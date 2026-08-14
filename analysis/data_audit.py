@@ -25,7 +25,7 @@ import pyarrow.parquet as pq
 START_DATE = "2016-06-10"
 END_DATE = "2025-12-31"
 EXCLUDED_YEARS = frozenset({2020, 2021})
-EXCLUDED_DATES = frozenset({"2018-07-01"})
+EXCLUDED_DATES = frozenset()
 SOURCE_MARKET = "trifecta"
 TARGET_MARKETS = ("win", "exacta", "quinella", "trio")
 ANALYSIS_MARKETS = (*TARGET_MARKETS, SOURCE_MARKET)
@@ -230,8 +230,11 @@ def audit_market(
     nonfinite_odds = ~np.isfinite(odds) & ~missing_odds
     nonpositive_odds = np.isfinite(odds) & (odds <= 0)
     missing_cap_flag = frame["is_capped_odds"].isna().to_numpy()
-    cap_flag = frame["is_capped_odds"].fillna(False).to_numpy(dtype=bool)
-    cap_flag_mismatch = (~missing_cap_flag) & (cap_flag != (odds >= 9999.9))
+    stored_cap_flag = frame["is_capped_odds"].fillna(False).to_numpy(dtype=bool)
+    # 9999.9 is the censoring placeholder. Historical KRA pages can contain
+    # genuine displayed odds above 9999.9, which must remain point observations.
+    cap_flag = np.isclose(odds, 9999.9, rtol=0.0, atol=1e-9)
+    cap_flag_mismatch = (~missing_cap_flag) & (stored_cap_flag != cap_flag) & ~(odds > 9999.9)
     if market == "win":
         cancelled_combination = np.zeros(len(frame), dtype=bool)
     else:
