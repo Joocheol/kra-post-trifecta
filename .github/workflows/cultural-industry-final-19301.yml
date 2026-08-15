@@ -25,12 +25,50 @@ jobs:
           ref: agent/cultural-industry-reverification
           fetch-depth: 1
 
-      - name: Integrate metadata-column fix
+      - name: Integrate final recomputation fixes
         shell: bash
         run: |
-          # load_market intentionally loads only pricing columns, so race_date is
-          # introduced by the later metadata merge without a suffix.
-          sed -i 's/race_date_meta/race_date/g' analysis/cultural_industry_final_recompute.py
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('analysis/cultural_industry_final_recompute.py')
+          s = p.read_text(encoding='utf-8').replace('race_date_meta', 'race_date')
+          old = '''    for field_size, group in hit.groupby("n_valid_horses", sort=True):
+        share, lo, hi, _ = mean_with_ci(
+            full_plan, group["winning_trifecta_capped"], group["race_date"]
+        )
+        by_field_rows.append(
+'''
+          new = '''    for field_size, group in hit.groupby("n_valid_horses", sort=True):
+        # Subgroup inference resamples only race dates represented in the subgroup;
+        # using the full 1,130-date universe can generate empty subgroup draws.
+        subgroup_plan = ClusterBootstrapPlan.build(
+            group["race_date"].astype(str).unique()
+        )
+        share, lo, hi, _ = mean_with_ci(
+            subgroup_plan, group["winning_trifecta_capped"], group["race_date"]
+        )
+        by_field_rows.append(
+'''
+          if old in s:
+              s = s.replace(old, new, 1)
+              marker = '''                "ci_high": hi,
+            }
+        )
+    return overall, pd.DataFrame(by_year_rows), pd.DataFrame(by_field_rows)
+'''
+              replacement = '''                "ci_high": hi,
+            }
+        )
+        del subgroup_plan
+    return overall, pd.DataFrame(by_year_rows), pd.DataFrame(by_field_rows)
+'''
+              if marker not in s:
+                  raise SystemExit('field-size block ending not found')
+              s = s.replace(marker, replacement, 1)
+          elif 'subgroup_plan = ClusterBootstrapPlan.build(' not in s:
+              raise SystemExit('field-size subgroup patch target not found')
+          p.write_text(s, encoding='utf-8')
+          PY
           python -m py_compile analysis/cultural_industry_final_recompute.py analysis/build_turnover_dataset.py
           bash -n scripts/reproduce_cultural_industry_final.sh
 
