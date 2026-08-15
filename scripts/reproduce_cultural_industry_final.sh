@@ -2,9 +2,8 @@
 set -euo pipefail
 
 # One-command clean-checkout reproduction for the Cultural Industry manuscript.
-# Optional: export KRA_RAW_ROOT=/path/to/raw_collected_v3_15w to build the compact
-# turnover extract needed for Table 4. If the compact file is already versioned,
-# KRA_RAW_ROOT is not needed.
+# If the compact turnover extract is absent, try the author's standard synced
+# Dropbox locations. KRA_RAW_ROOT can always override the auto-detection.
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
@@ -13,6 +12,23 @@ python -m pip install -r requirements.txt -c constraints-behavioral.txt
 python -m analysis.data_audit --strict
 
 TURNOVER_FILE="data/turnover_by_race_market.csv.gz"
+
+if [[ ! -s "$TURNOVER_FILE" && -z "${KRA_RAW_ROOT:-}" ]]; then
+  candidates=(
+    "$HOME/Library/CloudStorage/Dropbox/kra-analysis/data/raw_collected_v3_15w"
+    "$HOME/Dropbox/kra-analysis/data/raw_collected_v3_15w"
+    "$HOME/kra-analysis/data/raw_collected_v3_15w"
+  )
+  for candidate in "${candidates[@]}"; do
+    if [[ -d "$candidate" ]]; then
+      KRA_RAW_ROOT="$candidate"
+      export KRA_RAW_ROOT
+      echo "Auto-detected KRA raw archive: $KRA_RAW_ROOT"
+      break
+    fi
+  done
+fi
+
 if [[ ! -s "$TURNOVER_FILE" && -n "${KRA_RAW_ROOT:-}" ]]; then
   python -m analysis.build_turnover_dataset \
     --raw-root "$KRA_RAW_ROOT" \
