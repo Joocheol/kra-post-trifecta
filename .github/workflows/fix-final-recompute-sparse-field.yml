@@ -1,0 +1,75 @@
+name: Patch final recomputation sparse field bootstrap
+
+on:
+  push:
+    branches:
+      - agent/cultural-industry-reverification
+    paths:
+      - '.github/workflows/fix-final-recompute-sparse-field.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: agent/cultural-industry-reverification
+          fetch-depth: 1
+      - name: Apply durable metadata and subgroup-bootstrap fixes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('analysis/cultural_industry_final_recompute.py')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('race_date_meta', 'race_date')
+          old = '''    for field_size, group in hit.groupby("n_valid_horses", sort=True):
+        share, lo, hi, _ = mean_with_ci(
+            full_plan, group["winning_trifecta_capped"], group["race_date"]
+        )
+        by_field_rows.append(
+'''
+          new = '''    for field_size, group in hit.groupby("n_valid_horses", sort=True):
+        # A field-size subgroup can occur on only a few dates. Resampling the
+        # full 1,130-date universe can therefore draw zero observations for the
+        # subgroup. For subgroup inference, resample the race dates represented
+        # in that subgroup, preserving race-day clustering without empty draws.
+        subgroup_plan = ClusterBootstrapPlan.build(
+            group["race_date"].astype(str).unique()
+        )
+        share, lo, hi, _ = mean_with_ci(
+            subgroup_plan, group["winning_trifecta_capped"], group["race_date"]
+        )
+        by_field_rows.append(
+'''
+          if old not in s:
+              raise SystemExit('target field-size block not found')
+          s = s.replace(old, new, 1)
+          old2 = '''                "ci_high": hi,
+            }
+        )
+    return overall, pd.DataFrame(by_year_rows), pd.DataFrame(by_field_rows)
+'''
+          new2 = '''                "ci_high": hi,
+            }
+        )
+        del subgroup_plan
+    return overall, pd.DataFrame(by_year_rows), pd.DataFrame(by_field_rows)
+'''
+          if old2 not in s:
+              raise SystemExit('target field-size block ending not found')
+          s = s.replace(old2, new2, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+          python -m py_compile analysis/cultural_industry_final_recompute.py
+      - name: Commit durable fix
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis/cultural_industry_final_recompute.py
+          git commit -m 'Fix subgroup race-day bootstrap in final recomputation [skip ci]'
+          git push origin HEAD:agent/cultural-industry-reverification
