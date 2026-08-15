@@ -1,13 +1,12 @@
-"""Collect clean-sample race-market turnover from KRA historical result pages.
+"""Collect final clean-sample race-market turnover for Cultural Industry Table 4.
 
-This is a recovery/reproducibility path for the compact turnover extract used by
-Cultural Industry Table 4.  The author Dropbox contains archived raw JSON-gzip
-pages at ``/kra-analysis/data/raw_collected_v3_15w``.  The connected Dropbox
-interface confirms the archived pages contain the same historical turnover
-figures as KRA's current historical result endpoints.  We therefore collect only
-four race-market totals needed by Table 4 and freeze the compact extract in Git.
-
-No odds or participant-level data are downloaded by this script.
+The author's connected Dropbox keeps the archived raw KRA JSON-gzip pages under
+``/kra-analysis/data/raw_collected_v3_15w``.  We independently inspected an
+archived race and confirmed its race-market turnovers against KRA's historical
+``ScoretableDetailList`` page.  That detail page reports all market totals in one
+request, so this recovery path uses one historical page per clean race, freezes
+only the four totals needed by Table 4, and records the Dropbox cross-check in the
+manifest.  No odds or participant-level data are downloaded here.
 """
 from __future__ import annotations
 
@@ -16,6 +15,7 @@ import csv
 import gzip
 import hashlib
 import html
+import io
 import json
 import random
 import re
@@ -27,13 +27,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
-BASE_URL = "https://race.kra.co.kr/raceScore/"
-ENDPOINTS = {
-    "quinella": "ScoretableBettingprofitScm.do",
-    "exacta": "ScoretableBettingprofitBoth.do",
-    "trio": "ScoretableBettingprofit3Bc.do",
-    "trifecta": "ScoretableBettingprofit3Both.do",
-}
+BASE_URL = "https://race.kra.co.kr/raceScore/ScoretableDetailList.do"
+MARKETS = ("quinella", "exacta", "trio", "trifecta")
 LABELS = {
     "quinella": "복승식",
     "exacta": "쌍승식",
@@ -41,9 +36,9 @@ LABELS = {
     "trifecta": "삼쌍승식",
 }
 
-# Independent provenance check against the archived Dropbox raw file
+# Independently inspected in connected Dropbox:
 # /kra-analysis/data/raw_collected_v3_15w/kra_2025/raw_archive/2025/2025-12/
-# 2025-12-13_2_03.json.gz, inspected through the connected Dropbox account.
+# 2025-12-13_2_03.json.gz
 ARCHIVE_CHECK_RACE = "2025-12-13_2_03"
 ARCHIVE_CHECK = {
     "quinella": 763_893_500,
@@ -56,30 +51,25 @@ _thread_state = threading.local()
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument(
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
         "--race-ids",
         type=Path,
         default=Path("outputs/final_19301/clean_race_ids.txt"),
     )
-    p.add_argument(
+    parser.add_argument(
         "--output", type=Path, default=Path("data/turnover_by_race_market.csv.gz")
     )
-    p.add_argument(
+    parser.add_argument(
         "--manifest",
         type=Path,
         default=Path("data/turnover_by_race_market.manifest.json"),
     )
-    p.add_argument("--workers", type=int, default=10)
-    p.add_argument("--retries", type=int, default=6)
-    p.add_argument("--timeout", type=float, default=30.0)
-    p.add_argument(
-        "--polite-delay",
-        type=float,
-        default=0.08,
-        help="minimum per-worker delay before each request",
-    )
-    return p.parse_args()
+    parser.add_argument("--workers", type=int, default=12)
+    parser.add_argument("--retries", type=int, default=7)
+    parser.add_argument("--timeout", type=float, default=30.0)
+    parser.add_argument("--polite-delay", type=float, default=0.10)
+    return parser.parse_args()
 
 
 def race_parts(race_id: str) -> tuple[str, str, int]:
@@ -87,18 +77,15 @@ def race_parts(race_id: str) -> tuple[str, str, int]:
     return date_text.replace("-", ""), meet, int(race_no)
 
 
-def url_for(race_id: str, market: str) -> str:
+def url_for(race_id: str) -> str:
     date_text, meet, race_no = race_parts(race_id)
-    endpoint = ENDPOINTS[market]
-    return (
-        f"{BASE_URL}{endpoint}?meet={meet}&realRcDate={date_text}&realRcNo={race_no}"
-    )
+    return f"{BASE_URL}?meet={meet}&realRcDate={date_text}&realRcNo={race_no}"
 
 
 def decode_kra(raw: bytes) -> str:
-    for enc in ("euc-kr", "cp949", "utf-8"):
+    for encoding in ("euc-kr", "cp949", "utf-8"):
         try:
-            text = raw.decode(enc)
+            text = raw.decode(encoding)
         except UnicodeDecodeError:
             continue
         if "경주" in text or "매출" in text:
@@ -107,31 +94,28 @@ def decode_kra(raw: bytes) -> str:
 
 
 def page_text(raw: bytes) -> str:
-    text = decode_kra(raw)
-    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"<[^>]+>", " ", decode_kra(raw))
     return " ".join(html.unescape(text).replace("\xa0", " ").split())
 
 
-def parse_turnover(raw: bytes, market: str) -> int:
+def parse_turnovers(raw: bytes) -> dict[str, int]:
     text = page_text(raw)
-    label = LABELS[market]
-    if market == "quinella":
-        # The Scm page reports win/place/quinella totals in one footer.
-        pattern = rf"(?<![가-힣]){re.escape(label)}\s*:\s*([0-9,]+)\s*원"
-    else:
-        pattern = (
-            rf"(?<![가-힣]){re.escape(label)}\s*매출총액\s*:?\s*"
-            rf"([0-9,]+)\s*원"
+    result: dict[str, int] = {}
+    for market, label in LABELS.items():
+        match = re.search(
+            rf"(?<![가-힣]){re.escape(label)}\s*:\s*([0-9,]+)(?:\s*원)?",
+            text,
         )
-    match = re.search(pattern, text)
-    if not match:
-        raise ValueError(f"{market}: turnover label not found")
-    return int(match.group(1).replace(",", ""))
+        if not match:
+            raise ValueError(f"{market}: turnover label not found on detail page")
+        value = int(match.group(1).replace(",", ""))
+        if value <= 0 or value % 100 != 0:
+            raise ValueError(f"{market}: invalid turnover {value}")
+        result[market] = value
+    return result
 
 
 def fetch_bytes(url: str, *, retries: int, timeout: float, polite_delay: float) -> bytes:
-    # Each worker maintains its own most-recent request time, avoiding a bursty
-    # tight loop while still allowing modest parallelism.
     last = getattr(_thread_state, "last_request", 0.0)
     wait = polite_delay - (time.monotonic() - last)
     if wait > 0:
@@ -152,8 +136,6 @@ def fetch_bytes(url: str, *, retries: int, timeout: float, polite_delay: float) 
             return raw
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             last_error = exc
-            # Deterministic base backoff plus a tiny jitter to avoid synchronized
-            # retries across workers.
             time.sleep(min(20.0, 0.8 * (2**attempt)) + random.random() * 0.2)
     raise RuntimeError(f"KRA request failed after {retries} attempts: {url}: {last_error}")
 
@@ -161,40 +143,38 @@ def fetch_bytes(url: str, *, retries: int, timeout: float, polite_delay: float) 
 def collect_race(
     race_id: str, *, retries: int, timeout: float, polite_delay: float
 ) -> list[dict[str, object]]:
-    rows: list[dict[str, object]] = []
-    for market in ("quinella", "exacta", "trio", "trifecta"):
-        url = url_for(race_id, market)
-        raw = fetch_bytes(
-            url, retries=retries, timeout=timeout, polite_delay=polite_delay
-        )
-        turnover = parse_turnover(raw, market)
-        if turnover <= 0 or turnover % 100 != 0:
-            raise ValueError(f"{race_id}/{market}: invalid turnover {turnover}")
-        rows.append(
-            {
-                "race_id": race_id,
-                "market": market,
-                "turnover_won": turnover,
-            }
-        )
-    return rows
+    raw = fetch_bytes(
+        url_for(race_id),
+        retries=retries,
+        timeout=timeout,
+        polite_delay=polite_delay,
+    )
+    values = parse_turnovers(raw)
+    return [
+        {"race_id": race_id, "market": market, "turnover_won": values[market]}
+        for market in MARKETS
+    ]
 
 
 def sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for block in iter(lambda: f.read(1024 * 1024), b""):
-            h.update(block)
-    return h.hexdigest()
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def write_output(rows: list[dict[str, object]], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    rows = sorted(rows, key=lambda r: (str(r["race_id"]), str(r["market"])))
-    with gzip.open(path, "wt", encoding="utf-8", newline="", mtime=0) as f:
-        writer = csv.DictWriter(f, fieldnames=["race_id", "market", "turnover_won"])
-        writer.writeheader()
-        writer.writerows(rows)
+    rows = sorted(rows, key=lambda row: (str(row["race_id"]), str(row["market"])))
+    with path.open("wb") as raw_file:
+        with gzip.GzipFile(fileobj=raw_file, mode="wb", mtime=0) as compressed:
+            with io.TextIOWrapper(compressed, encoding="utf-8", newline="") as text_file:
+                writer = csv.DictWriter(
+                    text_file, fieldnames=["race_id", "market", "turnover_won"]
+                )
+                writer.writeheader()
+                writer.writerows(rows)
 
 
 def main() -> None:
@@ -207,21 +187,20 @@ def main() -> None:
     if len(race_ids) != 3338 or len(set(race_ids)) != 3338:
         raise AssertionError(f"expected 3,338 unique clean race IDs, got {len(set(race_ids))}")
 
-    # Fail fast on one independently archived race before launching the full job.
     archived_rows = collect_race(
         ARCHIVE_CHECK_RACE,
         retries=args.retries,
         timeout=args.timeout,
         polite_delay=args.polite_delay,
     )
-    archived = {str(r["market"]): int(r["turnover_won"]) for r in archived_rows}
+    archived = {str(row["market"]): int(row["turnover_won"]) for row in archived_rows}
     if archived != ARCHIVE_CHECK:
-        raise AssertionError(f"live/archive turnover check failed: {archived} != {ARCHIVE_CHECK}")
-    print(f"PASS: KRA live historical page matches Dropbox archive for {ARCHIVE_CHECK_RACE}")
+        raise AssertionError(f"KRA/Dropbox archive parity failed: {archived} != {ARCHIVE_CHECK}")
+    print(f"PASS: KRA detail page matches Dropbox archive for {ARCHIVE_CHECK_RACE}")
 
     all_rows: list[dict[str, object]] = []
     failures: list[tuple[str, str]] = []
-    start = time.monotonic()
+    started = time.monotonic()
     with ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {
             executor.submit(
@@ -233,28 +212,27 @@ def main() -> None:
             ): race_id
             for race_id in race_ids
         }
-        completed = 0
-        for future in as_completed(futures):
+        for completed, future in enumerate(as_completed(futures), start=1):
             race_id = futures[future]
             try:
                 all_rows.extend(future.result())
-            except Exception as exc:  # retain all failure evidence before aborting
+            except Exception as exc:
                 failures.append((race_id, repr(exc)))
-            completed += 1
             if completed % 100 == 0 or completed == len(race_ids):
-                elapsed = time.monotonic() - start
+                elapsed = (time.monotonic() - started) / 60.0
                 print(
-                    f"completed={completed:,}/{len(race_ids):,} "
-                    f"failures={len(failures)} elapsed={elapsed/60:.1f}m",
+                    f"completed={completed:,}/{len(race_ids):,} failures={len(failures)} "
+                    f"elapsed={elapsed:.1f}m",
                     flush=True,
                 )
 
     if failures:
-        for race_id, err in failures[:30]:
-            print("FAIL", race_id, err)
+        for race_id, error in failures[:40]:
+            print("FAIL", race_id, error)
         raise RuntimeError(f"turnover collection failed for {len(failures)} races")
-    if len(all_rows) != 3338 * 4:
-        raise AssertionError(f"expected {3338*4:,} turnover rows, got {len(all_rows):,}")
+    expected_rows = 3338 * len(MARKETS)
+    if len(all_rows) != expected_rows:
+        raise AssertionError(f"expected {expected_rows:,} rows, got {len(all_rows):,}")
 
     write_output(all_rows, args.output)
     output_hash = sha256(args.output)
@@ -262,13 +240,13 @@ def main() -> None:
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "scope": {
             "clean_races": 3338,
-            "markets": ["quinella", "exacta", "trio", "trifecta"],
+            "markets": list(MARKETS),
             "rows": len(all_rows),
         },
         "source": {
-            "primary": "KRA historical raceScore pages",
+            "primary": "KRA ScoretableDetailList historical page",
             "base_url": BASE_URL,
-            "endpoints": ENDPOINTS,
+            "one_request_per_race": True,
             "dropbox_archive_root": "/kra-analysis/data/raw_collected_v3_15w",
             "dropbox_archive_crosscheck_race": ARCHIVE_CHECK_RACE,
             "dropbox_archive_crosscheck_values_won": ARCHIVE_CHECK,
@@ -283,7 +261,7 @@ def main() -> None:
         "output": {
             "path": args.output.as_posix(),
             "sha256": output_hash,
-            "compression": "gzip",
+            "compression": "gzip with deterministic mtime=0",
         },
     }
     args.manifest.parent.mkdir(parents=True, exist_ok=True)
