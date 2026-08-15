@@ -1,0 +1,42 @@
+name: Test KRA turnover endpoints
+
+on:
+  push:
+    branches:
+      - agent/cultural-industry-reverification
+    paths:
+      - '.github/workflows/test-kra-turnover-live.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch known archived race turnovers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re, urllib.request
+          base='https://race.kra.co.kr/raceScore/'
+          q='?meet=2&realRcDate=20251213&realRcNo=3'
+          endpoints={
+            'scm':'ScoretableBettingprofitScm.do'+q,
+            'exacta':'ScoretableBettingprofitBoth.do'+q,
+            'trio':'ScoretableBettingprofit3Bc.do'+q,
+            'trifecta':'ScoretableBettingprofit3Both.do'+q,
+          }
+          for key,tail in endpoints.items():
+              req=urllib.request.Request(base+tail,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  data=r.read().decode('utf-8','ignore')
+              print(key, 'bytes', len(data))
+              text=re.sub(r'<[^>]+>',' ',data)
+              text=' '.join(text.replace('&nbsp;',' ').split())
+              for label in ('단승식','복승식','쌍승식','삼복승식','삼쌍승식'):
+                  pats=[rf'{label}\s*매출총액\s*:?\s*([0-9,]+)\s*원',rf'{label}\s*:\s*([0-9,]+)\s*원']
+                  for pat in pats:
+                      m=re.search(pat,text)
+                      if m:
+                          print(label,m.group(1))
+                          break
+          PY
