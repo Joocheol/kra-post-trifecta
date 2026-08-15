@@ -1,0 +1,66 @@
+{
+  "verification_date": "2026-08-16",
+  "git_sha_at_run": "b924b48ba05af5299096ca3c2b18a703a6374c1d",
+  "python": "3.12.3",
+  "numpy": "2.3.5",
+  "pandas": "2.2.3",
+  "pyarrow": "25.0.1",
+  "parameters": {
+    "start_date": "2016-06-10",
+    "end_date": "2025-12-31",
+    "unavailable_years": [
+      2020,
+      2021
+    ],
+    "display_cap": 9999.9,
+    "cap_definition": "odds == 9999.9 within 1e-9; values >9999.9 remain point observations",
+    "bootstrap_reps": 4999,
+    "bootstrap_seed": 20260816,
+    "turnover_mc_draws_per_race": 256,
+    "turnover_mc_seed": 20260816,
+    "nominal_wager_unit_won": 100,
+    "betting_limit_won_per_person_race": 100000
+  },
+  "input_files": {
+    "count": 637,
+    "combined_sha256": "2c6a6cecbfca579a858e122a19be512e187637d5b448d82669027789268324ae"
+  },
+  "outputs": {
+    "outputs/cultural_industry_reverification_sample.csv": {
+      "size_bytes": 206,
+      "sha256": "6284649a2116854b21b594a74b7e4e2640d778628802f329d8d1f6d4ac10217d"
+    },
+    "outputs/cultural_industry_reverification_per_race.csv": {
+      "size_bytes": 1497068,
+      "sha256": "2d1360b11e2536deb33869fa84d4b846fb53bc8dd2ab49cab5887f0398ffedf5"
+    },
+    "outputs/cultural_industry_reverification_summary.csv": {
+      "size_bytes": 1415,
+      "sha256": "b4aa87d3a51d1bd29a81dab846ed1956f78fe8792b5666fa4d9022a5e8e13f24"
+    },
+    "outputs/cultural_industry_2018_overcap_check.csv": {
+      "size_bytes": 267,
+      "sha256": "5054cff318909725422fa22949746cc873b6ef59ae9a7740ef1d61d4b9aeb42e"
+    },
+    "outputs/cultural_industry_turnover_limit_summary.csv": {
+      "size_bytes": 16,
+      "sha256": "b625ff254e1371dd3ad4eb8646cb3bf365f6bb309c3e448e3ee88dbcfdb086b0"
+    },
+    "outputs/cultural_industry_turnover_null_per_race.csv": {
+      "size_bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "outputs/cultural_industry_turnover_null_summary.csv": {
+      "size_bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "outputs/cultural_industry_reverification_input_files.csv": {
+      "size_bytes": 97459,
+      "sha256": "8cd8b0ca0a18c741166c5058955d54d18df38b97bc918bbfd79ba1ddf8f22681"
+    },
+    "submission/cultural-industry/REVERIFICATION_2026-08-16.md": {
+      "size_bytes": 4516,
+      "sha256": "244ae299cb2b20915471e36bd891893fd13c9e5e6d70ea3579ed756940ed2e85"
+    }
+  }
+}
