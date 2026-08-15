@@ -1,0 +1,86 @@
+name: Cultural-industry final 19301 recomputation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/cultural-industry-reverification
+    paths:
+      - 'analysis/cultural_industry_final_recompute.py'
+      - 'analysis/build_turnover_dataset.py'
+      - 'scripts/reproduce_cultural_industry_final.sh'
+      - 'requirements.txt'
+      - '.github/workflows/cultural-industry-final-19301.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  recompute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: agent/cultural-industry-reverification
+          fetch-depth: 1
+
+      - name: Integrate metadata-column fix
+        shell: bash
+        run: |
+          # load_market intentionally loads only pricing columns, so race_date is
+          # introduced by the later metadata merge without a suffix.
+          sed -i 's/race_date_meta/race_date/g' analysis/cultural_industry_final_recompute.py
+          python -m py_compile analysis/cultural_industry_final_recompute.py analysis/build_turnover_dataset.py
+          bash -n scripts/reproduce_cultural_industry_final.sh
+
+      - name: Install pinned numerical stack
+        run: python -m pip install -r requirements.txt -c constraints-behavioral.txt
+
+      - name: Freeze current analysis sample
+        run: python -m analysis.data_audit --strict
+
+      - name: Recompute all non-turnover manuscript quantities
+        run: python -m analysis.cultural_industry_final_recompute --allow-missing-turnover
+
+      - name: Validate fixed specification
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+
+          out = Path('outputs/final_19301')
+          cap = pd.read_csv(out / 'table2_cap_counts.csv')
+          expected = {'win':0, 'exacta':581, 'quinella':15, 'trio':3434, 'trifecta':15963}
+          assert dict(zip(cap.market, cap.capped_races)) == expected, cap
+          pre = pd.read_csv(out / 'precheck_2018_07_01.csv')
+          assert pre.odds_eq_9999_9.eq(0).all(), pre
+          assert pre.date_races.eq(17).all(), pre
+          a = pd.read_csv(out / 'table3_panel_a.csv')
+          assert a.n_races.eq(3338).all(), a
+          assert a.n_race_dates.eq(979).all(), a
+          b = pd.read_csv(out / 'table3_panel_b.csv')
+          assert b.n_races.eq(19301).all(), b
+          manifest = json.loads((out / 'manifest.json').read_text())
+          assert manifest['bootstrap']['reps'] == 99999, manifest
+          assert manifest['bootstrap']['seed'] == 20260816, manifest
+          assert manifest['bootstrap']['unit'] == 'race_date cluster', manifest
+          assert manifest['bootstrap']['interval'] == 'percentile 95%', manifest
+          print(a.to_string(index=False))
+          print(b.to_string(index=False))
+          print(pd.read_csv(out / 'table3_panel_b_superiority.csv').to_string(index=False))
+          print(pd.read_csv(out / 'paired_tv_difference.csv').to_string(index=False))
+          print(pd.read_csv(out / 'table5_logloss.csv').to_string(index=False))
+          print(pd.read_csv(out / 'winning_trifecta_cap_overall.csv').to_string(index=False))
+          PY
+
+      - name: Commit frozen recomputation record
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis/cultural_industry_final_recompute.py outputs/final_19301
+          git commit -m 'Freeze final 19301-race manuscript recomputation [skip ci]' || exit 0
+          git push origin HEAD:agent/cultural-industry-reverification
