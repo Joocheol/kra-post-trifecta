@@ -1,0 +1,32 @@
+name: Inspect Dropbox exotic backup schema
+
+on:
+  push:
+    branches:
+      - agent/cultural-industry-reverification
+    paths:
+      - '.github/workflows/inspect-exotic-backup.yml'
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Download backup and inspect Parquet metadata
+        shell: bash
+        env:
+          FILE_URL: 'https://ucb991c299bb06b8b1bd7a5339fb.dl.dropboxusercontent.com/cd/0/get/DGQ5ADU3FftArkKcjSJcycGyJtB01FUko1qbkoZC6oru1Hb78Fu-FafYQmaEHSrnzVlTwVWATBos_VIa8hrMn8p_F9EN7FrRaVCuwtrY2AWwXcSxQySqbagC2FQT2PqVCsR31wXLkQsrQ5ZHUDy7FPu5yH_5f4ruYdww80jQc2BEbQ/file?c_luid=23491090'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 2 -o /tmp/exotic.parquet "$FILE_URL"
+          python -m pip install --quiet pyarrow
+          python - <<'PY'
+          import pyarrow.parquet as pq
+          p='/tmp/exotic.parquet'
+          pf=pq.ParquetFile(p)
+          print('rows', pf.metadata.num_rows)
+          print('row_groups', pf.metadata.num_row_groups)
+          print('columns')
+          for name in pf.schema_arrow.names:
+              print(name)
+          PY
