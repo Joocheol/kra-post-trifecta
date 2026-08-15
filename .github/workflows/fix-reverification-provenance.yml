@@ -1,0 +1,118 @@
+name: Integrate raw provenance into reverification
+
+on:
+  push:
+    branches:
+      - agent/cultural-industry-reverification
+    paths:
+      - '.github/workflows/fix-reverification-provenance.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: agent/cultural-industry-reverification
+          fetch-depth: 1
+      - name: Integrate provenance generation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('analysis/cultural_industry_reverification.py')
+          text = path.read_text(encoding='utf-8')
+          old = 'DOC_PATH = Path("submission/cultural-industry/REVERIFICATION_2026-08-16.md")\n'
+          new = old + 'RAW_PROVENANCE_PATH = OUTPUT_DIR / "cultural_industry_raw_provenance.json"\n'
+          assert old in text
+          text = text.replace(old, new, 1)
+
+          marker = '\ndef write_manifest(output_paths: list[Path], input_hashes: pd.DataFrame) -> None:\n'
+          assert marker in text
+          helper = r'''
+
+def write_raw_provenance() -> None:
+    provenance = {
+        "verified_at": "2026-08-16",
+        "storage": "Dropbox",
+        "raw_root_path": "/kra-analysis/data/raw_collected_v3_15w",
+        "year_folders": [
+            "kra_2016", "kra_2017", "kra_2018", "kra_2019",
+            "kra_2022", "kra_2023", "kra_2024", "kra_2025",
+        ],
+        "format": "year/month/race-level *.json.gz raw archive",
+        "public_github_copy": False,
+        "reason_not_copied": (
+            "Raw archive is large and redistribution/provenance should remain separate; "
+            "compact derived data and hashes are preferred for GitHub."
+        ),
+        "sample_verification": {
+            "race_id": "2025-12-13_2_03",
+            "dropbox_path": (
+                "/kra-analysis/data/raw_collected_v3_15w/kra_2025/raw_archive/2025/"
+                "2025-12/2025-12-13_2_03.json.gz"
+            ),
+            "dropbox_server_modified": "2026-08-08T00:52:23Z",
+            "turnover_won_confirmed_in_raw_text": {
+                "exacta": 195364900,
+                "trio": 839141700,
+                "trifecta": 411991600,
+            },
+        },
+        "versioned_parsed_snapshot_note": (
+            "The GitHub KRA/parsed/market_status snapshot used by the independent "
+            "2026-08-16 run does not contain turnover_won; turnover-dependent outputs "
+            "therefore remain explicitly unavailable until reparsing or a compact "
+            "turnover extract is supplied."
+        ),
+        "reparse_entrypoint": "scripts/kra_reparse_raw.py",
+        "reverification_entrypoint": "analysis/cultural_industry_reverification.py",
+    }
+    RAW_PROVENANCE_PATH.write_text(
+        json.dumps(provenance, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+
+def append_raw_provenance_note() -> None:
+    note = """
+
+## 6. 원시자료 provenance 및 turnover 상태
+
+원시자료는 저자의 Dropbox `/kra-analysis/data/raw_collected_v3_15w/` 아래에
+연도·월별 `*.json.gz`로 보관되어 있음을 재확인했다. 표본 원문
+`2025-12-13_2_03.json.gz`에서는 쌍승식 195,364,900원, 삼복승식
+839,141,700원, 삼쌍승식 411,991,600원의 매출총액을 직접 확인했다.
+기계가 읽을 수 있는 provenance는 `outputs/cultural_industry_raw_provenance.json`에
+고정한다.
+
+현재 공개 GitHub의 versioned `KRA/parsed/market_status`에는 `turnover_won` 열이
+없으므로 이번 실행의 turnover-matched 결과는 `available=False`로 남긴다.
+원자료 전체를 공개 저장소에 복제하지 않으며, 추후 revised parser로 다시 파싱할 때에는
+경주×승식별 compact turnover data와 원천 provenance/hash를 동결한 뒤 같은
+`analysis.cultural_industry_reverification` 진입점으로 기계적 null을 재계산한다.
+""".lstrip("\n")
+    base = DOC_PATH.read_text(encoding="utf-8").rstrip() + "\n\n"
+    DOC_PATH.write_text(base + note, encoding="utf-8")
+'''
+          text = text.replace(marker, helper + marker, 1)
+
+          old_call = '    write_doc(sample_audit, tv_summary, overcap, limit_summary, turnover_summary, input_hashes)\n'
+          new_call = old_call + '    write_raw_provenance()\n    append_raw_provenance_note()\n'
+          assert old_call in text
+          text = text.replace(old_call, new_call, 1)
+
+          old_list = '        OUTPUT_DIR / "cultural_industry_reverification_input_files.csv",\n        DOC_PATH,\n'
+          new_list = '        OUTPUT_DIR / "cultural_industry_reverification_input_files.csv",\n        RAW_PROVENANCE_PATH,\n        DOC_PATH,\n'
+          assert old_list in text
+          text = text.replace(old_list, new_list, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit integrated generator
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis/cultural_industry_reverification.py
+          git commit -m 'Integrate raw provenance into reverification generator'
+          git push origin HEAD:agent/cultural-industry-reverification
