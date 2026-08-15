@@ -16,7 +16,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import re, urllib.request
+          import html, re, urllib.request
           base='https://race.kra.co.kr/raceScore/'
           q='?meet=2&realRcDate=20251213&realRcNo=3'
           endpoints={
@@ -25,18 +25,30 @@ jobs:
             'trio':'ScoretableBettingprofit3Bc.do'+q,
             'trifecta':'ScoretableBettingprofit3Both.do'+q,
           }
+          def decode(raw):
+              for enc in ('euc-kr','cp949','utf-8'):
+                  try:
+                      text=raw.decode(enc)
+                      if '매출' in text or '경주' in text:
+                          return text,enc
+                  except UnicodeDecodeError:
+                      pass
+              return raw.decode('cp949','replace'),'cp949-replace'
           for key,tail in endpoints.items():
               req=urllib.request.Request(base+tail,headers={'User-Agent':'Mozilla/5.0'})
               with urllib.request.urlopen(req, timeout=30) as r:
-                  data=r.read().decode('utf-8','ignore')
-              print(key, 'bytes', len(data))
+                  raw=r.read()
+                  print(key, 'content-type', r.headers.get('Content-Type'))
+              data,enc=decode(raw)
               text=re.sub(r'<[^>]+>',' ',data)
-              text=' '.join(text.replace('&nbsp;',' ').split())
+              text=' '.join(html.unescape(text).replace('\xa0',' ').split())
+              print(key, 'bytes', len(raw), 'encoding', enc, 'has_sales', '매출' in text)
               for label in ('단승식','복승식','쌍승식','삼복승식','삼쌍승식'):
-                  pats=[rf'{label}\s*매출총액\s*:?\s*([0-9,]+)\s*원',rf'{label}\s*:\s*([0-9,]+)\s*원']
+                  pats=[rf'{label}\s*매출총액\s*:?\s*([0-9,]+)\s*원',rf'(?<![가-힣]){label}\s*:\s*([0-9,]+)\s*원']
                   for pat in pats:
                       m=re.search(pat,text)
                       if m:
                           print(label,m.group(1))
                           break
+              print('tail',text[-600:])
           PY
