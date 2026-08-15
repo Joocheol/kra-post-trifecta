@@ -587,7 +587,7 @@ def winning_trifecta_cap(
     )
     hit["winning_trifecta_capped"] = hit["canonical_cap"].astype(float)
     overall_share, overall_lo, overall_hi, _ = mean_with_ci(
-        full_plan, hit["winning_trifecta_capped"], hit["race_date_meta"]
+        full_plan, hit["winning_trifecta_capped"], hit["race_date"]
     )
     overall = pd.DataFrame(
         [
@@ -603,9 +603,9 @@ def winning_trifecta_cap(
 
     by_year_rows: list[dict[str, object]] = []
     for year, group in hit.groupby("year", sort=True):
-        plan = ClusterBootstrapPlan.build(group["race_date_meta"].astype(str).unique())
+        plan = ClusterBootstrapPlan.build(group["race_date"].astype(str).unique())
         share, lo, hi, _ = mean_with_ci(
-            plan, group["winning_trifecta_capped"], group["race_date_meta"]
+            plan, group["winning_trifecta_capped"], group["race_date"]
         )
         by_year_rows.append(
             {
@@ -621,8 +621,13 @@ def winning_trifecta_cap(
 
     by_field_rows: list[dict[str, object]] = []
     for field_size, group in hit.groupby("n_valid_horses", sort=True):
+        # Subgroup inference resamples only race dates represented in the subgroup;
+        # using the full 1,130-date universe can generate empty subgroup draws.
+        subgroup_plan = ClusterBootstrapPlan.build(
+            group["race_date"].astype(str).unique()
+        )
         share, lo, hi, _ = mean_with_ci(
-            full_plan, group["winning_trifecta_capped"], group["race_date_meta"]
+            subgroup_plan, group["winning_trifecta_capped"], group["race_date"]
         )
         by_field_rows.append(
             {
@@ -634,6 +639,7 @@ def winning_trifecta_cap(
                 "ci_high": hi,
             }
         )
+        del subgroup_plan
     return overall, pd.DataFrame(by_year_rows), pd.DataFrame(by_field_rows)
 
 

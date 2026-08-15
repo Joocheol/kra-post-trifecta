@@ -1,0 +1,89 @@
+{
+  "sample": {
+    "full_races": 19301,
+    "clean_races": 3338,
+    "clean_race_dates": 979
+  },
+  "cap_definition": "odds == 9999.9 within absolute tolerance 1e-9; odds > 9999.9 are point observations",
+  "bootstrap": {
+    "unit": "race_date cluster",
+    "reps": 99999,
+    "seed": 20260816,
+    "interval": "percentile 95%",
+    "common_resamples_within_date_universe": true
+  },
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "pyarrow": "25.0.1"
+  },
+  "git_sha": "a5d08652ed6e0fbe1cd060168ebd11c0bae1649d",
+  "turnover_available": false,
+  "outputs": {
+    "MANUSCRIPT_REPLACEMENT_TABLES.md": {
+      "size_bytes": 8359,
+      "sha256": "65ead52496f442571d550121d8faa8249e90f45858473119ada5ea63b45c689a"
+    },
+    "paired_tv_difference.csv": {
+      "size_bytes": 310,
+      "sha256": "e9ec67b5a699a5de5d6fa886fb954d907b607c66d276773b9221c42d35c88b2c"
+    },
+    "panel_a_by_year.csv": {
+      "size_bytes": 4774,
+      "sha256": "3aaa05f22dee1b408c1f08c6f5425bebc9bd5a96a2c9ffd99eecfc07fb3921e8"
+    },
+    "panel_a_per_race_main_harville.csv": {
+      "size_bytes": 5206167,
+      "sha256": "ac6ed1186e08baf7aa6b42a6e6818d49ff0c5bd173dcb8a79a0f44117c1fb23f"
+    },
+    "panel_a_yearly_ranges.csv": {
+      "size_bytes": 414,
+      "sha256": "562e7de021eb73c6d2332956680a75d2903d10f962d63f630c262ce20489f80f"
+    },
+    "panel_b_per_race_main_harville.csv": {
+      "size_bytes": 11953735,
+      "sha256": "89530f7ab241c7a2424fa5692115f732063c32a1d80e252266aa9eb0cfe4b196"
+    },
+    "precheck_2018_07_01.csv": {
+      "size_bytes": 192,
+      "sha256": "cda9d513888683930495ed4647f45a136144830d897dbc0b2c1c3cb963f65d43"
+    },
+    "table2_cap_counts.csv": {
+      "size_bytes": 232,
+      "sha256": "2c8d10a633306d8914d1ecc796f469ff203341263a44592222e24cf158475394"
+    },
+    "table3_panel_a.csv": {
+      "size_bytes": 625,
+      "sha256": "a43eae8bd3f1b603b75cdf2ce8c66c7d5bee3b68ee3815dec2ab9230cf8a3ce4"
+    },
+    "table3_panel_b.csv": {
+      "size_bytes": 972,
+      "sha256": "8ac0e224a6a5f8d5c1e43ab712e222e3bbe0c4a33fa3967e903153d2320170dc"
+    },
+    "table3_panel_b_superiority.csv": {
+      "size_bytes": 246,
+      "sha256": "be3049422630878aae35b82860c81775accbc653eb84edd949dca00aa35ebcd1"
+    },
+    "table4_status.csv": {
+      "size_bytes": 105,
+      "sha256": "98d56f05cf05ed4b9c00465f08f51982550f5ee6397df7b60b8d871e66417d09"
+    },
+    "table5_logloss.csv": {
+      "size_bytes": 840,
+      "sha256": "9b72baa7271b7e8de58adfc5efe7de248076c217378e408e8922a8133e6e6235"
+    },
+    "winning_trifecta_cap_by_field.csv": {
+      "size_bytes": 502,
+      "sha256": "3e22a00418e41b453aff90fb4ccde99f3e5e4c0beb16dbf13c75eae2da7b08a5"
+    },
+    "winning_trifecta_cap_by_year.csv": {
+      "size_bytes": 547,
+      "sha256": "434d42caea7437f654f2d514d0bf0838ac290a330b28605a4249edd34df16930"
+    },
+    "winning_trifecta_cap_overall.csv": {
+      "size_bytes": 119,
+      "sha256": "62bb5ea689a56d10261d5c518296a14af3604bfb77680d0497ff077c4d903d5c"
+    }
+  }
+}

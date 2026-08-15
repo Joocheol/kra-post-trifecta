@@ -1,0 +1,2 @@
+available,required_file,reason
+False,data/turnover_by_race_market.csv.gz,compact turnover file not found
