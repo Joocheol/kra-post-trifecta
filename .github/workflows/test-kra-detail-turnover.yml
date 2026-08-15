@@ -1,0 +1,24 @@
+name: Test one-page KRA turnover extraction
+on:
+  push:
+    branches: [agent/cultural-industry-reverification]
+    paths: ['.github/workflows/test-kra-detail-turnover.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch detail page and parse all market totals
+        shell: bash
+        run: |
+          python - <<'PY'
+          import html,re,urllib.request
+          url='https://race.kra.co.kr/raceScore/ScoretableDetailList.do?meet=2&realRcDate=20251213&realRcNo=3'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          with urllib.request.urlopen(req,timeout=30) as r: raw=r.read()
+          data=raw.decode('euc-kr')
+          text=' '.join(html.unescape(re.sub(r'<[^>]+>',' ',data)).replace('\xa0',' ').split())
+          print('bytes',len(raw))
+          for label in ('복승식','쌍승식','삼복승식','삼쌍승식'):
+              m=re.search(rf'{label}\s*:\s*([0-9,]+)',text)
+              print(label, m.group(1) if m else 'MISSING')
+          PY
