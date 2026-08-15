@@ -72,3 +72,5 @@ jobs:
             submission/cultural-industry/REVERIFICATION_2026-08-16.md
           git commit -m 'Freeze independent cultural-industry reverification [skip ci]' || exit 0
           git push origin HEAD:agent/cultural-industry-reverification
+
+# This final replay is intentional: it verifies the branch after provenance-only documentation was added.
