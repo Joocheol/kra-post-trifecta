@@ -75,4 +75,4 @@
 
 ## 아직 교체 보류인 항목
 
-표 4의 실제 매출액 기반 유한풀 잡음 수치는 compact `data/turnover_by_race_market.csv.gz`가 생성·체크인된 뒤 최종 산출한다. 원자료가 있는 Dropbox 동기화 환경에서 `bash scripts/reproduce_cultural_industry_final.sh` 한 명령으로 compact turnover 추출과 최종 Table 4 재산출을 이어서 수행하도록 코드가 준비되어 있다.
+표 4의 실제 매출액 기반 유한풀 잡음 수치는 compact `data/turnover_by_race_market.csv.gz`가 생성·체크인된 뒤 최종 산출한다. 원자료가 있는 Dropbox 동기화 환경에서 `bash scripts/reproduce_cultural_industry_final.sh` 한 명령으로 compact turnover 추출과 최종 Table 4 재산출을 이어서 수행하도록 코드가 준비되어 있다. Table 4가 생성되기 전에는 기존 표 4 값도 최종값으로 간주하지 않는다.
