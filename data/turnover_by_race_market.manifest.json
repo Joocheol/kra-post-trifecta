@@ -1,0 +1,38 @@
+{
+  "created_utc": "2026-08-15T22:50:04.719912+00:00",
+  "scope": {
+    "clean_races": 3338,
+    "markets": [
+      "quinella",
+      "exacta",
+      "trio",
+      "trifecta"
+    ],
+    "rows": 13352
+  },
+  "source": {
+    "primary": "KRA ScoretableDetailList historical page",
+    "base_url": "https://race.kra.co.kr/raceScore/ScoretableDetailList.do",
+    "one_request_per_race": true,
+    "dropbox_archive_root": "/kra-analysis/data/raw_collected_v3_15w",
+    "dropbox_archive_crosscheck_race": "2025-12-13_2_03",
+    "dropbox_archive_crosscheck_values_won": {
+      "quinella": 763893500,
+      "exacta": 195364900,
+      "trio": 839141700,
+      "trifecta": 411991600
+    },
+    "dropbox_archive_crosscheck_passed": true
+  },
+  "collection": {
+    "workers": 12,
+    "retries": 7,
+    "timeout_seconds": 30.0,
+    "polite_delay_seconds_per_worker": 0.1
+  },
+  "output": {
+    "path": "data/turnover_by_race_market.csv.gz",
+    "sha256": "3a5a899933479a432ef75cbb8699c8128f7ecd325cedd5f1e58cede3f4247be6",
+    "compression": "gzip with deterministic mtime=0"
+  }
+}

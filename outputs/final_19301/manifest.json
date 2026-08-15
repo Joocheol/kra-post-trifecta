@@ -19,11 +19,11 @@
     "pyarrow": "25.0.1"
   },
   "git_sha": "a5d08652ed6e0fbe1cd060168ebd11c0bae1649d",
-  "turnover_available": false,
+  "turnover_available": true,
   "outputs": {
     "MANUSCRIPT_REPLACEMENT_TABLES.md": {
-      "size_bytes": 8359,
-      "sha256": "65ead52496f442571d550121d8faa8249e90f45858473119ada5ea63b45c689a"
+      "size_bytes": 12586,
+      "sha256": "39da0fdb6d22f21a3344559525079af9a48a657d6816c384751d352efd3fd42c"
     },
     "paired_tv_difference.csv": {
       "size_bytes": 310,
@@ -66,8 +66,8 @@
       "sha256": "be3049422630878aae35b82860c81775accbc653eb84edd949dca00aa35ebcd1"
     },
     "table4_status.csv": {
-      "size_bytes": 105,
-      "sha256": "98d56f05cf05ed4b9c00465f08f51982550f5ee6397df7b60b8d871e66417d09"
+      "size_bytes": 205,
+      "sha256": "918f37634d8f88208eeb19d499064f580e8de9ff61b56ee0fe03b51ae5114f44"
     },
     "table5_logloss.csv": {
       "size_bytes": 840,
@@ -84,6 +84,30 @@
     "winning_trifecta_cap_overall.csv": {
       "size_bytes": 119,
       "sha256": "62bb5ea689a56d10261d5c518296a14af3604bfb77680d0497ff077c4d903d5c"
+    },
+    "table4_turnover_noise.csv": {
+      "size_bytes": 2623,
+      "sha256": "58ff2bf6d7afa961d4c54acd730748d60d3fd61dd32d3f6debf61012e0003c89"
+    },
+    "table4_turnover_noise_per_race.csv": {
+      "size_bytes": 1663401,
+      "sha256": "8d114ceb8ffa34583b909c33a55585d45546ad1c2f6dcd099c000a9e8df99ec2"
+    },
+    "TABLE4_METHOD.md": {
+      "size_bytes": 781,
+      "sha256": "deb347a5e442c4582a5e552420fe8e87c75c3c05c55c898a5cde3e8968035229"
     }
+  },
+  "turnover": {
+    "path": "data/turnover_by_race_market.csv.gz",
+    "sha256": "3a5a899933479a432ef75cbb8699c8128f7ecd325cedd5f1e58cede3f4247be6",
+    "rows": 13352,
+    "markets": [
+      "exacta",
+      "quinella",
+      "trifecta",
+      "trio"
+    ],
+    "source": "KRA historical detail pages cross-checked against connected Dropbox raw archive"
   }
 }
