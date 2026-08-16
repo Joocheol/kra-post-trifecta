@@ -1,10 +1,14 @@
-name: Build latest cultural PDF
+name: Build final cultural-industry submission files
 
 on:
   push:
     branches:
-      - agent/cultural-industry-revision
+      - agent/cultural-industry-reverification
     paths:
+      - 'submission/cultural-industry/manuscript.json'
+      - 'submission/cultural-industry/build-hwp.mjs'
+      - 'submission/cultural-industry/build-review-pdf.py'
+      - 'submission/cultural-industry/validate.py'
       - '.github/workflows/build-latest-cultural-pdf.yml'
   workflow_dispatch:
 
@@ -14,10 +18,24 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: agent/cultural-industry-revision
+          ref: agent/cultural-industry-reverification
+          fetch-depth: 1
+
+      - name: Install HWP dependencies
+        working-directory: submission/cultural-industry
+        run: npm install --ignore-scripts
+
+      - name: Build author and blind HWP files
+        shell: bash
+        run: |
+          cp submission/cultural-industry/kra-cultural-industry-submission-author.hwp /tmp/cultural-industry-template.hwp
+          CULTURAL_INDUSTRY_TEMPLATE=/tmp/cultural-industry-template.hwp \
+            npm run --prefix submission/cultural-industry build:hwp
+
       - name: Install PDF dependencies
         shell: bash
         run: |
@@ -28,35 +46,56 @@ jobs:
           npm install \
             @expo-google-fonts/noto-serif-kr \
             @expo-google-fonts/noto-sans-kr
-      - name: Build latest review PDFs
+
+      - name: Build author and blind review PDFs
         run: python submission/cultural-industry/build-review-pdf.py
-      - name: Verify PDFs
+
+      - name: Validate final submission package
         shell: bash
         run: |
-          test -s submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf
-          test -s submission/cultural-industry/kra-cultural-industry-submission-blind-review.pdf
+          python submission/cultural-industry/validate.py
           python - <<'PY'
+          import json
           from pathlib import Path
-          for p in [
-              Path('submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf'),
-              Path('submission/cultural-industry/kra-cultural-industry-submission-blind-review.pdf'),
-          ]:
-              data=p.read_bytes()
-              assert data.startswith(b'%PDF-') and b'%%EOF' in data[-4096:], p
-              print(p, len(data))
+          here=Path('submission/cultural-industry')
+          data=json.loads((here/'manuscript.json').read_text(encoding='utf-8'))
+          text=json.dumps(data,ensure_ascii=False)
+          for value in ('19,301','3,338','<표 4> 실제 매출액 기반 유한풀 잡음','<표 5> 실제 착순 로그손실의 Harville 대비 개선'):
+              assert value in text, value
+          for value in ('19,284','3,321','0.1519','<표 4> 단계조정 Harville'):
+              assert value not in text, value
+          for name in (
+              'kra-cultural-industry-submission-author.hwp',
+              'kra-cultural-industry-submission-blind.hwp',
+              'kra-cultural-industry-submission-author-review.pdf',
+              'kra-cultural-industry-submission-blind-review.pdf',
+          ):
+              p=here/name
+              assert p.stat().st_size>10000, (name,p.stat().st_size)
+          print('PASS: final 19,301 / 3,338 submission package')
           PY
-      - name: Upload latest author PDF
+
+      - name: Upload final submission files
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: cultural-industry-latest-pdf
-          path: submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf
-          retention-days: 7
-      - name: Commit PDFs
+          name: cultural-industry-final-submission
+          path: |
+            submission/cultural-industry/kra-cultural-industry-submission-author.hwp
+            submission/cultural-industry/kra-cultural-industry-submission-blind.hwp
+            submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf
+            submission/cultural-industry/kra-cultural-industry-submission-blind-review.pdf
+          retention-days: 14
+
+      - name: Commit regenerated files
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf \
-                  submission/cultural-industry/kra-cultural-industry-submission-blind-review.pdf
-          git commit -m 'Regenerate latest cultural-industry review PDFs' || exit 0
-          git push origin HEAD:agent/cultural-industry-revision
+          git add \
+            submission/cultural-industry/kra-cultural-industry-submission-author.hwp \
+            submission/cultural-industry/kra-cultural-industry-submission-blind.hwp \
+            submission/cultural-industry/kra-cultural-industry-submission-author-review.pdf \
+            submission/cultural-industry/kra-cultural-industry-submission-blind-review.pdf \
+            submission/cultural-industry/hwp-build-report.json
+          git commit -m 'Regenerate final cultural-industry submission files [skip ci]' || exit 0
+          git push origin HEAD:agent/cultural-industry-reverification
