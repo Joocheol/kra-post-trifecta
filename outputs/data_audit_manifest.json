@@ -2,15 +2,15 @@
   "artifacts": {
     "analysis_sample.csv": {
       "rows": 77204,
-      "sha256": "e5296bdfe99e30f3fbf9d46ac1137ee6de4eef0ad25bce6aa3ac7e8bb7bdd8c1"
+      "sha256": "97994821fbbc25e2beeb9bca0a5cbd84b8952fcb51885da5bf6f7b4666f983e1"
     },
     "data_quality.csv": {
       "rows": 19301,
-      "sha256": "6ef24467c0fa75051e718ad463738738d9c1911dedb3fb0dea1bacc78c22e5a1"
+      "sha256": "b80e28ef01b86bb7c0f108b8fc2415ccfb67baa254cded88841cd56190849866"
     },
     "sample_flow.csv": {
       "rows": 36,
-      "sha256": "4fe78c1e3c3ffed6ddf6907bb11108ad73e1bdf0f4ad385d206879c32427f0d7"
+      "sha256": "b32f8580d2abc55a776c5eedaef4603ddfa91e88f84ddc244ed19ebb064aa4ed"
     }
   },
   "candidate_races": 19301,
@@ -24,7 +24,7 @@
       "win": 0
     }
   },
-  "in_date_scope_races": 19284,
+  "in_date_scope_races": 19301,
   "orphan_records": {
     "exacta": {
       "race_ids": 0,
@@ -48,29 +48,27 @@
     }
   },
   "schema_version": 1,
-  "scope_exclusions": {
-    "excluded_date": 17
-  },
+  "scope_exclusions": {},
   "target_samples": {
     "exacta": {
       "capped_interval": 15963,
-      "clean_point": 3321,
-      "complete": 19284
+      "clean_point": 3338,
+      "complete": 19301
     },
     "quinella": {
       "capped_interval": 15963,
-      "clean_point": 3321,
-      "complete": 19284
+      "clean_point": 3338,
+      "complete": 19301
     },
     "trio": {
       "capped_interval": 15963,
-      "clean_point": 3321,
-      "complete": 19284
+      "clean_point": 3338,
+      "complete": 19301
     },
     "win": {
       "capped_interval": 15963,
-      "clean_point": 3321,
-      "complete": 19284
+      "clean_point": 3338,
+      "complete": 19301
     }
   }
 }

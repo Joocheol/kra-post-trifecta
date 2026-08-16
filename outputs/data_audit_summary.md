@@ -3,25 +3,24 @@
 ## 표본과 데이터 단위
 
 - 후보 경주: 19,301경주
-- 사전 날짜 규칙 적용 후: 19,284경주 (제외 17경주)
+- 사전 날짜 규칙 적용 후: 19,301경주 (제외 0경주)
 - 가격자료 단위: 경주 × 승식 × 가능한 조합
 - 실질 표본단위: 경주
 
 ## 핵심 판정
 
-- `win`: 완전 조합 19,284경주, 양수·유한 배당 19,284경주, 상한 포함 0경주, 고아 race_id 0개
-- `exacta`: 완전 조합 19,284경주, 양수·유한 배당 19,284경주, 상한 포함 581경주, 고아 race_id 0개
-- `quinella`: 완전 조합 19,284경주, 양수·유한 배당 19,284경주, 상한 포함 15경주, 고아 race_id 0개
-- `trio`: 완전 조합 19,284경주, 양수·유한 배당 19,284경주, 상한 포함 3,434경주, 고아 race_id 0개
-- `trifecta`: 완전 조합 19,284경주, 양수·유한 배당 19,284경주, 상한 포함 15,963경주, 고아 race_id 0개
-- 날짜 범위 제외 사유: excluded_date 17경주
+- `win`: 완전 조합 19,301경주, 양수·유한 배당 19,301경주, 상한 포함 0경주, 고아 race_id 0개
+- `exacta`: 완전 조합 19,301경주, 양수·유한 배당 19,301경주, 상한 포함 581경주, 고아 race_id 0개
+- `quinella`: 완전 조합 19,301경주, 양수·유한 배당 19,301경주, 상한 포함 15경주, 고아 race_id 0개
+- `trio`: 완전 조합 19,301경주, 양수·유한 배당 19,301경주, 상한 포함 3,434경주, 고아 race_id 0개
+- `trifecta`: 완전 조합 19,301경주, 양수·유한 배당 19,301경주, 상한 포함 15,963경주, 고아 race_id 0개
 
 - 지원집합·키·배당 유효성: **통과**
 - 목표 승식별 최종 분석표본:
-  - `win`: clean point 3,321경주, capped interval 15,963경주
-  - `exacta`: clean point 3,321경주, capped interval 15,963경주
-  - `quinella`: clean point 3,321경주, capped interval 15,963경주
-  - `trio`: clean point 3,321경주, capped interval 15,963경주
+  - `win`: clean point 3,338경주, capped interval 15,963경주
+  - `exacta`: clean point 3,338경주, capped interval 15,963경주
+  - `quinella`: clean point 3,338경주, capped interval 15,963경주
+  - `trio`: clean point 3,338경주, capped interval 15,963경주
 - 네 목표 승식의 clean race_id 집합: **동일**
 
 ## 분석상 위험과 처리

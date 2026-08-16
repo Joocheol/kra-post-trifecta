@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-08-16T00:42:15.925Z",
+  "outputs": [
+    {
+      "out": "submission/cultural-industry/kra-cultural-industry-submission-author.hwp",
+      "bytes": 34816,
+      "pages": 28,
+      "verify": {
+        "bytesLen": 34816,
+        "pageCountBefore": 28,
+        "pageCountAfter": 28,
+        "recovered": true
+      },
+      "loss": {
+        "schemaVersion": 1,
+        "outputFormat": "hwp",
+        "count": 0,
+        "losses": []
+      }
+    },
+    {
+      "out": "submission/cultural-industry/kra-cultural-industry-submission-blind.hwp",
+      "bytes": 34304,
+      "pages": 28,
+      "verify": {
+        "bytesLen": 34304,
+        "pageCountBefore": 28,
+        "pageCountAfter": 28,
+        "recovered": true
+      },
+      "loss": {
+        "schemaVersion": 1,
+        "outputFormat": "hwp",
+        "count": 0,
+        "losses": []
+      }
+    }
+  ]
+}

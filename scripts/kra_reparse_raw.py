@@ -19,6 +19,8 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+from analysis.turnover import extract_turnovers
+
 
 MARKETS = [
     "win",
@@ -93,7 +95,7 @@ def to_odds(value: Any) -> float | None:
 
 
 def is_capped(odds: float | None) -> bool:
-    return odds is not None and odds >= 9999.9
+    return odds is not None and abs(odds - 9999.9) <= 1e-9
 
 
 def html_tables(page: str) -> list[pd.DataFrame]:
@@ -272,6 +274,7 @@ def parse_raw(path: Path, raw_root: Path) -> ParsedRace:
         payload = json.load(f)
     pages = payload.get("pages", {})
     meta = payload.get("meta", {})
+    turnovers = extract_turnovers(pages)
     arrival_nums = extract_arrival_order(pages)
     arrival = ",".join(str(x) for x in arrival_nums)
     markets: dict[str, list[dict[str, Any]]] = {m: [] for m in MARKETS}
@@ -392,6 +395,7 @@ def parse_raw(path: Path, raw_root: Path) -> ParsedRace:
                 "status": "ok" if n_rows else "no_rows",
                 "is_cancelled": is_cancelled,
                 "status_reason": "parsed_rows_present" if n_rows else "no_parsed_rows",
+                "turnover_won": turnovers[market],
                 "race_date": race_date,
                 "meet": meet,
             }
@@ -424,6 +428,7 @@ SCHEMAS = {
             ("status", pa.large_string()),
             ("is_cancelled", pa.bool_()),
             ("status_reason", pa.large_string()),
+            ("turnover_won", pa.int64()),
             ("race_date", pa.large_string()),
             ("meet", pa.large_string()),
         ]

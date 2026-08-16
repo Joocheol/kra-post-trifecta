@@ -1,0 +1,11 @@
+{
+  "name": "kra-cultural-industry-submission",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:hwp": "node build-hwp.mjs"
+  },
+  "dependencies": {
+    "@rhwp/core": "0.8.4"
+  }
+}

@@ -1,0 +1,6 @@
+market,n_races,capped_races,expected_capped_races,count_maintained,capped_rows
+win,19301,0,0,True,0
+exacta,19301,581,581,True,2594
+quinella,19301,15,15,True,21
+trio,19301,3434,3434,True,45420
+trifecta,19301,15963,15963,True,3774486
