@@ -5,9 +5,7 @@
   ],
   "date_scope": {
     "end": "2025-12-31",
-    "excluded_dates": [
-      "2018-07-01"
-    ],
+    "excluded_dates": [],
     "excluded_years": [
       2020,
       2021
@@ -15,8 +13,8 @@
     "start": "2016-06-10"
   },
   "identification_note": "A separate M-U series is not reported: unrestricted risk utility and M-R are observationally equivalent on the win-price schedule. The directly implemented contrast is M-R versus M-S2/M-S3, with raw and discounted Harville as same-race nonbehavioral benchmarks.",
-  "n_rank_races": 19284,
-  "price_metric_rows": 915028,
+  "n_rank_races": 19301,
+  "price_metric_rows": 915824,
   "price_models": {
     "exacta": [
       "M-R",
@@ -49,14 +47,14 @@
     "power"
   ],
   "time_forward_validation": {
-    "preferred_price_metric_rows": 124030,
+    "preferred_price_metric_rows": 124146,
     "rank_validation_rows": 42,
     "training_rule": "years strictly earlier than the validation year",
     "uncapped_price_races": {
-      "exacta": 17324,
-      "quinella": 17736,
-      "trifecta": 3130,
-      "trio": 14840
+      "exacta": 17341,
+      "quinella": 17753,
+      "trifecta": 3132,
+      "trio": 14854
     },
     "validation_years": [
       2017,
@@ -69,10 +67,10 @@
     ]
   },
   "uncapped_price_races": {
-    "exacta": 18703,
-    "quinella": 19269,
-    "trifecta": 3321,
-    "trio": 15850
+    "exacta": 18720,
+    "quinella": 19286,
+    "trifecta": 3323,
+    "trio": 15864
   },
   "unordered_external_validation_note": "Quinella and trio compare one reduced weighting of the unordered event probability with the sum of two or six ordered sequential claim scores; no arbitrary order is assigned to an unordered pool.",
   "validation_years": [
