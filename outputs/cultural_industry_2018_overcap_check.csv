@@ -1,0 +1,6 @@
+market,date_races,rows,odds_eq_9999_9,odds_gt_9999_9,stored_capped_rows,stored_capped_and_gt_9999_9,max_odds
+win,17,172,0,0,0,0,186
+exacta,17,1612,0,0,0,0,6768.1
+quinella,17,806,0,0,0,0,2948.9
+trio,17,2320,0,41,41,41,21834.2
+trifecta,17,13920,0,3514,3514,3514,235070

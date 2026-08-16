@@ -1,0 +1,2 @@
+available,turnover_sha256,n_races,n_race_dates,bootstrap_reps,bootstrap_seed,bootstrap_interval
+True,3a5a899933479a432ef75cbb8699c8128f7ecd325cedd5f1e58cede3f4247be6,3338,979,99999,20260816,percentile 95%

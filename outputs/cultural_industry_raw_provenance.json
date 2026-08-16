@@ -1,0 +1,31 @@
+{
+  "verified_at": "2026-08-16",
+  "storage": "Dropbox",
+  "raw_root_path": "/kra-analysis/data/raw_collected_v3_15w",
+  "year_folders": [
+    "kra_2016",
+    "kra_2017",
+    "kra_2018",
+    "kra_2019",
+    "kra_2022",
+    "kra_2023",
+    "kra_2024",
+    "kra_2025"
+  ],
+  "format": "year/month/race-level *.json.gz raw archive",
+  "public_github_copy": false,
+  "reason_not_copied": "Raw archive is large and redistribution/provenance should remain separate; compact derived data and hashes are preferred for GitHub.",
+  "sample_verification": {
+    "race_id": "2025-12-13_2_03",
+    "dropbox_path": "/kra-analysis/data/raw_collected_v3_15w/kra_2025/raw_archive/2025/2025-12/2025-12-13_2_03.json.gz",
+    "dropbox_server_modified": "2026-08-08T00:52:23Z",
+    "turnover_won_confirmed_in_raw_text": {
+      "exacta": 195364900,
+      "trio": 839141700,
+      "trifecta": 411991600
+    }
+  },
+  "versioned_parsed_snapshot_note": "The GitHub KRA/parsed/market_status snapshot used by the independent 2026-08-16 run does not contain turnover_won; turnover-dependent outputs therefore remain explicitly unavailable until reparsing or a compact turnover extract is supplied.",
+  "reparse_entrypoint": "scripts/kra_reparse_raw.py",
+  "reverification_entrypoint": "analysis/cultural_industry_reverification.py"
+}
